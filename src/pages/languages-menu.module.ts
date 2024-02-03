@@ -1,25 +1,35 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import { LanguageCardComponent } from '../widgets/components/languages-menu/language-card/language-card.component';
 import { LanguagesMenuComponent } from '../widgets/components/languages-menu/languages-menu.component';
-
+import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonCardTitle } from "@ionic/angular/standalone";
 
 @NgModule({
-  declarations: [LanguagesMenuComponent, LanguageCardComponent],
-  imports: [
-    CommonModule,
-    IonicModule,
-    TranslateModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        component: LanguagesMenuComponent,
-      }]),
-  ],
-  exports: [LanguagesMenuComponent],
+    declarations: [LanguagesMenuComponent, LanguageCardComponent],
+    imports: [
+        CommonModule,
+        TranslateModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                component: LanguagesMenuComponent,
+            }]),
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonBackButton,
+        IonTitle,
+        IonContent,
+        IonGrid,
+        IonRow,
+        IonCol,
+        IonCard,
+        IonCardContent,
+        IonCardTitle
+    ],
+    exports: [LanguagesMenuComponent],
 })
 export class LanguagesMenuModule {
 }

@@ -1,26 +1,53 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
-import { Platform } from '@ionic/angular';
-import { select, Store } from '@ngrx/store';
+import { IonicRouteStrategy, Platform } from '@ionic/angular/standalone';
+import { select, Store, StoreModule } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Device } from '@capacitor/device';
-import { increaseOpenCountAction, initApplicationDataAction } from '../../../store/actions/settings.actions';
-import { loadReactArticlesAction } from '../../../store/actions/react.actions';
-import { loadProgressStateAction } from '../../../store/actions/progress.actions';
-import { openWithProgressAction } from '../../../store/actions/navigation.actions';
-import { loadLatestPageAction, saveLatestPageAction } from '../../../store/actions/history.actions';
-import { selectRouterState } from '../../../store/selectors/react.selectors';
-import { ISettingsState } from '../../../store/state/settings.state';
+import { increaseOpenCountAction, initApplicationDataAction } from '../../store/actions/settings.actions';
+import { loadReactArticlesAction } from '../../store/actions/react.actions';
+import { loadProgressStateAction } from '../../store/actions/progress.actions';
+import { openWithProgressAction } from '../../store/actions/navigation.actions';
+import { loadLatestPageAction, saveLatestPageAction } from '../../store/actions/history.actions';
+import { selectRouterState } from '../../store/selectors/react.selectors';
+import { ISettingsState } from '../../store/state/settings.state';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
-import { selectAppTheme } from '../../../store/selectors/settings.selectors';
+import { selectAppTheme } from '../../store/selectors/settings.selectors';
+import { BrowserModule } from '@angular/platform-browser';
+import { ReactModule } from '../react.module';
+import { FutureHandlerModule } from '../future-handler.module';
+import { AppMenuModule } from '../app-menu.module';
+import { RouteReuseStrategy, RouterModule } from '@angular/router';
+import { LanguagesMenuModule } from '../languages-menu.module';
+import { ReactService } from '../../features/services/react.service';
+import { LanguageService } from '../../features/services/language.service';
+import { IonApp, IonContent, IonRouterOutlet } from '@ionic/angular/standalone';
+import { AsyncPipe } from '@angular/common';
+
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
+  standalone: true,
+  imports: [
+    IonApp,
+    IonContent,
+    IonRouterOutlet,
+    AppMenuModule,
+    AsyncPipe,
+  ],
+  providers: [
+    ReactService,
+    LanguageService,
+    {
+      provide: RouteReuseStrategy,
+      useClass: IonicRouteStrategy,
+    },
+  ],
 })
 export class AppComponent implements OnInit, OnDestroy {
   public darkMode: Observable<boolean> = this.store.pipe(select(selectAppTheme));
