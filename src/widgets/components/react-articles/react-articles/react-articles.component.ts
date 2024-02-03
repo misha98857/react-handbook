@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Articles } from '../../../../entities/articles/article';
-import { Platform, ToastController } from '@ionic/angular/standalone';
+import { Platform, ToastController, IonHeader, IonToolbar, IonButtons, IonBackButton, IonButton, IonIcon, IonMenuButton, IonTitle, IonContent, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonList, IonBadge } from '@ionic/angular/standalone';
 import { Observable, Subscription } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { App } from '@capacitor/app';
 import { selectReactArticles } from '../../../../store/selectors/react.selectors';
 import { selectProgressState } from '../../../../store/selectors/progress.selectors';
@@ -13,12 +13,40 @@ import { openWithProgressAction } from '../../../../store/actions/navigation.act
 import { addIcons } from "ionicons";
 import { search, languageOutline } from "ionicons/icons";
 import { IonRouterLink } from "@ionic/angular/standalone";
+import { NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-react-articles',
     templateUrl: './react-articles.component.html',
     styleUrls: ['./react-articles.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonBackButton,
+        IonButton,
+        RouterLink,
+        IonIcon,
+        IonMenuButton,
+        IonTitle,
+        IonContent,
+        IonAccordionGroup,
+        NgFor,
+        IonAccordion,
+        IonItem,
+        IonLabel,
+        IonList,
+        NgIf,
+        NgSwitch,
+        NgSwitchCase,
+        IonBadge,
+        NgSwitchDefault,
+        AsyncPipe,
+        TranslateModule,
+    ],
 })
 export class ReactArticlesComponent implements OnDestroy {
     public articles: Observable<Articles[]> = this.store.pipe(select(selectReactArticles));

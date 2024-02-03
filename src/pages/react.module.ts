@@ -11,7 +11,6 @@ import { FutureHandlerComponent } from '../widgets/components/future-handler/fut
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonButton, IonIcon, IonMenuButton, IonTitle, IonContent, IonFooter, IonTabs, IonTabBar, IonTabButton, IonBadge, IonLabel, IonAccordionGroup, IonAccordion, IonItem, IonList } from "@ionic/angular/standalone";
 
 @NgModule({
-    declarations: [ReactArticlesComponent, ReactArticleComponent, ReactHtmlArticleComponent],
     imports: [
         CommonModule,
         RouterModule.forChild([
@@ -59,7 +58,8 @@ import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonButton, IonIcon, I
         IonLabel,
         IonList,
         IonBadge,
-        IonContent
+        IonContent,
+        ReactArticlesComponent, ReactArticleComponent, ReactHtmlArticleComponent
     ],
 })
 export class ReactModule {

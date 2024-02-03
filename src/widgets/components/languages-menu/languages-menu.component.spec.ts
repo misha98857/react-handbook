@@ -8,8 +8,8 @@ describe('LanguagesMenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LanguagesMenuComponent ]
-    })
+    imports: [LanguagesMenuComponent]
+})
     .compileComponents();
   });
 

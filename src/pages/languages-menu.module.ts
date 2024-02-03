@@ -7,7 +7,6 @@ import { LanguagesMenuComponent } from '../widgets/components/languages-menu/lan
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonCardTitle } from "@ionic/angular/standalone";
 
 @NgModule({
-    declarations: [LanguagesMenuComponent, LanguageCardComponent],
     imports: [
         CommonModule,
         TranslateModule,
@@ -15,7 +14,8 @@ import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent,
             {
                 path: '',
                 component: LanguagesMenuComponent,
-            }]),
+            }
+        ]),
         IonHeader,
         IonToolbar,
         IonButtons,
@@ -27,7 +27,8 @@ import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent,
         IonCol,
         IonCard,
         IonCardContent,
-        IonCardTitle
+        IonCardTitle,
+        LanguagesMenuComponent, LanguageCardComponent
     ],
     exports: [LanguagesMenuComponent],
 })

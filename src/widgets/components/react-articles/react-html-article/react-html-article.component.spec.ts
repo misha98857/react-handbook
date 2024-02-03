@@ -7,9 +7,8 @@ describe('HtmlArticleComponent', () => {
 
     beforeEach(async(() => {
         void TestBed.configureTestingModule({
-            declarations: [ReactHtmlArticleComponent],
-            imports: [IonicModule.forRoot()],
-        }).compileComponents();
+    imports: [IonicModule.forRoot(), ReactHtmlArticleComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(ReactHtmlArticleComponent);
         component = fixture.componentInstance;

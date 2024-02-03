@@ -7,9 +7,8 @@ describe('FutureHandlerComponent', () => {
 
     beforeEach(async(() => {
         void TestBed.configureTestingModule({
-            declarations: [FutureHandlerComponent],
-            imports: [IonicModule.forRoot()],
-        }).compileComponents();
+    imports: [IonicModule.forRoot(), FutureHandlerComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(FutureHandlerComponent);
         component = fixture.componentInstance;

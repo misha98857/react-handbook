@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { IonicRouteStrategy, Platform } from '@ionic/angular/standalone';
-import { select, Store, StoreModule } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Device } from '@capacitor/device';
 import { increaseOpenCountAction, initApplicationDataAction } from '../../store/actions/settings.actions';
@@ -16,16 +16,12 @@ import { ISettingsState } from '../../store/state/settings.state';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { selectAppTheme } from '../../store/selectors/settings.selectors';
-import { BrowserModule } from '@angular/platform-browser';
-import { ReactModule } from '../react.module';
-import { FutureHandlerModule } from '../future-handler.module';
-import { AppMenuModule } from '../app-menu.module';
-import { RouteReuseStrategy, RouterModule } from '@angular/router';
-import { LanguagesMenuModule } from '../languages-menu.module';
+import { RouteReuseStrategy } from '@angular/router';
 import { ReactService } from '../../features/services/react.service';
 import { LanguageService } from '../../features/services/language.service';
 import { IonApp, IonContent, IonRouterOutlet } from '@ionic/angular/standalone';
 import { AsyncPipe } from '@angular/common';
+import { MenuComponent } from '../../widgets/components/app-menu/menu.component';
 
 
 @Component({
@@ -37,8 +33,8 @@ import { AsyncPipe } from '@angular/common';
     IonApp,
     IonContent,
     IonRouterOutlet,
-    AppMenuModule,
     AsyncPipe,
+    MenuComponent,
   ],
   providers: [
     ReactService,

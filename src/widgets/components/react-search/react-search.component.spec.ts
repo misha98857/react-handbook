@@ -7,9 +7,8 @@ describe('ReactSearchComponent', () => {
 
     beforeEach(async(() => {
         void TestBed.configureTestingModule({
-            declarations: [ReactSearchComponent],
-            imports: [IonicModule.forRoot()],
-        }).compileComponents();
+    imports: [IonicModule.forRoot(), ReactSearchComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(ReactSearchComponent);
         component = fixture.componentInstance;

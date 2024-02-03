@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Article } from '../../../../entities/articles/article';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
@@ -17,12 +17,41 @@ import { decreaseFontSizeAction, increaseFontSizeAction } from '../../../../stor
 import { openInternalLinkAction } from '../../../../store/actions/navigation.actions';
 import { addIcons } from "ionicons";
 import { removeOutline, addOutline, arrowBackCircleOutline, arrowForwardCircleOutline } from "ionicons/icons";
+import { NgStyle, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe } from '@angular/common';
+import { ReactHtmlArticleComponent } from '../react-html-article/react-html-article.component';
+import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonButton, IonIcon, IonMenuButton, IonTitle, IonContent, IonFooter, IonTabs, IonTabBar, IonTabButton, IonBadge, IonLabel } from '@ionic/angular/standalone';
 
 @Component({
     selector: 'app-react-article',
     templateUrl: './react-article.component.html',
     styleUrls: ['./react-article.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonBackButton,
+        IonButton,
+        IonIcon,
+        IonMenuButton,
+        IonTitle,
+        IonContent,
+        ReactHtmlArticleComponent,
+        NgStyle,
+        IonFooter,
+        NgIf,
+        IonTabs,
+        IonTabBar,
+        IonTabButton,
+        RouterLink,
+        NgSwitch,
+        NgSwitchCase,
+        IonBadge,
+        NgSwitchDefault,
+        IonLabel,
+        AsyncPipe,
+    ],
 })
 export class ReactArticleComponent {
     @Input() articleKey: string;

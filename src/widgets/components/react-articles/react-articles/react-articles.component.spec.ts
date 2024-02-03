@@ -7,9 +7,8 @@ describe('ReactArticlesComponent', () => {
 
     beforeEach(async(() => {
         void TestBed.configureTestingModule({
-            declarations: [ReactArticlesComponent],
-            imports: [IonicModule.forRoot()],
-        }).compileComponents();
+    imports: [IonicModule.forRoot(), ReactArticlesComponent],
+}).compileComponents();
 
         fixture = TestBed.createComponent(ReactArticlesComponent);
         component = fixture.componentInstance;

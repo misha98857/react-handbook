@@ -37,6 +37,8 @@ import {
     styleUrls: ['./react-html-article.component.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [IonContent],
 })
 export class ReactHtmlArticleComponent implements OnInit, AfterViewChecked, OnDestroy {
     @ViewChild(IonContent) content: IonContent;

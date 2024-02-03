@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { IonCard, IonCardContent, IonCardTitle } from '@ionic/angular/standalone';
 
 @Component({
     selector: 'app-card',
     templateUrl: './language-card.component.html',
     styleUrls: ['./language-card.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [IonCard, IonCardContent, IonCardTitle]
 })
 export class LanguageCardComponent {
     @Input() message: string;

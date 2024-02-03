@@ -6,7 +6,6 @@ import { ReactSearchComponent } from '../widgets/components/react-search/react-s
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonMenuButton, IonSearchbar, IonContent, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonList, IonBadge } from "@ionic/angular/standalone";
 
 @NgModule({
-    declarations: [ReactSearchComponent],
     imports: [
         CommonModule,
         TranslateModule,
@@ -28,7 +27,8 @@ import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonMenuButton, IonSea
         IonItem,
         IonLabel,
         IonList,
-        IonBadge
+        IonBadge,
+        ReactSearchComponent
     ],
 })
 export class SearchModule {
