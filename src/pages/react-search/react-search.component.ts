@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Articles } from '../../entities/articles/article';
+import { Articles } from '../../entities/articles/models/article';
 import { select, Store } from '@ngrx/store';
 import { selectSearchedReactArticles } from '../../store/selectors/react.selectors';
 import { selectProgressState } from '../../store/selectors/progress.selectors';

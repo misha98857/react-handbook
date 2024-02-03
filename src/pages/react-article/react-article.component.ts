@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Article } from '../../entities/articles/article';
+import { Article } from '../../entities/articles/models/article';
 import { Router, RouterLink } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { first } from 'rxjs/operators';
@@ -36,6 +36,7 @@ import {
   IonBadge,
   IonLabel,
 } from '@ionic/angular/standalone';
+import { ArticleNavigationToolbarComponent } from '../../widgets/navigation-toolbar/article-navigation-toolbar.component';
 
 @Component({
   selector: 'app-react-article',
@@ -67,6 +68,7 @@ import {
     NgSwitchDefault,
     IonLabel,
     AsyncPipe,
+    ArticleNavigationToolbarComponent,
   ],
 })
 export class ReactArticleComponent {

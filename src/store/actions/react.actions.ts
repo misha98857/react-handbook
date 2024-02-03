@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Articles } from '../../entities/articles/article';
+import { Articles } from '../../entities/articles/models/article';
 
 export const loadReactArticlesSuccessAction = createAction(
   '[React Module] loadReactArticlesSuccess',

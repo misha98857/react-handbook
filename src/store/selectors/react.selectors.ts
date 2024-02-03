@@ -2,7 +2,7 @@ import { createSelector } from '@ngrx/store';
 import { IReactState } from '../state/react.state';
 import { IAppState } from '../state/app.state';
 import { SerializedRouterStateSnapshot } from '@ngrx/router-store';
-import { Articles } from '../../entities/articles/article';
+import { Articles } from '../../entities/articles/models/article';
 
 export const selectReactState = (state: IAppState): IReactState => state.react;
 export const selectRouterState = (state: IAppState): SerializedRouterStateSnapshot => state.router.state;

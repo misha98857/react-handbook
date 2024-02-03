@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Articles } from '../../entities/articles/article';
+import { Articles } from '../../entities/articles/models/article';
 import {
   Platform,
   ToastController,

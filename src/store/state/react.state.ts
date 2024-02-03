@@ -1,4 +1,4 @@
-import { Articles } from '../../entities/articles/article';
+import { Articles } from '../../entities/articles/models/article';
 
 export interface IReactState {
   articles: Array<Articles>;

@@ -16,29 +16,19 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <app-html-html-article (click)='getRoute($event)' [html]='article$' [ngStyle]="{'font-size': (fontSize | async).toString() + 'rem'}"></app-html-html-article>
+  <app-html-html-article
+    [html]='article$'
+    (click)='getRoute($event)'
+    [ngStyle]="{'font-size': (fontSize | async).toString() + 'rem'}"
+  >
+  </app-html-html-article>
 </ion-content>
 <ion-footer>
   <ion-toolbar *ngIf='navButtonsState | async'>
-    <ion-tabs>
-      <ion-tab-bar slot='bottom'>
-        <ion-tab-button [routerLink]='(article$ | async).nav[0]'>
-          <ion-icon class='nav-icon' name='arrow-back-circle-outline'></ion-icon>
-        </ion-tab-button>
-        <div *ngIf='visibleProgress | async' class='progress-badge'>
-          <ng-container *ngIf='(progress | async)![(article$ | async).key]'
-                        [ngSwitch]='(progress | async)![(article$ | async).key].toFixed(0)'>
-            <ion-badge *ngSwitchCase='"100"' color='success'>100%</ion-badge>
-            <ion-badge *ngSwitchDefault color='primary'>{{ (progress | async)![(article$ | async).key].toFixed(0) }}%
-            </ion-badge>
-          </ng-container>
-          <ion-badge *ngIf='!(progress | async)![(article$ | async).key]' color='light'>0%</ion-badge>
-        </div>
-        <ion-tab-button [routerLink]='(article$ | async).nav[1]'>
-          <ion-icon class='nav-icon' name='arrow-forward-circle-outline'></ion-icon>
-          <ion-label></ion-label>
-        </ion-tab-button>
-      </ion-tab-bar>
-    </ion-tabs>
+    <app-article-navigation-toolbar
+      [article]="article$ | async"
+      [showProgress]="visibleProgress | async"
+      [readProgress]="progress | async">
+    </app-article-navigation-toolbar>
   </ion-toolbar>
 </ion-footer>
