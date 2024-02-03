@@ -21,7 +21,7 @@ import { ReactService } from '../../features/services/react.service';
 import { LanguageService } from '../../features/services/language.service';
 import { IonApp, IonContent, IonRouterOutlet } from '@ionic/angular/standalone';
 import { AsyncPipe } from '@angular/common';
-import { MenuComponent } from '../../widgets/components/app-menu/menu.component';
+import { MenuComponent } from '../app-menu/menu.component';
 
 
 @Component({

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Articles } from '../../../../entities/articles/article';
+import { Articles } from '../../entities/articles/article';
 import {
   Platform,
   ToastController,
@@ -23,11 +23,11 @@ import {
 import { Observable, Subscription } from 'rxjs';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { App } from '@capacitor/app';
-import { selectReactArticles } from '../../../../store/selectors/react.selectors';
-import { selectProgressState } from '../../../../store/selectors/progress.selectors';
-import { selectLanguage, selectVisibleProgress } from '../../../../store/selectors/settings.selectors';
-import { ReactService } from '../../../../features/services/react.service';
-import { openWithProgressAction } from '../../../../store/actions/navigation.actions';
+import { selectReactArticles } from '../../store/selectors/react.selectors';
+import { selectProgressState } from '../../store/selectors/progress.selectors';
+import { selectLanguage, selectVisibleProgress } from '../../store/selectors/settings.selectors';
+import { ReactService } from '../../features/services/react.service';
+import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { addIcons } from 'ionicons';
 import { search, languageOutline } from 'ionicons/icons';
 import { IonRouterLink } from '@ionic/angular/standalone';

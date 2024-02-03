@@ -11,25 +11,25 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Observable, Subscription } from 'rxjs';
-import { Article } from '../../../../entities/articles/article';
+import { Article } from '../../entities/articles/article';
 import { select, Store } from '@ngrx/store';
 import { IonContent } from '@ionic/angular/standalone';
 import * as Mark from 'mark.js';
 import { first } from 'rxjs/operators';
-import { selectReactFragment, selectSearchText } from '../../../../store/selectors/react.selectors';
-import { selectRestoreProgress } from '../../../../store/selectors/settings.selectors';
-import { INavigationState } from '../../../../store/state/navigation.state';
-import { selectNavigationState } from '../../../../store/selectors/navigation.selectors';
-import { selectProgressState } from '../../../../store/selectors/progress.selectors';
-import { IProgressState } from '../../../../store/state/progress.state';
+import { selectReactFragment, selectSearchText } from '../../store/selectors/react.selectors';
+import { selectRestoreProgress } from '../../store/selectors/settings.selectors';
+import { INavigationState } from '../../store/state/navigation.state';
+import { selectNavigationState } from '../../store/selectors/navigation.selectors';
+import { selectProgressState } from '../../store/selectors/progress.selectors';
+import { IProgressState } from '../../store/state/progress.state';
 import {
     saveArticlesProgressStateAction,
     setArticleProgressStateAction,
-} from '../../../../store/actions/progress.actions';
+} from '../../store/actions/progress.actions';
 import {
     increaseOpenArticleCountAction,
     returnDefaultNavigationStateAction,
-} from '../../../../store/actions/navigation.actions';
+} from '../../store/actions/navigation.actions';
 
 @Component({
     selector: 'app-html-html-article',

@@ -15,11 +15,11 @@ import {
   IonRow,
   IonCol,
 } from '@ionic/angular/standalone';
-import { selectLanguage } from '../../../store/selectors/settings.selectors';
-import { changeAppLanguageAction } from '../../../store/actions/settings.actions';
-import { LanguageService } from '../../../features/services/language.service';
-import { ReactService } from '../../../features/services/react.service';
-import { LanguageCardComponent } from './language-card/language-card.component';
+import { selectLanguage } from '../../store/selectors/settings.selectors';
+import { changeAppLanguageAction } from '../../store/actions/settings.actions';
+import { LanguageService } from '../../features/services/language.service';
+import { ReactService } from '../../features/services/react.service';
+import { LanguageCardComponent } from '../../widgets/components/language-card/language-card.component';
 import { NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
