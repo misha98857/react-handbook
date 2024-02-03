@@ -1,9 +1,30 @@
 import { Routes } from '@angular/router';
+import {
+  ReactArticlesComponent,
+} from '../../widgets/components/react-articles/react-articles/react-articles.component';
+import { ReactArticleComponent } from '../../widgets/components/react-articles/react-article/react-article.component';
 import { FutureHandlerComponent } from '../../widgets/components/future-handler/future-handler.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'react', pathMatch: 'full' },
-  { path: 'react', loadChildren: () => import('../../pages/react.module').then(m => m.ReactModule) },
+  {
+    path: 'react',
+    children: [
+      {
+        path: '',
+        component: ReactArticlesComponent,
+        pathMatch: 'full',
+      },
+      {
+        path: ':name',
+        component: ReactArticleComponent,
+      },
+      {
+        path: '**',
+        component: FutureHandlerComponent,
+      },
+    ],
+  },
   {
     path: 'languages',
     loadComponent: () => import('../../widgets/components/languages-menu/languages-menu.component').then(m => m.LanguagesMenuComponent),
