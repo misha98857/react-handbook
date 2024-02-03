@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot='start'>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot='primary'>
+      <ion-button routerLink='/search'>
+        <ion-icon name='search' slot='icon-only'></ion-icon>
+      </ion-button>
+      <ion-button routerLink='/languages'>
+        <ion-icon slot='icon-only' name='language-outline'></ion-icon>
+      </ion-button>
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{'title' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-accordion-group>
+    <ion-accordion *ngFor='let article of articles | async'>
+      <ion-item slot='header'>
+        <ion-label> {{ article.key }} </ion-label>
+      </ion-item>
+      <ion-list slot='content'>
+        <ion-item (click)='openArticle()' *ngFor='let childArticle of article.values'
+                  [routerLink]='[childArticle.path]'>
+          <ion-label>{{ childArticle.key }}</ion-label>
+          <ng-container *ngIf='visibleProgress | async'>
+            <ng-container *ngIf='(progress | async)[childArticle.key]'
+                          [ngSwitch]='(progress | async)[childArticle.key].toFixed(0)'>
+              <ion-badge *ngSwitchCase='"100"' color='success'>100%</ion-badge>
+              <ion-badge *ngSwitchDefault color='primary'>{{ (progress | async)[childArticle.key].toFixed(0) }}%
+              </ion-badge>
+            </ng-container>
+            <ion-badge *ngIf='!(progress | async)[childArticle.key]' color='light'>0%</ion-badge>
+          </ng-container>
+        </ion-item>
+      </ion-list>
+    </ion-accordion>
+  </ion-accordion-group>
+</ion-content>

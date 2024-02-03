@@ -1,0 +1,21 @@
+.is-open {
+  color: var(--ion-color-primary);
+  transform: rotate(180deg);
+}
+
+.is-open-label {
+  color: var(--ion-color-primary);
+}
+
+ion-icon {
+  transition: transform 0.3s;
+}
+
+.child-list {
+  padding-left: 10px;
+}
+
+pre {
+  overflow-x: scroll;
+  white-space: nowrap;
+}

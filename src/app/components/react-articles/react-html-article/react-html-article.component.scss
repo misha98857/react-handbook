@@ -1,0 +1,103 @@
+@import "prismjs/themes/prism";
+
+.gatsby-highlight-code-line {
+  display: block;
+}
+
+article {
+  margin: 0 10px;
+}
+
+.external-link:link:after {
+  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+  margin-left: 2px;
+}
+
+.external-link:link {
+  color: red;
+}
+
+.external-link {
+  color: red;
+}
+
+.highlight {
+  border: red 1px solid;
+}
+
+.gatsby-highlight {
+  border: 1px solid rgba(236, 236, 236, 1);
+  margin-top: 15px;
+}
+
+div[class*="gatsby-"] {
+  background: #f5f2f0;
+}
+
+ion-app.dark {
+  @import "prismjs/themes/prism-okaidia";
+
+  div[class*="gatsby-"] {
+    background: #121212;
+  }
+
+  .gatsby-highlight {
+    border: 1px solid rgb(84, 84, 84);
+  }
+
+  .external-link:link:after {
+    content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+    margin-left: 2px;
+    filter: invert(1);
+  }
+
+  .external-link:link {
+    color: #5ad75f;
+  }
+
+  .external-link {
+    color: #5ad75f;
+  }
+
+  .highlight {
+    border: yellow 1px solid;
+  }
+
+}
+
+
+.token.operator {
+  background: none;
+}
+
+.blockquote {
+  background-color: rgba(255, 229, 100, 0.3);
+  border-left-color: #ffe564;
+  border-left-width: 9px;
+  border-left-style: solid;
+  padding: 20px 45px 20px 26px;
+  margin-top: 15px;
+}
+
+.scary > .blockquote {
+  background-color: rgba(237, 51, 21, 0.2);
+  border-left-color: #ed3315;
+}
+
+article {
+  h2:before {
+    content: " ";
+    display: block;
+    border-bottom: 1px solid #ececec;
+    margin-bottom: 30px;
+    padding-top: 15px;
+  }
+
+  h2:first-child::before {
+    content: " ";
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+}
+

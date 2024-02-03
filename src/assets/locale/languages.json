@@ -1,0 +1,107 @@
+[
+  {
+    "link": "https://en.reactjs.org/",
+    "name": "English",
+    "englishName": "English",
+    "abbr": "en",
+    "translation": "en"
+  },
+  {
+    "link": "https://ru.reactjs.org/",
+    "name": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
+    "englishName": "Russian",
+    "abbr": "ru",
+    "translation": "ru"
+  },
+  {
+    "link": "https://az.reactjs.org/",
+    "name": "Az\u0259rbaycanca",
+    "englishName": "Azerbaijani",
+    "abbr": "az",
+    "translation": "az"
+  },
+  {
+    "link": "https://es.reactjs.org/",
+    "name": "Espa\u00f1ol",
+    "englishName": "Spanish",
+    "abbr": "es",
+    "translation": "es"
+  },
+  {
+    "link": "https://fr.reactjs.org/",
+    "name": "Fran\u00e7ais",
+    "englishName": "French",
+    "abbr": "fr",
+    "translation": "fr"
+  },
+  {
+    "link": "https://hu.reactjs.org/",
+    "name": "magyar",
+    "englishName": "Hungarian",
+    "abbr": "hu",
+    "translation": "hu"
+  },
+  {
+    "link": "https://it.reactjs.org/",
+    "name": "Italiano",
+    "englishName": "Italian",
+    "abbr": "it",
+    "translation": "it"
+  },
+  {
+    "link": "https://ja.reactjs.org/",
+    "name": "\u65e5\u672c\u8a9e",
+    "englishName": "Japanese",
+    "abbr": "ja",
+    "translation": "ja"
+  },
+  {
+    "link": "https://ko.reactjs.org/",
+    "name": "\ud55c\uad6d\uc5b4",
+    "englishName": "Korean",
+    "abbr": "ko",
+    "translation": "ko"
+  },
+  {
+    "link": "https://pt-br.reactjs.org/",
+    "name": "Portugu\u00eas do Brasil",
+    "englishName": "Portuguese",
+    "abbr": "pt-br",
+    "translation": "pt"
+  },
+  {
+    "link": "https://tr.reactjs.org/",
+    "name": "T\u00fcrk\u00e7e",
+    "englishName": "Turkish",
+    "abbr": "tr",
+    "translation": "tr"
+  },
+  {
+    "link": "https://uk.reactjs.org/",
+    "name": "\u0423\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430",
+    "englishName": "Ukrainian",
+    "abbr": "uk",
+    "translation": "uk"
+  },
+  {
+    "link": "https://zh-hans.reactjs.org/",
+    "name": "\u7b80\u4f53\u4e2d\u6587",
+    "englishName": "Simplified Chinese",
+    "abbr": "zh-hans",
+    "translation": "zh-CN"
+  },
+  {
+    "link": "https://zh-hant.reactjs.org/",
+    "name": "\u7e41\u9ad4\u4e2d\u6587",
+    "englishName": "Traditional Chinese",
+    "abbr": "zh-hant",
+    "translation": "zh-TW"
+  },
+  {
+    "link": "https://mn.reactjs.org/",
+    "name": "\u041c\u043e\u043d\u0433\u043e\u043b \u0445\u044d\u043b",
+    "englishName": "Mongolian",
+    "abbr": "mn",
+    "translation": "mn"
+  }
+]

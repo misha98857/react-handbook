@@ -1,0 +1,7 @@
+{
+  "name": "react-docs",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

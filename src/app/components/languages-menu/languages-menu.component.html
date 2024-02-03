@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot='start'>
+      <ion-back-button [defaultHref]='"/react"'></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'app-language' | translate }} ({{ currentLang | async }})</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]='true'>
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngFor='let lang of data | async' size='6'>
+        <app-card
+          [message]='lang.englishName'
+          [imagePath]="'assets/flags/' + lang.abbr + '.svg'"
+          [language]='lang.abbr'
+          (changeLanguage)='changeLanguage($event)'
+          [selected]='(currentLang | async) === lang.abbr'
+        ></app-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
