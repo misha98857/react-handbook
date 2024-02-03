@@ -3,14 +3,19 @@
     <ion-tab-button [routerLink]='article.nav[0]'>
       <ion-icon class='nav-icon' name='arrow-back-circle-outline'></ion-icon>
     </ion-tab-button>
-    <div *ngIf='showProgress' class='progress-badge'>
-      <ng-container *ngIf='readProgress[article.key]' [ngSwitch]='readProgress[article.key].toFixed(0)'>
-        <ion-badge *ngSwitchCase='"100"' color='success'>100%</ion-badge>
-        <ion-badge *ngSwitchDefault color='primary'>{{ readProgress[article.key].toFixed(0) }}%
-        </ion-badge>
-      </ng-container>
-      <ion-badge *ngIf='!readProgress[article.key]' color='light'>0%</ion-badge>
-    </div>
+    @if (showProgress) {
+      @switch ((readProgress?.[article.key] ?? 0).toFixed(0)) {
+        @case ('100') {
+          <ion-badge color='success'>100%</ion-badge>
+        }
+        @case ('0') {
+          <ion-badge color='light'>0%</ion-badge>
+        }
+        @default {
+          <ion-badge color='primary'>{{ readProgress[article.key].toFixed(0) }}%</ion-badge>
+        }
+      }
+    }
     <ion-tab-button [routerLink]='article.nav[1]'>
       <ion-icon class='nav-icon' name='arrow-forward-circle-outline'></ion-icon>
       <ion-label></ion-label>
