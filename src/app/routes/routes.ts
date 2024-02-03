@@ -6,13 +6,17 @@ export const routes: Routes = [
   { path: 'react', loadChildren: () => import('../../pages/react.module').then(m => m.ReactModule) },
   {
     path: 'languages',
-    loadChildren: () => import('../../pages/languages-menu.module').then(m => m.LanguagesMenuModule),
+    loadComponent: () => import('../../widgets/components/languages-menu/languages-menu.component').then(m => m.LanguagesMenuComponent),
   },
   {
     path: 'search',
-    loadChildren: () => import('../../pages/search.module').then((m) => m.SearchModule),
+    loadComponent: () => import('../../widgets/components/react-search/react-search.component').then(m => m.ReactSearchComponent),
     pathMatch: 'full',
   },
-  { path: 'error', component: FutureHandlerComponent, pathMatch: 'full' },
+  {
+    path: 'error',
+    loadComponent: () => import('../../widgets/components/future-handler/future-handler.component').then(m => m.FutureHandlerComponent),
+    pathMatch: 'full',
+  },
   { path: '**', redirectTo: 'error', pathMatch: 'full' },
 ];
