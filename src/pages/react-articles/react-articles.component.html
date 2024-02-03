@@ -12,29 +12,22 @@
       </ion-button>
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>{{'title' | translate}}</ion-title>
+    <ion-title>{{ 'title' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
   <ion-accordion-group>
-    <ion-accordion *ngFor='let article of articles | async'>
+    <ion-accordion *ngFor='let articleGroup of articleGroups$ | async'>
       <ion-item slot='header'>
-        <ion-label> {{ article.key }} </ion-label>
+        <ion-label> {{ articleGroup.key }}</ion-label>
       </ion-item>
       <ion-list slot='content'>
-        <ion-item (click)='openArticle()' *ngFor='let childArticle of article.values'
-                  [routerLink]='[childArticle.path]'>
-          <ion-label>{{ childArticle.key }}</ion-label>
-          <ng-container *ngIf='visibleProgress | async'>
-            <ng-container *ngIf='(progress | async)[childArticle.key]'
-                          [ngSwitch]='(progress | async)[childArticle.key].toFixed(0)'>
-              <ion-badge *ngSwitchCase='"100"' color='success'>100%</ion-badge>
-              <ion-badge *ngSwitchDefault color='primary'>{{ (progress | async)[childArticle.key].toFixed(0) }}%
-              </ion-badge>
-            </ng-container>
-            <ion-badge *ngIf='!(progress | async)[childArticle.key]' color='light'>0%</ion-badge>
-          </ng-container>
-        </ion-item>
+        <app-article-list-item
+          [articles]="articleGroup.values"
+          [showProgress]="visibleProgress$ | async"
+          [readProgress]="progress$ | async"
+          (openArticle)="openArticle()">
+        </app-article-list-item>
       </ion-list>
     </ion-accordion>
   </ion-accordion-group>

@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FutureHandlerComponent } from './future-handler.component';
+import { IonicModule } from '@ionic/angular';
 
 describe('FutureHandlerComponent', () => {
     let component: FutureHandlerComponent;

@@ -12,6 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
 import { NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe } from '@angular/common';
 import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonMenuButton, IonSearchbar, IonContent, IonAccordionGroup, IonAccordion, IonItem, IonLabel, IonList, IonBadge } from '@ionic/angular/standalone';
+import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 
 @Component({
     selector: 'app-react-search',
@@ -41,10 +42,11 @@ import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonMenuButton, IonSea
         NgSwitchDefault,
         AsyncPipe,
         TranslateModule,
+        ArticleListItemComponent,
     ],
 })
 export class ReactSearchComponent {
-    public articles$: Observable<Array<Articles>> = this.store.pipe(select(selectSearchedReactArticles));
+    public articleGroups$: Observable<Array<Articles>> = this.store.pipe(select(selectSearchedReactArticles));
     public openStatus: Map<string, boolean> = new Map<string, boolean>();
     public progress: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
     public visibleProgress: Observable<boolean> = this.store.pipe(select(selectVisibleProgress));

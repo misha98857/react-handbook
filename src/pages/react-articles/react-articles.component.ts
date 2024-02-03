@@ -33,6 +33,7 @@ import { search, languageOutline } from 'ionicons/icons';
 import { IonRouterLink } from '@ionic/angular/standalone';
 import { NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe } from '@angular/common';
 import { provideRouter, RouterLink } from '@angular/router';
+import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 
 @Component({
   selector: 'app-react-articles',
@@ -64,13 +65,14 @@ import { provideRouter, RouterLink } from '@angular/router';
     NgSwitchDefault,
     AsyncPipe,
     TranslateModule,
+    ArticleListItemComponent,
   ],
 })
 
 export class ReactArticlesComponent implements OnDestroy {
-  public articles: Observable<Articles[]> = this.store.pipe(select(selectReactArticles));
-  public progress: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
-  public visibleProgress: Observable<boolean> = this.store.pipe(select(selectVisibleProgress));
+  public articleGroups$: Observable<Articles[]> = this.store.pipe(select(selectReactArticles));
+  public progress$: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
+  public visibleProgress$: Observable<boolean> = this.store.pipe(select(selectVisibleProgress));
   public language: Observable<string> = this.store.pipe(select(selectLanguage));
 
   private backButtonSubscribe: Subscription;

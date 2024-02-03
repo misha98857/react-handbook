@@ -1,0 +1,11 @@
+<ion-item *ngFor='let article of articles' [routerLink]='[article.path]' (click)='onOpenArticle()'>
+  <ion-label>{{ article.key }}</ion-label>
+  <ng-container *ngIf='showProgress'>
+    <ng-container *ngIf='readProgress[article.key]' [ngSwitch]='readProgress[article.key].toFixed(0)'>
+      <ion-badge *ngSwitchCase='"100"' color='success'>100%</ion-badge>
+      <ion-badge *ngSwitchDefault color='primary'>{{ readProgress[article.key].toFixed(0) }}%
+      </ion-badge>
+    </ng-container>
+    <ion-badge *ngIf='!readProgress[article.key]' color='light'>0%</ion-badge>
+  </ng-container>
+</ion-item>
