@@ -1,11 +1,11 @@
 export interface Articles {
   key: string;
-  values: Array<Article>;
+  values: Article[];
 }
 
 export interface Article {
   key: string;
   value: string;
   path: string;
-  nav: Array<string>;
+  nav: string[];
 }

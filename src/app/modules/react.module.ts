@@ -4,7 +4,9 @@ import { ReactArticlesComponent } from '../components/react-articles/react-artic
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { ReactArticleComponent } from '../components/react-articles/react-article/react-article.component';
-import { ReactHtmlArticleComponent } from '../components/react-articles/react-html-article/react-html-article.component';
+import {
+  ReactHtmlArticleComponent,
+} from '../components/react-articles/react-html-article/react-html-article.component';
 import { FutureHandlerComponent } from '../components/future-handler/future-handler.component';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -28,6 +30,7 @@ import { TranslateModule } from '@ngx-translate/core';
       },
     ]),
     TranslateModule,
-  ]
+  ],
 })
-export class ReactModule {}
+export class ReactModule {
+}

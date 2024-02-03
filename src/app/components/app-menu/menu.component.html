@@ -1,41 +1,38 @@
 <ion-menu [maxEdgeStart]='0' contentId='main' side='end' type='overlay'>
-    <ion-header>
-        <ion-toolbar>
-            <ion-title>{{'menu-header'| translate}}</ion-title>
-        </ion-toolbar>
-    </ion-header>
-    <ion-content>
-        <ion-list>
-            <ion-item [href]="'source-site' | translate">{{'source' | translate}}</ion-item>
-            <ion-item href='https://github.com/facebook/react/blob/master/LICENSE'>{{'license' | translate}}</ion-item>
-            <ion-item href='https://play.google.com/store/apps/details?id=dev.misha98857.react_article'>{{'rate-app' | translate}}</ion-item>
-            <ion-item *ngIf="'vk-group' | translate" [href]="'vk-group' | translate">Группа ВК</ion-item>
-            <ion-item *ngIf="isRussianLanguage()" href="https://t.me/misha98857_dev">{{ 'telegram-channel-text' | translate}}</ion-item>
-            <ion-item *ngIf="!isRussianLanguage()" href="https://t.me/misha98857_dev_en">{{ 'telegram-channel-text' | translate}}</ion-item>
-      <ion-item (click)='disableRating()' href=''>{{'disable-rate' | translate}}</ion-item>
-            <ion-item>
-                <ion-label>{{'navigation-buttons' | translate}}</ion-label>
-                <ion-toggle (ionChange)='changeNavigationButtonState($event.detail.checked)' [checked]='navButtonState | async' color='primary'></ion-toggle>
-            </ion-item>
-            <ion-item>
-                <ion-label>{{'dark-theme-button' | translate}}</ion-label>
-                <ion-toggle (ionChange)='toggleTheme($event.detail.checked)' [checked]='darkMode | async' color='primary'></ion-toggle>
-            </ion-item>
-            <ion-item>
-                <ion-label>{{ 'visible-progress' | translate }}</ion-label>
-                <ion-toggle (ionChange)='toggleVisibleProgress($event.detail.checked)' [checked]='visibleProgress | async' color='primary'></ion-toggle>
-            </ion-item>
-            <ion-item>
-                <ion-label>{{ 'restore-progress' | translate }}</ion-label>
-                <ion-toggle (ionChange)='toggleRestoreProgress($event.detail.checked)' [checked]='restoreProgress | async' color='primary'></ion-toggle>
-            </ion-item>
-            <ion-item>
-                <ion-label>{{ 'restore-state' | translate }}</ion-label>
-                <ion-toggle (ionChange)='toggleRestoreState($event.detail.checked)' [checked]='restoreState | async' color='primary'></ion-toggle>
-            </ion-item>
-            <ion-item (click)='openMyApps()'>
-                <ion-label>{{ 'my-apps' | translate }}</ion-label>
-            </ion-item>
-        </ion-list>
-    </ion-content>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>{{ 'menu-header'| translate }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item [href]="'source-site' | translate">{{ 'source' | translate }}</ion-item>
+      <ion-item href='https://github.com/facebook/react/blob/master/LICENSE'>{{ 'license' | translate }}</ion-item>
+      <ion-item>
+        <ion-label>{{ 'navigation-buttons' | translate }}</ion-label>
+        <ion-toggle (ionChange)='changeNavigationButtonState($event.detail.checked)' [checked]='navButtonState | async'
+                    color='primary'></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{ 'dark-theme-button' | translate }}</ion-label>
+        <ion-toggle (ionChange)='toggleTheme($event.detail.checked)' [checked]='darkMode | async'
+                    color='primary'></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{ 'visible-progress' | translate }}</ion-label>
+        <ion-toggle (ionChange)='toggleVisibleProgress($event.detail.checked)' [checked]='visibleProgress | async'
+                    color='primary'></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{ 'restore-progress' | translate }}</ion-label>
+        <ion-toggle (ionChange)='toggleRestoreProgress($event.detail.checked)' [checked]='restoreProgress | async'
+                    color='primary'></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{ 'restore-state' | translate }}</ion-label>
+        <ion-toggle (ionChange)='toggleRestoreState($event.detail.checked)' [checked]='restoreState | async'
+                    color='primary'></ion-toggle>
+      </ion-item>
+    </ion-list>
+  </ion-content>
 </ion-menu>
