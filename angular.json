@@ -24,8 +24,8 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/assets",
-                "output": "assets"
+                "input": "src/shared/assets",
+                "output": "/shared/assets"
               },
               {
                 "glob": "**/*.svg",
@@ -35,7 +35,7 @@
             ],
             "styles": [
               {
-                "input": "src/theme/variables.scss"
+                "input": "src/app/theme/variables.scss"
               },
               {
                 "input": "src/global.scss"
@@ -111,8 +111,8 @@
               },
               {
                 "glob": "**/*",
-                "input": "src/assets",
-                "output": "/assets"
+                "input": "src/shared/assets",
+                "output": "/shared/assets"
               }
             ]
           },
