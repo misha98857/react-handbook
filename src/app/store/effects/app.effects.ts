@@ -29,7 +29,7 @@ export class AppEffects {
               encoding: Encoding.UTF8,
             }),
           ).pipe(
-            map(fileReadResult => JSON.parse(fileReadResult.data) as Array<Articles>),
+            map(fileReadResult => JSON.parse(fileReadResult.data as string) as Array<Articles>),
             catchError(() => this.http.get(`assets/articles/react/en.articles.json`)),
           );
         }
@@ -59,5 +59,6 @@ export class AppEffects {
     private http: HttpClient,
     private translate: TranslateService,
     private store: Store,
-  ) {}
+  ) {
+  }
 }
