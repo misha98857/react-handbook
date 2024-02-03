@@ -6,14 +6,13 @@ import {
   increaseFontSizeAction,
   increaseOpenCountAction,
   initApplicationDataAction,
-  rateAppAction,
   toggleNavigationButtonAction,
   toggleRestoreProgressAction,
   toggleRestoreStateAction,
   toggleThemeAction,
   toggleVisibleProgressAction,
 } from '../actions/settings.actions';
-import { catchError, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Preferences } from '@capacitor/preferences';
 import { ReactService } from '../../services/react.service';
 import { loadReactArticlesAction } from '../actions/react.actions';
@@ -42,20 +41,11 @@ export class SettingsEffects {
     { dispatch: false },
   );
 
-  private rateApp = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(rateAppAction),
-        map(() => void Preferences.set({ key: 'isRated', value: 'true' })),
-      ),
-    { dispatch: false },
-  );
-
   private increaseOpenCount = createEffect(
     () =>
       this.actions$.pipe(
         ofType(increaseOpenCountAction),
-        map(({ openCount, isRated, language }) => {
+        map(({ openCount, language }) => {
           void Preferences.set({ key: 'openCount', value: openCount.toString() });
           setTimeout(() => {
             if (openCount === 1) {
@@ -69,10 +59,6 @@ export class SettingsEffects {
                   }
                 }
               });
-            }
-
-            if (openCount % 5 === 0 && !isRated) {
-              void this.reactService.presentAlert();
             }
           }, 1000);
         }),
@@ -172,5 +158,6 @@ export class SettingsEffects {
     private reactService: ReactService,
     private translate: TranslateService,
     private languageService: LanguageService,
-  ) {}
+  ) {
+  }
 }

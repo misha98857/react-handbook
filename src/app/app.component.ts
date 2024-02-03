@@ -115,7 +115,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.store.dispatch(
             increaseOpenCountAction({
                 openCount: parseInt(openCount ?? '0', 10) + 1,
-                isRated: isRated === 'true',
                 language,
             }),
         );
