@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Article } from '../../entities/articles/models/article';
+import { Article } from '../../entities/articles/models/articles';
 import { RouterLink } from '@angular/router';
 import { NgForOf, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import { IonBadge, IonItem, IonLabel } from '@ionic/angular/standalone';

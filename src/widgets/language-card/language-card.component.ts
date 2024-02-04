@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { IonCard, IonCardContent, IonCardTitle } from '@ionic/angular/standalone';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
     selector: 'app-card',
@@ -7,7 +8,7 @@ import { IonCard, IonCardContent, IonCardTitle } from '@ionic/angular/standalone
     styleUrls: ['./language-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [IonCard, IonCardContent, IonCardTitle]
+  imports: [IonCard, IonCardContent, IonCardTitle, NgOptimizedImage],
 })
 export class LanguageCardComponent {
     @Input() message: string;
@@ -17,7 +18,7 @@ export class LanguageCardComponent {
     @Input() selected: boolean;
     @Output() changeLanguage: EventEmitter<string> = new EventEmitter<string>();
 
-    public setLanguage() {
+    setLanguage() {
         this.changeLanguage.emit(this.language);
     }
 }

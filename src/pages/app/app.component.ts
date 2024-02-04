@@ -46,11 +46,11 @@ export class AppComponent implements OnInit {
   ) {
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     void this.initializeApp();
   }
 
-  public async initializeApp(): Promise<void> {
+  async initializeApp(): Promise<void> {
     await this.platform.ready();
     this.initApplicationData().then(async () => {
       this.initRouterWatcher();
@@ -79,8 +79,8 @@ export class AppComponent implements OnInit {
 
   private darkThemeHandler() {
     this.darkMode.subscribe(darkMode => {
-      StatusBar.setStyle({ style: darkMode ? Style.Dark : Style.Light });
-      StatusBar.setBackgroundColor({ color: darkMode ? '#000000' : '#ffffff' });
+      void StatusBar.setStyle({ style: darkMode ? Style.Dark : Style.Light });
+      void StatusBar.setBackgroundColor({ color: darkMode ? '#000000' : '#ffffff' });
     });
   }
 
@@ -102,8 +102,7 @@ export class AppComponent implements OnInit {
 
   private initRouterWatcher() {
     this.store.select(selectRouterState).pipe(takeUntilDestroyed()).subscribe((routerState) => {
-      let url = routerState.url;
-      this.store.dispatch(saveLatestPageAction({ url }));
+      this.store.dispatch(saveLatestPageAction({ url: routerState.url }));
     });
   }
 
@@ -112,7 +111,7 @@ export class AppComponent implements OnInit {
 
     for (const setting of Object.keys(initialSettingsState)) {
       const { value } = await Preferences.get({ key: setting });
-      settings = { ...settings, [setting]: value ? this.coerceSettingsProperty(setting, value) : settings[setting] };
+      settings = value ? { ...settings, [setting]: this.coerceSettingsProperty(setting, value) } : { ...settings };
     }
 
     return settings;
@@ -131,12 +130,11 @@ export class AppComponent implements OnInit {
   }
 
   private coerceSettingsProperty(settingKey: string, value: string) {
-    console.log(settingKey, value);
-    if (['showProgress', 'restoreProgress', 'restoreState', 'navButton', 'darkTheme', 'isRated'].includes(settingKey)) {
+    if (typeof initialSettingsState[settingKey] === 'boolean') {
       return booleanAttribute(value);
     }
 
-    if (['fontSize', 'openCount'].includes(settingKey)) {
+    if (typeof initialSettingsState[settingKey] === 'number') {
       return numberAttribute(value, 1);
     }
 

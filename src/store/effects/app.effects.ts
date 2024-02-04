@@ -10,7 +10,7 @@ import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 import { from, Observable } from 'rxjs';
 import { increaseOpenArticleCountAction } from '../actions/navigation.actions';
 import { Preferences } from '@capacitor/preferences';
-import { ArticleGroup } from '../../entities/articles/models/article';
+import { ArticleGroup } from '../../entities/articles/models/articles';
 
 @Injectable()
 export class AppEffects {

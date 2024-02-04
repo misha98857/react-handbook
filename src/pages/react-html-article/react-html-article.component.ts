@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Observable, Subscription } from 'rxjs';
-import { Article } from '../../entities/articles/models/article';
+import { Article } from '../../entities/articles/models/articles';
 import { select, Store } from '@ngrx/store';
 import { IonContent } from '@ionic/angular/standalone';
 import * as Mark from 'mark.js';
@@ -43,7 +43,7 @@ import {
 export class ReactHtmlArticleComponent implements OnInit, AfterViewChecked, OnDestroy {
     @ViewChild(IonContent) content: IonContent;
     @Input() html: Observable<Article>;
-    public article: SafeHtml;
+    article: SafeHtml;
 
     private articleKey: string;
     private text$: Observable<string> = this.store.pipe(select(selectSearchText));
@@ -53,7 +53,7 @@ export class ReactHtmlArticleComponent implements OnInit, AfterViewChecked, OnDe
     private text: string;
     private lock: boolean;
     private textSubscription: Subscription;
-    public htmlSubscription: Subscription;
+    htmlSubscription: Subscription;
     private fragmentSubscription: Subscription;
     private navigationState: Observable<NavigationState> = this.store.pipe(select(selectNavigationState));
     private navigationStateSubscription: Subscription;
@@ -67,7 +67,7 @@ export class ReactHtmlArticleComponent implements OnInit, AfterViewChecked, OnDe
     constructor(private sanitizer: DomSanitizer, private cdRef: ChangeDetectorRef, private store: Store) {
     }
 
-    public saveReadProgress(scrollElement: Element): void {
+    saveReadProgress(scrollElement: Element): void {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const { offsetHeight, scrollTop, scrollHeight } = scrollElement;
@@ -75,7 +75,7 @@ export class ReactHtmlArticleComponent implements OnInit, AfterViewChecked, OnDe
         this.store.dispatch(setArticleProgressStateAction({ key: this.articleKey, value: articleProgress }));
     }
 
-    public progressScroll(): void {
+    progressScroll(): void {
         this.restoreProgress.pipe(first()).subscribe((restoreProgress) => {
             if (this.isProgress && restoreProgress) {
                 void this.content.getScrollElement().then((element) => {
@@ -90,7 +90,7 @@ export class ReactHtmlArticleComponent implements OnInit, AfterViewChecked, OnDe
         });
     }
 
-    public ngOnInit(): void {
+    ngOnInit(): void {
         this.navigationStateSubscription = this.navigationState.subscribe((state) => {
             this.isSearch = state.isSearch;
             this.isProgress = state.isProgress;
@@ -126,7 +126,7 @@ export class ReactHtmlArticleComponent implements OnInit, AfterViewChecked, OnDe
         this.store.dispatch(increaseOpenArticleCountAction());
     }
 
-    public ngAfterViewChecked(): void {
+    ngAfterViewChecked(): void {
         if (this.text && this.isSearch) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
@@ -152,7 +152,7 @@ export class ReactHtmlArticleComponent implements OnInit, AfterViewChecked, OnDe
         }
     }
 
-    public ngOnDestroy(): void {
+    ngOnDestroy(): void {
         this.htmlSubscription.unsubscribe();
         this.fragmentSubscription.unsubscribe();
         this.textSubscription.unsubscribe();

@@ -1,4 +1,4 @@
-import { ArticleGroup } from '../../entities/articles/models/article';
+import { ArticleGroup } from '../../entities/articles/models/articles';
 
 export interface ArticlesState {
   articleGroups: ArticleGroup[];

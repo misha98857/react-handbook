@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { AsyncPipe, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import { IonBadge, IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs } from '@ionic/angular/standalone';
-import { Article } from '../../entities/articles/models/article';
+import { Article } from '../../entities/articles/models/articles';
 import { RouterLink } from '@angular/router';
 
 @Component({

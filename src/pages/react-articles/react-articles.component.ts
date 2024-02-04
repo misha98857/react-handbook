@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { ArticleGroup } from '../../entities/articles/models/article';
+import { ArticleGroup } from '../../entities/articles/models/articles';
 import {
   Platform,
   ToastController,
@@ -25,14 +25,13 @@ import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { App } from '@capacitor/app';
 import { selectArticleGroups } from '../../store/selectors/articles.selectors';
 import { selectProgressState } from '../../store/selectors/progress.selectors';
-import { selectLanguage, selectshowProgress } from '../../store/selectors/settings.selectors';
+import { selectLanguage, selectShowProgress } from '../../store/selectors/settings.selectors';
 import { ReactService } from '../../features/services/react.service';
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { addIcons } from 'ionicons';
 import { search, languageOutline } from 'ionicons/icons';
-import { IonRouterLink } from '@ionic/angular/standalone';
 import { NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe } from '@angular/common';
-import { provideRouter, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 
 @Component({
@@ -70,10 +69,10 @@ import { ArticleListItemComponent } from '../../widgets/article-list-item/articl
 })
 
 export class ReactArticlesComponent implements OnDestroy {
-  public articleGroups$: Observable<ArticleGroup[]> = this.store.pipe(select(selectArticleGroups));
-  public progress$: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
-  public showProgress$: Observable<boolean> = this.store.pipe(select(selectshowProgress));
-  public language: Observable<string> = this.store.pipe(select(selectLanguage));
+  articleGroups$: Observable<ArticleGroup[]> = this.store.pipe(select(selectArticleGroups));
+  progress$: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
+  showProgress$: Observable<boolean> = this.store.pipe(select(selectShowProgress));
+  language: Observable<string> = this.store.pipe(select(selectLanguage));
 
   private backButtonSubscribe: Subscription;
   private backCounter = 0;
@@ -89,7 +88,7 @@ export class ReactArticlesComponent implements OnDestroy {
     addIcons({ search, languageOutline });
   }
 
-  public ionViewWillEnter(): void {
+  ionViewWillEnter(): void {
     this.backButtonSubscribe = this.platform.backButton.subscribe(() => {
       this.backCounter += 1;
       if (this.backCounter === 1) {
@@ -97,21 +96,20 @@ export class ReactArticlesComponent implements OnDestroy {
         setTimeout(() => (this.backCounter = 0), 2000);
       }
       if (this.backCounter === 2) {
-        // eslint-disable-next-line @typescript-eslint/dot-notation
         App.exitApp();
       }
     });
   }
 
-  public ionViewDidLeave(): void {
+  ionViewDidLeave(): void {
     this.backButtonSubscribe.unsubscribe();
   }
 
-  public ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.changeLanguageSubscription.unsubscribe();
   }
 
-  public openArticle(): void {
+  openArticle(): void {
     this.store.dispatch(openWithProgressAction());
   }
 

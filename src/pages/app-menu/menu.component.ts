@@ -18,7 +18,7 @@ import {
   selectAppTheme,
   selectNavButtons,
   selectRestoreProgress, selectRestoreState,
-  selectshowProgress,
+  selectShowProgress,
 } from '../../store/selectors/settings.selectors';
 import {
   toggleNavigationButtonAction, toggleRestoreProgressAction, toggleRestoreStateAction,
@@ -49,31 +49,31 @@ import {
 export class MenuComponent {
   navButtonState: Observable<boolean> = this.store.pipe(select(selectNavButtons));
   darkMode: Observable<boolean> = this.store.pipe(select(selectAppTheme));
-  showProgress: Observable<boolean> = this.store.pipe(select(selectshowProgress));
+  showProgress: Observable<boolean> = this.store.pipe(select(selectShowProgress));
   restoreProgress: Observable<boolean> = this.store.pipe(select(selectRestoreProgress));
   restoreState: Observable<boolean> = this.store.pipe(select(selectRestoreState));
 
   constructor(private store: Store) {
   }
 
-  public changeNavigationButtonState(checked: boolean): void {
+  changeNavigationButtonState(checked: boolean): void {
     // TODO: should use method from service in features
     this.store.dispatch(toggleNavigationButtonAction({ navButton: checked }));
   }
 
-  public toggleTheme(checked: boolean): void {
+  toggleTheme(checked: boolean): void {
     this.store.dispatch(toggleThemeAction({ darkTheme: checked }));
   }
 
-  public toggleshowProgress(checked: boolean): void {
+  toggleShowProgress(checked: boolean): void {
     this.store.dispatch(toggleShowProgressAction({ showProgress: checked }));
   }
 
-  public toggleRestoreProgress(checked: boolean): void {
+  toggleRestoreProgress(checked: boolean): void {
     this.store.dispatch(toggleRestoreProgressAction({ restoreProgress: checked }));
   }
 
-  public toggleRestoreState(checked: boolean): void {
+  toggleRestoreState(checked: boolean): void {
     this.store.dispatch(toggleRestoreStateAction({ restoreState: checked }));
   }
 }

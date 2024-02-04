@@ -12,7 +12,7 @@ export const selectNavButtons = createSelector(selectSettingsState, (settingsSta
 
 export const selectFontSize = createSelector(selectSettingsState, (settingsState: SettingsState) => settingsState.fontSize);
 
-export const selectshowProgress = createSelector(selectSettingsState, (settingsState: SettingsState) => settingsState.showProgress);
+export const selectShowProgress = createSelector(selectSettingsState, (settingsState: SettingsState) => settingsState.showProgress);
 
 export const selectRestoreProgress = createSelector(selectSettingsState, (settingsState: SettingsState) => settingsState.restoreProgress);
 

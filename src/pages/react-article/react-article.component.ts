@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Article } from '../../entities/articles/models/article';
+import { Article } from '../../entities/articles/models/articles';
 import { Router, RouterLink } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
 import { selectCurrentArticle } from '../../store/selectors/articles.selectors';
 import {
   selectFontSize,
   selectNavButtons,
-  selectshowProgress,
+  selectShowProgress,
 } from '../../store/selectors/settings.selectors';
 import { selectProgressState } from '../../store/selectors/progress.selectors';
 import { ReactService } from '../../features/services/react.service';
@@ -73,29 +73,29 @@ import { ArticleNavigationToolbarComponent } from '../../widgets/navigation-tool
 })
 export class ReactArticleComponent {
   @Input() articleKey: string;
-  public article$: Observable<Article> = this.store.pipe(select(selectCurrentArticle));
-  public fontSize: Observable<number> = this.store.pipe(select(selectFontSize));
-  public navButtonsState: Observable<boolean> = this.store.pipe(select(selectNavButtons));
-  public progress: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
-  public showProgress: Observable<boolean> = this.store.pipe(select(selectshowProgress));
+  article$: Observable<Article> = this.store.pipe(select(selectCurrentArticle));
+  fontSize: Observable<number> = this.store.pipe(select(selectFontSize));
+  navButtonsState: Observable<boolean> = this.store.pipe(select(selectNavButtons));
+  progress: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
+  showProgress: Observable<boolean> = this.store.pipe(select(selectShowProgress));
 
   constructor(private store: Store, private reactService: ReactService, private router: Router) {
     addIcons({ removeOutline, addOutline, arrowBackCircleOutline, arrowForwardCircleOutline });
   }
 
-  public increaseFontSize(): void {
+  increaseFontSize(): void {
     this.fontSize.pipe(first()).subscribe(fontSize => {
       this.store.dispatch(increaseFontSizeAction({ fontSize: fontSize + 0.1 }));
     });
   }
 
-  public decreaseFontSize(): void {
+  decreaseFontSize(): void {
     this.fontSize.pipe(first()).subscribe(fontSize => {
       this.store.dispatch(decreaseFontSizeAction({ fontSize: fontSize - 0.1 }));
     });
   }
 
-  public getRoute(e: MouseEvent): void {
+  getRoute(e: MouseEvent): void {
     const path = e?.composedPath() as HTMLElement[];
     // TODO handle url with type "localhost/react/incorrect-name
     for (const node of path) {
