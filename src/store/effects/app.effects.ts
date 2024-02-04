@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { loadArticlesAction, loadArticlesSuccessAction } from '../actions/articles.actions';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { selectLanguage } from '../selectors/settings.selectors';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 import { from, Observable } from 'rxjs';

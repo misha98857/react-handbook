@@ -14,7 +14,7 @@ import {
 
 export const settingsReducer = createReducer(
   initialSettingsState,
-  on(initApplicationDataAction, (state, action) => action.settings),
+  on(initApplicationDataAction, (_, action) => action.settings),
   on(toggleThemeAction, (state, action) => ({
     ...state,
     darkTheme: action.darkTheme,

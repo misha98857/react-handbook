@@ -16,7 +16,7 @@ import { Preferences } from '@capacitor/preferences';
 import { loadArticlesAction } from '../actions/articles.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpEventType } from '@angular/common/http';
-import { EMPTY, forkJoin } from 'rxjs';
+import { EMPTY, forkJoin, of } from 'rxjs';
 import { ReactService } from '../../features/services/react.service';
 import { LanguageService } from '../../features/services/language.service';
 import { SettingsState } from '../state/settings.state';
@@ -113,7 +113,8 @@ export class SettingsEffects {
         ofType(initApplicationDataAction),
         switchMap(({ settings }) =>
           forkJoin(
-            Object.entries({ ...settings }).map(([key, value]) => Preferences.set({ key, value: value.toString() })),
+            Object.entries({ ...settings }).map(([key, value]) =>
+              value !== null ? Preferences.set({ key, value: value.toString() }) : of()),
           ),
         ),
       ),

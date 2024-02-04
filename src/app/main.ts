@@ -4,7 +4,7 @@ import '@capacitor/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideStore } from '@ngrx/store';
 import { appReducers } from '../store/reducers/app.reduces';
-import { provideIonicAngular } from '@ionic/angular/standalone';
+import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { provideEffects } from '@ngrx/effects';
 import { AppEffects } from '../store/effects/app.effects';
 import { SettingsEffects } from '../store/effects/settings.effects';
@@ -18,7 +18,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { createTranslateLoader } from '../shared/translate/utils/create-translate-loader';
 import {
   PreloadAllModules,
-  provideRouter,
+  provideRouter, RouteReuseStrategy,
   withInMemoryScrolling,
   withPreloading,
 } from '@angular/router';
@@ -48,6 +48,10 @@ bootstrapApplication(AppComponent,
         scrollPositionRestoration: 'enabled',
         anchorScrolling: 'enabled',
       })),
+      {
+        provide: RouteReuseStrategy,
+        useClass: IonicRouteStrategy,
+      },
       !environment.production ? provideStoreDevtools() : [],
     ],
   })

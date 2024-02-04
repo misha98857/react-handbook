@@ -40,7 +40,7 @@ export const selectSearchedArticles = createSelector(selectArticlesState, (react
     const searchedGroupArticles = [];
 
     for (const article of groupArticles.values) {
-      if (article.value.indexOf(reactState.searchText) !== -1 || article.key.indexOf(reactState.searchText) !== -1) {
+      if (article.value.includes(reactState.searchText) || article.key.includes(reactState.searchText)) {
         searchedGroupArticles.push(article);
         groupHasFound = true;
       }
