@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { ArticleGroup } from '../../entities/articles/models/articles';
 import {
   Platform,
@@ -69,10 +69,10 @@ import { ArticleListItemComponent } from '../../widgets/article-list-item/articl
 })
 
 export class ReactArticlesComponent implements OnDestroy {
-  articleGroups$: Observable<ArticleGroup[]> = this.store.pipe(select(selectArticleGroups));
-  progress$: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
-  showProgress$: Observable<boolean> = this.store.pipe(select(selectShowProgress));
-  language: Observable<string> = this.store.pipe(select(selectLanguage));
+  articleGroups$: Observable<ArticleGroup[]> = this.store.select(selectArticleGroups);
+  progress$: Observable<Record<string, number>> = this.store.select(selectProgressState);
+  showProgress$: Observable<boolean> = this.store.select(selectShowProgress);
+  language: Observable<string> = this.store.select(selectLanguage);
 
   private backButtonSubscribe: Subscription;
   private backCounter = 0;

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ArticleGroup } from '../../entities/articles/models/articles';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { selectSearchedArticles } from '../../store/selectors/articles.selectors';
 import { selectProgressState } from '../../store/selectors/progress.selectors';
 import { selectShowProgress } from '../../store/selectors/settings.selectors';
@@ -59,9 +59,9 @@ import { ArticleListItemComponent } from '../../widgets/article-list-item/articl
   ],
 })
 export class ReactSearchComponent {
-  articleGroups$: Observable<Array<ArticleGroup>> = this.store.pipe(select(selectSearchedArticles));
-  progress: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
-  showProgress: Observable<boolean> = this.store.pipe(select(selectShowProgress));
+  articleGroups$: Observable<Array<ArticleGroup>> = this.store.select(selectSearchedArticles);
+  progress: Observable<Record<string, number>> = this.store.select(selectProgressState);
+  showProgress: Observable<boolean> = this.store.select(selectShowProgress);
 
   constructor(private store: Store) {
   }

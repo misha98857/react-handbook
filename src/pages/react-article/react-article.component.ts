@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Article } from '../../entities/articles/models/articles';
 import { Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -36,7 +36,9 @@ import {
   IonBadge,
   IonLabel,
 } from '@ionic/angular/standalone';
-import { ArticleNavigationToolbarComponent } from '../../widgets/navigation-toolbar/article-navigation-toolbar.component';
+import {
+  ArticleNavigationToolbarComponent,
+} from '../../widgets/navigation-toolbar/article-navigation-toolbar.component';
 
 @Component({
   selector: 'app-react-article',
@@ -73,11 +75,11 @@ import { ArticleNavigationToolbarComponent } from '../../widgets/navigation-tool
 })
 export class ReactArticleComponent {
   @Input() articleKey: string;
-  article$: Observable<Article> = this.store.pipe(select(selectCurrentArticle));
-  fontSize: Observable<number> = this.store.pipe(select(selectFontSize));
-  navButtonsState: Observable<boolean> = this.store.pipe(select(selectNavButtons));
-  progress: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
-  showProgress: Observable<boolean> = this.store.pipe(select(selectShowProgress));
+  article$: Observable<Article> = this.store.select(selectCurrentArticle);
+  fontSize: Observable<number> = this.store.select(selectFontSize);
+  navButtonsState: Observable<boolean> = this.store.select(selectNavButtons);
+  progress: Observable<Record<string, number>> = this.store.select(selectProgressState);
+  showProgress: Observable<boolean> = this.store.select(selectShowProgress);
 
   constructor(private store: Store, private reactService: ReactService, private router: Router) {
     addIcons({ removeOutline, addOutline, arrowBackCircleOutline, arrowForwardCircleOutline });

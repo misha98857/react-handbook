@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { AsyncPipe } from '@angular/common';
@@ -47,11 +47,11 @@ import {
   ],
 })
 export class MenuComponent {
-  navButtonState: Observable<boolean> = this.store.pipe(select(selectNavButtons));
-  darkMode: Observable<boolean> = this.store.pipe(select(selectAppTheme));
-  showProgress: Observable<boolean> = this.store.pipe(select(selectShowProgress));
-  restoreProgress: Observable<boolean> = this.store.pipe(select(selectRestoreProgress));
-  restoreState: Observable<boolean> = this.store.pipe(select(selectRestoreState));
+  navButtonState: Observable<boolean> = this.store.select(selectNavButtons);
+  darkMode: Observable<boolean> = this.store.select(selectAppTheme);
+  showProgress: Observable<boolean> = this.store.select(selectShowProgress);
+  restoreProgress: Observable<boolean> = this.store.select(selectRestoreProgress);
+  restoreState: Observable<boolean> = this.store.select(selectRestoreState);
 
   constructor(private store: Store) {
   }

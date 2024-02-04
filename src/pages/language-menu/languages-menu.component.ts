@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import {
   LoadingController,
@@ -46,7 +46,7 @@ import { Language } from '../../entities/languages/models/languages';
 })
 export class LanguagesMenuComponent {
   data = this.http.get<Language[]>('shared/assets/locale/languages.json');
-  currentLang: Observable<string> = this.store.pipe(select(selectLanguage));
+  currentLang: Observable<string> = this.store.select(selectLanguage);
   private loadingPercentage = 0;
   private loadingProgressMessage: HTMLIonLoadingElement;
 
