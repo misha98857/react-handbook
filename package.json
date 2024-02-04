@@ -7,7 +7,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --configuration=production",
-    "sync": "npx ionic capacitor sync --configuration=production && node resources",
+    "sync": "ng build --configuration=production && npx ionic capacitor sync --configuration=production",
     "android": "npx cap open android",
     "test": "ng test",
     "lint": "ng lint",

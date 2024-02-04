@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">React handbook</string>
-    <string name="title_activity_main">React handbook</string>
-    <string name="package_name">dev.misha98857.react</string>
-    <string name="custom_url_scheme">dev.misha98857.react</string>
+    <string name="app_name">Справочник React</string>
+    <string name="title_activity_main">Справочник React</string>
+    <string name="package_name">"dev.misha98857.react_article "</string>
+    <string name="custom_url_scheme">"dev.misha98857.react_article "</string>
 </resources>

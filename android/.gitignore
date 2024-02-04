@@ -1,4 +1,8 @@
-# Using Android gitignore template: https://github.com/github/gitignore/blob/HEAD/Android.gitignore
+# NPM renames .gitignore to .npmignore
+# In order to prevent that, we remove the initial "."
+# And the CLI then renames it
+
+# Using Android gitignore template: https://github.com/github/gitignore/blob/master/Android.gitignore
 
 # Built application files
 *.apk
@@ -16,8 +20,7 @@
 bin/
 gen/
 out/
-#  Uncomment the following line in case you need and you don't have the release build type files in your app
-# release/
+release/
 
 # Gradle files
 .gradle/
