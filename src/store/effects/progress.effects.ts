@@ -15,6 +15,5 @@ export class ProgressEffects {
     { dispatch: false },
   );
 
-  constructor(private actions$: Actions) {
-  }
+  constructor(private actions$: Actions) {}
 }

@@ -6,12 +6,10 @@ import { TranslateService } from '@ngx-translate/core';
   providedIn: 'root',
 })
 export class ArticlesService {
-
   constructor(
     private translate: TranslateService,
     private alertController: AlertController,
-  ) {
-  }
+  ) {}
 
   async presentErrorDownloadAlert(): Promise<void> {
     const alert = await this.alertController.create({

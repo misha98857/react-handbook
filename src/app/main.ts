@@ -18,41 +18,45 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { createTranslateLoader } from '../shared/translate/utils/create-translate-loader';
 import {
   PreloadAllModules,
-  provideRouter, RouteReuseStrategy,
+  provideRouter,
+  RouteReuseStrategy,
   withInMemoryScrolling,
   withPreloading,
 } from '@angular/router';
 import { routes } from './routes/routes';
 
-
 if (environment.production) {
   enableProdMode();
 }
-bootstrapApplication(AppComponent,
-  {
-    providers: [
-      provideIonicAngular(),
-      provideStore(appReducers),
-      provideEffects([AppEffects, SettingsEffects, ProgressEffects, HistoryEffects]),
-      provideRouterStore(),
-      importProvidersFrom(TranslateModule.forRoot({
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideIonicAngular(),
+    provideStore(appReducers),
+    provideEffects([AppEffects, SettingsEffects, ProgressEffects, HistoryEffects]),
+    provideRouterStore(),
+    importProvidersFrom(
+      TranslateModule.forRoot({
         defaultLanguage: 'en',
         loader: {
           provide: TranslateLoader,
           useFactory: createTranslateLoader,
           deps: [HttpClient],
         },
-      })),
-      provideHttpClient(),
-      provideRouter(routes, withPreloading(PreloadAllModules), withInMemoryScrolling({
+      }),
+    ),
+    provideHttpClient(),
+    provideRouter(
+      routes,
+      withPreloading(PreloadAllModules),
+      withInMemoryScrolling({
         scrollPositionRestoration: 'enabled',
         anchorScrolling: 'enabled',
-      })),
-      {
-        provide: RouteReuseStrategy,
-        useClass: IonicRouteStrategy,
-      },
-      !environment.production ? provideStoreDevtools() : [],
-    ],
-  })
-  .catch(err => console.log(err));
+      }),
+    ),
+    {
+      provide: RouteReuseStrategy,
+      useClass: IonicRouteStrategy,
+    },
+    !environment.production ? provideStoreDevtools() : [],
+  ],
+}).catch(err => console.log(err));

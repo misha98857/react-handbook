@@ -9,21 +9,21 @@ import { searchArticlesAction } from '../../store/actions/articles.actions';
 import { openWithSearchAction } from '../../store/actions/navigation.actions';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
-import { NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import {
-  IonHeader,
-  IonToolbar,
-  IonButtons,
-  IonBackButton,
-  IonMenuButton,
-  IonSearchbar,
-  IonContent,
-  IonAccordionGroup,
   IonAccordion,
+  IonAccordionGroup,
+  IonBackButton,
+  IonBadge,
+  IonButtons,
+  IonContent,
+  IonHeader,
   IonItem,
   IonLabel,
   IonList,
-  IonBadge,
+  IonMenuButton,
+  IonSearchbar,
+  IonToolbar,
 } from '@ionic/angular/standalone';
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 
@@ -63,8 +63,7 @@ export class SearchComponent {
   progress: Observable<Record<string, number>> = this.store.select(selectReadProgressState);
   showProgress: Observable<boolean> = this.store.select(selectShowProgress);
 
-  constructor(private store: Store) {
-  }
+  constructor(private store: Store) {}
 
   searchText({ detail: { value } }): void {
     this.store.dispatch(searchArticlesAction({ text: value }));

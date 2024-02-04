@@ -9,9 +9,11 @@ import { changeAppLanguageAction } from '../../store/actions/settings.actions';
   providedIn: 'root',
 })
 export class LanguageService {
-
-  constructor(private http: HttpClient, private articlesService: ArticlesService, private store: Store) {
-  }
+  constructor(
+    private http: HttpClient,
+    private articlesService: ArticlesService,
+    private store: Store,
+  ) {}
 
   downloadLanguage(language: string) {
     return this.http.get(`https://misha98857.dev/react/articles/${language}.articles.json`, {

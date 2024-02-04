@@ -8,8 +8,8 @@ import {
   toggleNavigationButtonAction,
   toggleRestoreProgressAction,
   toggleRestoreStateAction,
-  toggleThemeAction,
   toggleShowProgressAction,
+  toggleThemeAction,
 } from '../actions/settings.actions';
 import { map, switchMap } from 'rxjs/operators';
 import { Preferences } from '@capacitor/preferences';
@@ -72,8 +72,8 @@ export class SettingsEffects {
     () =>
       this.actions$.pipe(
         ofType(toggleShowProgressAction),
-        switchMap(
-          ({ showProgress }) => Preferences.set({
+        switchMap(({ showProgress }) =>
+          Preferences.set({
             key: 'showProgress',
             value: showProgress.toString(),
           }),
@@ -86,8 +86,8 @@ export class SettingsEffects {
     () =>
       this.actions$.pipe(
         ofType(toggleRestoreProgressAction),
-        switchMap(
-          ({ restoreProgress }) => Preferences.set({
+        switchMap(({ restoreProgress }) =>
+          Preferences.set({
             key: 'restoreProgress',
             value: restoreProgress.toString(),
           }),
@@ -112,7 +112,8 @@ export class SettingsEffects {
         switchMap(({ settings }) =>
           forkJoin(
             Object.entries({ ...settings }).map(([key, value]) =>
-              value !== null ? Preferences.set({ key, value: value.toString() }) : of()),
+              value !== null ? Preferences.set({ key, value: value.toString() }) : of(),
+            ),
           ),
         ),
       ),
@@ -123,8 +124,7 @@ export class SettingsEffects {
     private actions$: Actions,
     private translate: TranslateService,
     private languageService: LanguageService,
-  ) {
-  }
+  ) {}
 
   // TODO: save download articles attempt to local storage
   private downloadArticlesFile(language: string) {

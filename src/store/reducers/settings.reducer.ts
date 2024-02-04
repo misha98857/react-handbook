@@ -8,8 +8,8 @@ import {
   toggleNavigationButtonAction,
   toggleRestoreProgressAction,
   toggleRestoreStateAction,
-  toggleThemeAction,
   toggleShowProgressAction,
+  toggleThemeAction,
 } from '../actions/settings.actions';
 
 export const settingsReducer = createReducer(

@@ -12,7 +12,7 @@ import { loadProgressStateAction } from '../../store/actions/progress.actions';
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { loadLatestPageAction, saveLatestPageAction } from '../../store/actions/history.actions';
 import { selectRouterState } from '../../store/selectors/articles.selectors';
-import { initialSettingsState, SettingsState } from '../../store/state/settings.state';
+import { initialSettingsState } from '../../store/state/settings.state';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { selectAppTheme } from '../../store/selectors/settings.selectors';

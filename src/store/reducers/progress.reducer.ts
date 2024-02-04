@@ -15,5 +15,5 @@ export const progressReducer = createReducer(
     ...state,
     [action.key]: +action.value,
   })),
-  on(saveArticlesProgressStateAction, (state) => state),
+  on(saveArticlesProgressStateAction, state => state),
 );

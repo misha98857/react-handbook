@@ -11,40 +11,40 @@
       <ion-item>
         <ion-label>{{ 'navigation-buttons' | translate }}</ion-label>
         <ion-toggle
-          [checked]='navButtonState | async'
           (ionChange)='changeNavigationButtonState($event.detail.checked)'
+          [checked]='navButtonState | async'
           color='primary'>
         </ion-toggle>
       </ion-item>
       <ion-item>
         <ion-label>{{ 'dark-theme-button' | translate }}</ion-label>
         <ion-toggle
-          [checked]='darkMode | async'
           (ionChange)='toggleTheme($event.detail.checked)'
+          [checked]='darkMode | async'
           color='primary'>
         </ion-toggle>
       </ion-item>
       <ion-item>
         <ion-label>{{ 'visible-progress' | translate }}</ion-label>
         <ion-toggle
-          [checked]='showProgress | async'
           (ionChange)='toggleShowProgress($event.detail.checked)'
+          [checked]='showProgress | async'
           color='primary'>
         </ion-toggle>
       </ion-item>
       <ion-item>
         <ion-label>{{ 'restore-progress' | translate }}</ion-label>
         <ion-toggle
-          [checked]='restoreProgress | async'
           (ionChange)='toggleRestoreProgress($event.detail.checked)'
+          [checked]='restoreProgress | async'
           color='primary'>
         </ion-toggle>
       </ion-item>
       <ion-item>
         <ion-label>{{ 'restore-state' | translate }}</ion-label>
         <ion-toggle
-          [checked]='restoreState | async'
           (ionChange)='toggleRestoreState($event.detail.checked)'
+          [checked]='restoreState | async'
           color='primary'>
         </ion-toggle>
       </ion-item>

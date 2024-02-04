@@ -6,8 +6,11 @@ export const loadArticlesSuccessAction = createAction(
   props<{ articleGroups: ArticleGroup[] }>(),
 );
 
-export const searchArticlesAction = createAction('[React Module] searchArticlesAction', props<{
-  text: string
-}>());
+export const searchArticlesAction = createAction(
+  '[React Module] searchArticlesAction',
+  props<{
+    text: string;
+  }>(),
+);
 
 export const loadArticlesAction = createAction('[React Module] loadArticles');

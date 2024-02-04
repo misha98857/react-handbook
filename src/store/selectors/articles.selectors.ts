@@ -7,7 +7,10 @@ import { ArticleGroup } from '../../entities/articles/models/articles';
 export const selectArticlesState = (state: AppState): ArticlesState => state.articles;
 export const selectRouterState = (state: AppState): SerializedRouterStateSnapshot => state.router.state;
 
-export const selectArticleGroups = createSelector(selectArticlesState, (articlesState: ArticlesState) => articlesState.articleGroups);
+export const selectArticleGroups = createSelector(
+  selectArticlesState,
+  (articlesState: ArticlesState) => articlesState.articleGroups,
+);
 
 export const selectCurrentArticle = createSelector(
   selectArticlesState,
@@ -32,28 +35,31 @@ export const selectFragment = createSelector(
   (routerState: SerializedRouterStateSnapshot) => routerState.root.fragment,
 );
 
-export const selectSearchedArticles = createSelector(selectArticlesState, (reactState: ArticlesState): ArticleGroup[] => {
-  const searchedArticles: ArticleGroup[] = [];
+export const selectSearchedArticles = createSelector(
+  selectArticlesState,
+  (reactState: ArticlesState): ArticleGroup[] => {
+    const searchedArticles: ArticleGroup[] = [];
 
-  for (const groupArticles of reactState.articleGroups) {
-    let groupHasFound = false;
-    const searchedGroupArticles = [];
+    for (const groupArticles of reactState.articleGroups) {
+      let groupHasFound = false;
+      const searchedGroupArticles = [];
 
-    for (const article of groupArticles.values) {
-      if (article.value.includes(reactState.searchText) || article.key.includes(reactState.searchText)) {
-        searchedGroupArticles.push(article);
-        groupHasFound = true;
+      for (const article of groupArticles.values) {
+        if (article.value.includes(reactState.searchText) || article.key.includes(reactState.searchText)) {
+          searchedGroupArticles.push(article);
+          groupHasFound = true;
+        }
+      }
+
+      if (groupHasFound) {
+        const groupKey = groupArticles.key;
+        const element = { key: groupKey, values: searchedGroupArticles };
+        searchedArticles.push(element);
       }
     }
-
-    if (groupHasFound) {
-      const groupKey = groupArticles.key;
-      const element = { key: groupKey, values: searchedGroupArticles };
-      searchedArticles.push(element);
-    }
-  }
-  return searchedArticles;
-});
+    return searchedArticles;
+  },
+);
 
 export const selectSearchText = createSelector(
   selectArticlesState,

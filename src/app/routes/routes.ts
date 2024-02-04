@@ -1,7 +1,5 @@
 import { Routes } from '@angular/router';
-import {
-  ArticlesComponent,
-} from '../../pages/articles/articles.component';
+import { ArticlesComponent } from '../../pages/articles/articles.component';
 import { ArticleComponent } from '../../pages/article/article.component';
 
 export const routes: Routes = [
@@ -22,7 +20,8 @@ export const routes: Routes = [
   },
   {
     path: 'languages',
-    loadComponent: () => import('../../pages/language-menu/languages-menu.component').then(m => m.LanguagesMenuComponent),
+    loadComponent: () =>
+      import('../../pages/language-menu/languages-menu.component').then(m => m.LanguagesMenuComponent),
   },
   {
     path: 'search',
@@ -31,7 +30,8 @@ export const routes: Routes = [
   },
   {
     path: 'error',
-    loadComponent: () => import('../../pages/future-handler/future-handler.component').then(m => m.FutureHandlerComponent),
+    loadComponent: () =>
+      import('../../pages/future-handler/future-handler.component').then(m => m.FutureHandlerComponent),
     pathMatch: 'full',
   },
   { path: '**', redirectTo: 'error', pathMatch: 'full' },

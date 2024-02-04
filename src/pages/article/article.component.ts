@@ -3,42 +3,35 @@ import { Store } from '@ngrx/store';
 import { Article } from '../../entities/articles/models/articles';
 import { Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
 import { selectCurrentArticle } from '../../store/selectors/articles.selectors';
-import {
-  selectFontSize,
-  selectNavButtons,
-  selectShowProgress,
-} from '../../store/selectors/settings.selectors';
+import { selectFontSize, selectNavButtons, selectShowProgress } from '../../store/selectors/settings.selectors';
 import { selectReadProgressState } from '../../store/selectors/progress.selectors';
-import { ArticlesService } from '../../features/services/articles.service';
 import { decreaseFontSizeAction, increaseFontSizeAction } from '../../store/actions/settings.actions';
 import { openInternalLinkAction } from '../../store/actions/navigation.actions';
 import { addIcons } from 'ionicons';
-import { removeOutline, addOutline, arrowBackCircleOutline, arrowForwardCircleOutline } from 'ionicons/icons';
-import { NgStyle, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe } from '@angular/common';
+import { addOutline, arrowBackCircleOutline, arrowForwardCircleOutline, removeOutline } from 'ionicons/icons';
+import { AsyncPipe, NgIf, NgStyle, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import { ArticleRenderComponent } from '../article-render/article-render.component';
 import {
-  IonHeader,
-  IonToolbar,
-  IonButtons,
   IonBackButton,
+  IonBadge,
   IonButton,
-  IonIcon,
-  IonMenuButton,
-  IonTitle,
+  IonButtons,
   IonContent,
   IonFooter,
-  IonTabs,
+  IonHeader,
+  IonIcon,
+  IonLabel,
+  IonMenuButton,
   IonTabBar,
   IonTabButton,
-  IonBadge,
-  IonLabel,
+  IonTabs,
+  IonTitle,
+  IonToolbar,
 } from '@ionic/angular/standalone';
-import {
-  ArticleNavigationToolbarComponent,
-} from '../../widgets/navigation-toolbar/article-navigation-toolbar.component';
+import { ArticleNavigationToolbarComponent } from '../../widgets/navigation-toolbar/article-navigation-toolbar.component';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -82,7 +75,11 @@ export class ArticleComponent {
   progress: Observable<Record<string, number>> = this.store.select(selectReadProgressState);
   showProgress: Observable<boolean> = this.store.select(selectShowProgress);
 
-  constructor(private store: Store, private router: Router, private domSanitazer: DomSanitizer) {
+  constructor(
+    private store: Store,
+    private router: Router,
+    private domSanitazer: DomSanitizer,
+  ) {
     addIcons({ removeOutline, addOutline, arrowBackCircleOutline, arrowForwardCircleOutline });
   }
 

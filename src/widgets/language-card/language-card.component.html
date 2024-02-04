@@ -1,6 +1,6 @@
-<ion-card [disabled]='disabled' (click)='setLanguage()'>
+<ion-card (click)='setLanguage()' [disabled]='disabled'>
   <ion-card-content>
-    <img src='{{ imagePath }}' alt='{{ message }}' />
-    <ion-card-title class='language-card-title' [color]="selected ? 'primary' : ''">{{ message }}</ion-card-title>
+    <img alt='{{ message }}' src='{{ imagePath }}' />
+    <ion-card-title [color]="selected ? 'primary' : ''" class='language-card-title'>{{ message }}</ion-card-title>
   </ion-card-content>
 </ion-card>

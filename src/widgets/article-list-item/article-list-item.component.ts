@@ -7,17 +7,7 @@ import { IonBadge, IonItem, IonLabel } from '@ionic/angular/standalone';
 @Component({
   selector: 'app-article-list-item',
   standalone: true,
-  imports: [
-    IonLabel,
-    IonItem,
-    IonBadge,
-    RouterLink,
-    NgSwitch,
-    NgIf,
-    NgSwitchCase,
-    NgSwitchDefault,
-    NgForOf,
-  ],
+  imports: [IonLabel, IonItem, IonBadge, RouterLink, NgSwitch, NgIf, NgSwitchCase, NgSwitchDefault, NgForOf],
   templateUrl: './article-list-item.component.html',
   styleUrl: './article-list-item.component.scss',
 })

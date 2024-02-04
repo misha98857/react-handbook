@@ -6,7 +6,7 @@
     <ion-buttons slot='primary'>
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-searchbar [placeholder]="'search' | translate" (ionInput)='searchText($event)'></ion-searchbar>
+    <ion-searchbar (ionInput)='searchText($event)' [placeholder]="'search' | translate"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true" id='main'>
@@ -18,10 +18,10 @@
       </ion-item>
       <ion-list slot='content'>
         <app-article-list-item
-          [articles]="articleGroup.values"
-          [showProgress]="showProgress | async"
-          [readProgress]="progress | async"
           (openArticle)="openArticleWithSearch()"
+          [articles]="articleGroup.values"
+          [readProgress]="progress | async"
+          [showProgress]="showProgress | async"
         >
         </app-article-list-item>
       </ion-list>

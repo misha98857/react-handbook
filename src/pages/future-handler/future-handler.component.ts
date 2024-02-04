@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
-  IonHeader,
-  IonToolbar,
-  IonButtons,
   IonBackButton,
-  IonTitle,
+  IonButtons,
   IonContent,
   IonGrid,
-  IonList,
+  IonHeader,
   IonItem,
+  IonList,
+  IonTitle,
+  IonToolbar,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -17,17 +17,6 @@ import {
   styleUrls: ['./future-handler.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonBackButton,
-    IonTitle,
-    IonContent,
-    IonGrid,
-    IonList,
-    IonItem,
-  ],
+  imports: [IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonGrid, IonList, IonItem],
 })
-export class FutureHandlerComponent {
-}
+export class FutureHandlerComponent {}

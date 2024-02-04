@@ -17,8 +17,8 @@
 </ion-header>
 <ion-content>
   <app-article-render
-    [html]='article$ | async'
     (click)='getRoute($event)'
+    [html]='article$ | async'
     [ngStyle]="{'font-size': (fontSize | async).toString() + 'rem'}"
   >
   </app-article-render>
@@ -27,8 +27,8 @@
   <ion-toolbar *ngIf='navButtonsState | async'>
     <app-article-navigation-toolbar
       [article]="article$ | async"
-      [showProgress]="showProgress | async"
-      [readProgress]="progress | async">
+      [readProgress]="progress | async"
+      [showProgress]="showProgress | async">
     </app-article-navigation-toolbar>
   </ion-toolbar>
 </ion-footer>

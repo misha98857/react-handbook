@@ -50,8 +50,7 @@ export class AppEffects {
     private http: HttpClient,
     private translate: TranslateService,
     private store: Store,
-  ) {
-  }
+  ) {}
 
   private loadArticlesFile(language: string): Observable<ArticleGroup[]> {
     return this.http.get<ArticleGroup[]>(`shared/assets/articles/react/${language}.articles.json`);

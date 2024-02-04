@@ -1,7 +1,10 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  Component, DestroyRef, ElementRef, inject,
+  Component,
+  DestroyRef,
+  ElementRef,
+  inject,
   Input,
   ViewChild,
   ViewEncapsulation,
@@ -40,17 +43,14 @@ export class ArticleRenderComponent implements AfterViewInit {
   @ViewChild('renderElement') renderElement: ElementRef<HTMLDivElement>;
 
   @Input() html: Article;
-
+  destroyRef = inject(DestroyRef);
   private searchText$: Observable<string> = this.store.select(selectSearchText);
   private fragment$: Observable<string> = this.store.select(selectFragment);
   private restoreProgress$: Observable<boolean> = this.store.select(selectRestoreProgress);
   private navigationState$: Observable<NavigationState> = this.store.select(selectNavigationState);
   private readProgressState$: Observable<ReadProgressState> = this.store.select(selectReadProgressState);
 
-  destroyRef = inject(DestroyRef);
-
-  constructor(private store: Store) {
-  }
+  constructor(private store: Store) {}
 
   saveReadProgress({ offsetHeight, scrollTop, scrollHeight }): void {
     const articleProgress = ((scrollTop / (scrollHeight - offsetHeight)) * 100).toFixed(4);
@@ -63,25 +63,29 @@ export class ArticleRenderComponent implements AfterViewInit {
       this.content.getScrollElement(),
       this.navigationState$,
       this.readProgressState$,
-    ]).pipe(
-      first(),
-      filter(
-        ([restoreProgress, _, navigationState]) => restoreProgress && navigationState.isProgress,
-      ),
-      takeUntilDestroyed(this.destroyRef))
+    ])
+      .pipe(
+        first(),
+        filter(([restoreProgress, _, navigationState]) => restoreProgress && navigationState.isProgress),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe(([_, { scrollHeight, offsetHeight }, __, progressState]) => {
-        this.content.scrollToPoint(0, ((scrollHeight - offsetHeight) * progressState[this.html.key]) / 100, 0).then(() => {
-          this.store.dispatch(returnDefaultNavigationStateAction());
-        });
+        this.content
+          .scrollToPoint(0, ((scrollHeight - offsetHeight) * progressState[this.html.key]) / 100, 0)
+          .then(() => {
+            this.store.dispatch(returnDefaultNavigationStateAction());
+          });
       });
   }
 
   ngAfterViewInit(): void {
-    this.navigationState$.pipe(withLatestFrom(this.searchText$, this.fragment$), takeUntilDestroyed(this.destroyRef)).subscribe(([navigationState, searchText, fragment]) => {
-      this.scrollToSearchedText(searchText, navigationState);
-      this.scrollToFragment(fragment, navigationState);
-      this.scrollToReadProgress();
-    });
+    this.navigationState$
+      .pipe(withLatestFrom(this.searchText$, this.fragment$), takeUntilDestroyed(this.destroyRef))
+      .subscribe(([navigationState, searchText, fragment]) => {
+        this.scrollToSearchedText(searchText, navigationState);
+        this.scrollToFragment(fragment, navigationState);
+        this.scrollToReadProgress();
+      });
 
     this.store.dispatch(increaseOpenArticleCountAction());
   }

@@ -8,4 +8,6 @@ export const increaseOpenArticleCountAction = createAction('[Navigation Module] 
 
 export const openWithSearchAction = createAction('[Navigation Module] open page with search');
 
-export const returnDefaultNavigationStateAction = createAction('[Navigation Module] return navigation state to default');
+export const returnDefaultNavigationStateAction = createAction(
+  '[Navigation Module] return navigation state to default',
+);

@@ -8,7 +8,7 @@
         <ion-icon name='search' slot='icon-only'></ion-icon>
       </ion-button>
       <ion-button routerLink='/languages'>
-        <ion-icon slot='icon-only' name='language-outline'></ion-icon>
+        <ion-icon name='language-outline' slot='icon-only'></ion-icon>
       </ion-button>
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -23,10 +23,10 @@
       </ion-item>
       <ion-list slot='content'>
         <app-article-list-item
+          (openArticle)="openArticle()"
           [articles]="articleGroup.values"
-          [showProgress]="showProgress$ | async"
           [readProgress]="progress$ | async"
-          (openArticle)="openArticle()">
+          [showProgress]="showProgress$ | async">
         </app-article-list-item>
       </ion-list>
     </ion-accordion>

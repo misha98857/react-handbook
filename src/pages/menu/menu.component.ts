@@ -4,26 +4,29 @@ import { Observable } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { AsyncPipe } from '@angular/common';
 import {
-  IonMenu,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
-  IonList,
+  IonHeader,
   IonItem,
   IonLabel,
+  IonList,
+  IonMenu,
+  IonTitle,
   IonToggle,
+  IonToolbar,
 } from '@ionic/angular/standalone';
 import {
   selectAppTheme,
   selectNavButtons,
-  selectRestoreProgress, selectRestoreState,
+  selectRestoreProgress,
+  selectRestoreState,
   selectShowProgress,
 } from '../../store/selectors/settings.selectors';
 import {
-  toggleNavigationButtonAction, toggleRestoreProgressAction, toggleRestoreStateAction,
-  toggleThemeAction,
+  toggleNavigationButtonAction,
+  toggleRestoreProgressAction,
+  toggleRestoreStateAction,
   toggleShowProgressAction,
+  toggleThemeAction,
 } from '../../store/actions/settings.actions';
 
 @Component({
@@ -53,8 +56,7 @@ export class MenuComponent {
   restoreProgress: Observable<boolean> = this.store.select(selectRestoreProgress);
   restoreState: Observable<boolean> = this.store.select(selectRestoreState);
 
-  constructor(private store: Store) {
-  }
+  constructor(private store: Store) {}
 
   changeNavigationButtonState(checked: boolean): void {
     // TODO: should use method from service in features

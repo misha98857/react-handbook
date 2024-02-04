@@ -13,7 +13,7 @@
   "source": "Information source",
   "license": "License",
   "rate-app": "Rate App",
-    "telegram-channel-text": "Telegram Channel",
+  "telegram-channel-text": "Telegram Channel",
   "source-site": "https://reactjs.org",
   "disable-rate": "Disable notification \"Rate App\"",
   "navigation-buttons": "Navigation buttons",
