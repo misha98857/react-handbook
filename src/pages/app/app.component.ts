@@ -16,8 +16,6 @@ import { initialSettingsState, SettingsState } from '../../store/state/settings.
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { selectAppTheme } from '../../store/selectors/settings.selectors';
-import { ReactService } from '../../features/services/react.service';
-import { LanguageService } from '../../features/services/language.service';
 import { IonApp, IonContent, IonRouterOutlet } from '@ionic/angular/standalone';
 import { AsyncPipe } from '@angular/common';
 import { MenuComponent } from '../app-menu/menu.component';
@@ -36,10 +34,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     IonRouterOutlet,
     AsyncPipe,
     MenuComponent,
-  ],
-  providers: [
-    ReactService,
-    LanguageService,
   ],
 })
 export class AppComponent implements OnInit {
