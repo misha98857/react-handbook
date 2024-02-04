@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, numberAttribute, OnInit } from '@angular/core';
+import { booleanAttribute, Component, DestroyRef, inject, numberAttribute, OnInit } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { Platform } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
@@ -38,6 +38,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class AppComponent implements OnInit {
   darkMode: Observable<boolean> = this.store.select(selectAppTheme);
+
+  destroyRef = inject(DestroyRef);
 
   constructor(
     private platform: Platform,
@@ -102,7 +104,7 @@ export class AppComponent implements OnInit {
   }
 
   private initRouterWatcher() {
-    this.store.select(selectRouterState).pipe(takeUntilDestroyed()).subscribe((routerState) => {
+    this.store.select(selectRouterState).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((routerState) => {
       this.store.dispatch(saveLatestPageAction({ url: routerState.url }));
     });
   }

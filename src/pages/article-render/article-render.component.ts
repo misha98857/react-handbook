@@ -1,8 +1,7 @@
 import {
-  AfterViewChecked,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, DestroyRef, inject,
   Input,
   OnInit,
   ViewChild,
@@ -35,23 +34,25 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: true,
   imports: [IonContent],
 })
-export class ArticleRenderComponent implements OnInit, AfterViewChecked {
+export class ArticleRenderComponent implements OnInit {
   @ViewChild(IonContent) content: IonContent;
   @Input() html: Observable<Article>;
   article: SafeHtml;
 
-  private articleKey: string;
-  private text$: Observable<string> = this.store.select(selectSearchText);
+  private searchText$: Observable<string> = this.store.select(selectSearchText);
   private fragment$: Observable<string> = this.store.select(selectFragment);
-  private restoreProgress: Observable<boolean> = this.store.select(selectRestoreProgress);
+  private restoreProgress$: Observable<boolean> = this.store.select(selectRestoreProgress);
+  private navigationState$: Observable<NavigationState> = this.store.select(selectNavigationState);
+
+  private articleKey: string;
   private fragment: string;
   private text: string;
-  private lock: boolean;
-  private navigationState: Observable<NavigationState> = this.store.select(selectNavigationState);
   private isSearch: boolean;
   private isProgress: boolean;
   private isInternalLink: boolean;
   private progressState: Record<string, number>;
+
+  destroyRef = inject(DestroyRef);
 
   constructor(private sanitizer: DomSanitizer, private cdRef: ChangeDetectorRef, private store: Store) {
   }
@@ -65,7 +66,7 @@ export class ArticleRenderComponent implements OnInit, AfterViewChecked {
   }
 
   progressScroll(): void {
-    this.restoreProgress.pipe(first()).subscribe((restoreProgress) => {
+    this.restoreProgress$.pipe(first()).subscribe((restoreProgress) => {
       if (this.isProgress && restoreProgress) {
         void this.content.getScrollElement().then((element) => {
           const { scrollHeight, offsetHeight } = element;
@@ -80,29 +81,28 @@ export class ArticleRenderComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit(): void {
-    this.navigationState.pipe(takeUntilDestroyed()).subscribe((state) => {
+    this.navigationState$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
       this.isSearch = state.isSearch;
       this.isProgress = state.isProgress;
       this.isInternalLink = state.isInternalLink;
     });
 
-    this.html.pipe(takeUntilDestroyed()).subscribe((html) => {
+    this.html.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((html) => {
       this.article = this.sanitizer.bypassSecurityTrustHtml(html.value);
       this.articleKey = html.key;
-      this.cdRef.markForCheck();
+      this.cdRef.detectChanges();
+      this.scrollToText();
     });
 
 
-    this.text$.pipe(takeUntilDestroyed()).subscribe((text) => {
+    this.searchText$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((text) => {
       if (text) {
-        this.lock = false;
         this.text = text;
       }
     });
 
-    this.fragment$.pipe(takeUntilDestroyed()).subscribe((fragment) => {
+    this.fragment$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((fragment) => {
       if (fragment) {
-        this.lock = false;
         this.fragment = fragment;
       }
     });
@@ -110,7 +110,7 @@ export class ArticleRenderComponent implements OnInit, AfterViewChecked {
     this.store.dispatch(increaseOpenArticleCountAction());
   }
 
-  ngAfterViewChecked(): void {
+  private scrollToText(): void {
     if (this.text && this.isSearch) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -131,6 +131,7 @@ export class ArticleRenderComponent implements OnInit, AfterViewChecked {
         });
       }
     }
+
     if (this.articleKey) {
       this.progressScroll();
     }
