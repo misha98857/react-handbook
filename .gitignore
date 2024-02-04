@@ -17,7 +17,6 @@ $RECYCLE.BIN/
 log.txt
 npm-debug.log*
 
-**/google-services.json
 **/.idea
 /.idea
 /.ionic
@@ -33,3 +32,5 @@ npm-debug.log*
 /plugins
 /www
 /.nx
+
+**/google-services.json
