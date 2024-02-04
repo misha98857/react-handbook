@@ -87,16 +87,17 @@ export class AppComponent implements OnInit {
   private async initApplicationData() {
     const settings = await this.initSettings();
     const { value: progress } = await Preferences.get({ key: 'progress' });
+    const { value: latestPage } = await Preferences.get({ key: 'latestPage' });
 
     let language = settings['language'];
     language = await this.initLanguage(language);
-
     this.translate.use(language);
-    this.store.dispatch(initApplicationDataAction({ settings }));
+
+    this.store.dispatch(initApplicationDataAction({ settings: { ...settings, language } }));
     this.store.dispatch(loadArticlesAction());
     this.store.dispatch(loadProgressStateAction({ progressState: JSON.parse(progress) as Record<string, number> }));
 
-    this.restoreLatestPage(settings['restoreState'], settings['latestPage']);
+    this.restoreLatestPage(settings['restoreState'], latestPage);
     await SplashScreen.hide();
   }
 
@@ -118,7 +119,7 @@ export class AppComponent implements OnInit {
   }
 
   private restoreLatestPage(restoreState: boolean, latestPage: string) {
-    if (restoreState) {
+    if (restoreState && latestPage) {
       this.store.dispatch(openWithProgressAction());
       this.store.dispatch(loadLatestPageAction({ url: latestPage.replace(/"/g, '') }));
       return;
