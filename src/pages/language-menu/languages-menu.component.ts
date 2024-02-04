@@ -18,7 +18,7 @@ import {
 import { selectLanguage } from '../../store/selectors/settings.selectors';
 import { changeAppLanguageAction } from '../../store/actions/settings.actions';
 import { LanguageService } from '../../features/services/language.service';
-import { ReactService } from '../../features/services/react.service';
+import { ArticlesService } from '../../features/services/articles.service';
 import { LanguageCardComponent } from '../../widgets/language-card/language-card.component';
 import { NgFor, AsyncPipe } from '@angular/common';
 import { Language } from '../../entities/languages/models/languages';
@@ -50,7 +50,7 @@ export class LanguagesMenuComponent {
   private loadingPercentage = 0;
   private loadingProgressMessage: HTMLIonLoadingElement;
 
-  constructor(private http: HttpClient, private translate: TranslateService, private store: Store, private loadingController: LoadingController, private reactService: ReactService, private languageService: LanguageService) {
+  constructor(private http: HttpClient, private translate: TranslateService, private store: Store, private loadingController: LoadingController, private articlesService: ArticlesService, private languageService: LanguageService) {
   }
 
   private async presentLoading() {
@@ -84,7 +84,7 @@ export class LanguagesMenuComponent {
       }, error: () => {
         this.loadingProgressMessage.dismiss();
         this.loadingPercentage = 0;
-        this.reactService.presentErrorDownloadAlert();
+        this.articlesService.presentErrorDownloadAlert();
       },
     });
   }

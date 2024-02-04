@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
-import { ReactService } from './react.service';
+import { ArticlesService } from './articles.service';
 import { Store } from '@ngrx/store';
 import { changeAppLanguageAction } from '../../store/actions/settings.actions';
 
@@ -10,7 +10,7 @@ import { changeAppLanguageAction } from '../../store/actions/settings.actions';
 })
 export class LanguageService {
 
-  constructor(private http: HttpClient, private reactService: ReactService, private store: Store) {
+  constructor(private http: HttpClient, private articlesService: ArticlesService, private store: Store) {
   }
 
   downloadLanguage(language: string) {
@@ -33,7 +33,7 @@ export class LanguageService {
       });
       this.store.dispatch(changeAppLanguageAction({ language }));
     } catch (e) {
-      await this.reactService.presentErrorDownloadAlert();
+      await this.articlesService.presentErrorDownloadAlert();
     }
   }
 }

@@ -12,7 +12,7 @@ import {
   selectShowProgress,
 } from '../../store/selectors/settings.selectors';
 import { selectProgressState } from '../../store/selectors/progress.selectors';
-import { ReactService } from '../../features/services/react.service';
+import { ArticlesService } from '../../features/services/articles.service';
 import { decreaseFontSizeAction, increaseFontSizeAction } from '../../store/actions/settings.actions';
 import { openInternalLinkAction } from '../../store/actions/navigation.actions';
 import { addIcons } from 'ionicons';
@@ -81,7 +81,7 @@ export class ReactArticleComponent {
   progress: Observable<Record<string, number>> = this.store.select(selectProgressState);
   showProgress: Observable<boolean> = this.store.select(selectShowProgress);
 
-  constructor(private store: Store, private reactService: ReactService, private router: Router) {
+  constructor(private store: Store, private router: Router) {
     addIcons({ removeOutline, addOutline, arrowBackCircleOutline, arrowForwardCircleOutline });
   }
 

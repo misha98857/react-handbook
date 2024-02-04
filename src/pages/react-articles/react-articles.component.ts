@@ -26,7 +26,7 @@ import { App } from '@capacitor/app';
 import { selectArticleGroups } from '../../store/selectors/articles.selectors';
 import { selectProgressState } from '../../store/selectors/progress.selectors';
 import { selectLanguage, selectShowProgress } from '../../store/selectors/settings.selectors';
-import { ReactService } from '../../features/services/react.service';
+import { ArticlesService } from '../../features/services/articles.service';
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { addIcons } from 'ionicons';
 import { search, languageOutline } from 'ionicons/icons';
@@ -80,7 +80,6 @@ export class ReactArticlesComponent implements OnDestroy {
 
   constructor(
     private store: Store,
-    private reactService: ReactService,
     private toastController: ToastController,
     private platform: Platform,
     private translate: TranslateService,
