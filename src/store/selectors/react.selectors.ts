@@ -13,10 +13,8 @@ export const selectReactCurrentArticle = createSelector(
   selectReactState,
   selectRouterState,
   (reactState: ReactState, routerState: SerializedRouterStateSnapshot) => {
-    let url: string = routerState.url;
-    if (routerState.root.fragment) {
-      url = url.replace(`#${routerState.root.fragment}`, '');
-    }
+    let url: string = routerState.url.split('#')[0];
+
     for (const i of reactState.articles) {
       for (const j of i.values) {
         if (url === j.path) {
