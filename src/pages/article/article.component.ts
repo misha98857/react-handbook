@@ -18,7 +18,7 @@ import { openInternalLinkAction } from '../../store/actions/navigation.actions';
 import { addIcons } from 'ionicons';
 import { removeOutline, addOutline, arrowBackCircleOutline, arrowForwardCircleOutline } from 'ionicons/icons';
 import { NgStyle, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe } from '@angular/common';
-import { ReactHtmlArticleComponent } from '../react-html-article/react-html-article.component';
+import { ArticleRenderComponent } from '../article-render/article-render.component';
 import {
   IonHeader,
   IonToolbar,
@@ -42,8 +42,8 @@ import {
 
 @Component({
   selector: 'app-react-article',
-  templateUrl: './react-article.component.html',
-  styleUrls: ['./react-article.component.scss'],
+  templateUrl: './article.component.html',
+  styleUrls: ['./article.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
@@ -56,7 +56,7 @@ import {
     IonMenuButton,
     IonTitle,
     IonContent,
-    ReactHtmlArticleComponent,
+    ArticleRenderComponent,
     NgStyle,
     IonFooter,
     NgIf,
@@ -73,7 +73,7 @@ import {
     ArticleNavigationToolbarComponent,
   ],
 })
-export class ReactArticleComponent {
+export class ArticleComponent {
   @Input() articleKey: string;
   article$: Observable<Article> = this.store.select(selectCurrentArticle);
   fontSize: Observable<number> = this.store.select(selectFontSize);

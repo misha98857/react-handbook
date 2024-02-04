@@ -28,9 +28,9 @@ import {
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 
 @Component({
-  selector: 'app-react-search',
-  templateUrl: './react-search.component.html',
-  styleUrls: ['./react-search.component.scss'],
+  selector: 'app-search',
+  templateUrl: './search.component.html',
+  styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
@@ -58,7 +58,7 @@ import { ArticleListItemComponent } from '../../widgets/article-list-item/articl
     ArticleListItemComponent,
   ],
 })
-export class ReactSearchComponent {
+export class SearchComponent {
   articleGroups$: Observable<Array<ArticleGroup>> = this.store.select(selectSearchedArticles);
   progress: Observable<Record<string, number>> = this.store.select(selectProgressState);
   showProgress: Observable<boolean> = this.store.select(selectShowProgress);

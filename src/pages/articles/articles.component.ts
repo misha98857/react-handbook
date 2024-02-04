@@ -35,9 +35,9 @@ import { RouterLink } from '@angular/router';
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 
 @Component({
-  selector: 'app-react-articles',
-  templateUrl: './react-articles.component.html',
-  styleUrls: ['./react-articles.component.scss'],
+  selector: 'app-articles',
+  templateUrl: './articles.component.html',
+  styleUrls: ['./articles.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
@@ -68,7 +68,7 @@ import { ArticleListItemComponent } from '../../widgets/article-list-item/articl
   ],
 })
 
-export class ReactArticlesComponent implements OnDestroy {
+export class ArticlesComponent implements OnDestroy {
   articleGroups$: Observable<ArticleGroup[]> = this.store.select(selectArticleGroups);
   progress$: Observable<Record<string, number>> = this.store.select(selectProgressState);
   showProgress$: Observable<boolean> = this.store.select(selectShowProgress);

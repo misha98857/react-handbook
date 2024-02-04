@@ -33,14 +33,14 @@ import {
 
 @Component({
   selector: 'app-html-html-article',
-  templateUrl: './react-html-article.component.html',
-  styleUrls: ['./react-html-article.component.scss'],
+  templateUrl: './article-render.component.html',
+  styleUrls: ['./article-render.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [IonContent],
 })
-export class ReactHtmlArticleComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class ArticleRenderComponent implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild(IonContent) content: IonContent;
   @Input() html: Observable<Article>;
   article: SafeHtml;

@@ -18,7 +18,7 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { selectAppTheme } from '../../store/selectors/settings.selectors';
 import { IonApp, IonContent, IonRouterOutlet } from '@ionic/angular/standalone';
 import { AsyncPipe } from '@angular/common';
-import { MenuComponent } from '../app-menu/menu.component';
+import { MenuComponent } from '../menu/menu.component';
 import { allowedLanguages, langMap } from '../../shared/translate/const/const';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 

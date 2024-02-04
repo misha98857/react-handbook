@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import {
-  ReactArticlesComponent,
-} from '../../pages/react-articles/react-articles.component';
-import { ReactArticleComponent } from '../../pages/react-article/react-article.component';
+  ArticlesComponent,
+} from '../../pages/articles/articles.component';
+import { ArticleComponent } from '../../pages/article/article.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'react', pathMatch: 'full' },
@@ -11,12 +11,12 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: ReactArticlesComponent,
+        component: ArticlesComponent,
         pathMatch: 'full',
       },
       {
         path: ':name',
-        component: ReactArticleComponent,
+        component: ArticleComponent,
       },
     ],
   },
@@ -26,7 +26,7 @@ export const routes: Routes = [
   },
   {
     path: 'search',
-    loadComponent: () => import('../../pages/react-search/react-search.component').then(m => m.ReactSearchComponent),
+    loadComponent: () => import('../../pages/search/search.component').then(m => m.SearchComponent),
     pathMatch: 'full',
   },
   {
