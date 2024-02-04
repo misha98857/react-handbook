@@ -6,7 +6,7 @@
     <ion-buttons slot='primary'>
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-searchbar (ionChange)='searchText($event)' [placeholder]="'search' | translate"></ion-searchbar>
+    <ion-searchbar [placeholder]="'search' | translate" (ionInput)='searchText($event)'></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true" id='main'>

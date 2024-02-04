@@ -1,14 +1,14 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, DestroyRef, inject,
+  Component, DestroyRef, ElementRef, inject,
   Input,
   OnInit,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
+import { Observable, withLatestFrom } from 'rxjs';
 import { Article } from '../../entities/articles/models/articles';
 import { Store } from '@ngrx/store';
 import { IonContent } from '@ionic/angular/standalone';
@@ -36,6 +36,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class ArticleRenderComponent implements OnInit {
   @ViewChild(IonContent) content: IonContent;
+  @ViewChild('renderElement') renderElement: ElementRef<HTMLDivElement>;
+
   @Input() html: Observable<Article>;
   article: SafeHtml;
 
@@ -46,7 +48,6 @@ export class ArticleRenderComponent implements OnInit {
 
   private articleKey: string;
   private fragment: string;
-  private text: string;
   private isSearch: boolean;
   private isProgress: boolean;
   private isInternalLink: boolean;
@@ -57,10 +58,7 @@ export class ArticleRenderComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer, private cdRef: ChangeDetectorRef, private store: Store) {
   }
 
-  saveReadProgress(scrollElement: Element): void {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const { offsetHeight, scrollTop, scrollHeight } = scrollElement;
+  saveReadProgress({ offsetHeight, scrollTop, scrollHeight }): void {
     const articleProgress = ((scrollTop / (scrollHeight - offsetHeight)) * 100).toFixed(4);
     this.store.dispatch(setArticleProgressStateAction({ key: this.articleKey, value: articleProgress }));
   }
@@ -87,18 +85,11 @@ export class ArticleRenderComponent implements OnInit {
       this.isInternalLink = state.isInternalLink;
     });
 
-    this.html.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((html) => {
+    this.html.pipe(withLatestFrom(this.searchText$), takeUntilDestroyed(this.destroyRef)).subscribe(([html, text]) => {
       this.article = this.sanitizer.bypassSecurityTrustHtml(html.value);
       this.articleKey = html.key;
       this.cdRef.detectChanges();
-      this.scrollToText();
-    });
-
-
-    this.searchText$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((text) => {
-      if (text) {
-        this.text = text;
-      }
+      this.scrollToText(text);
     });
 
     this.fragment$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((fragment) => {
@@ -110,12 +101,10 @@ export class ArticleRenderComponent implements OnInit {
     this.store.dispatch(increaseOpenArticleCountAction());
   }
 
-  private scrollToText(): void {
-    if (this.text && this.isSearch) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const instance: Mark = new Mark(this.content.el);
-      instance.mark(this.text);
+  private scrollToText(text: string): void {
+    if (text && this.isSearch) {
+      const instance: Mark = new Mark(this.renderElement.nativeElement);
+      instance.mark(text, { accuracy: 'complementary' });
       const markedElements = document.getElementsByTagName('mark');
       if (markedElements.length) {
         setTimeout(() => markedElements[0].scrollIntoView(), 0);

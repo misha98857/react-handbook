@@ -66,19 +66,8 @@ export class SearchComponent {
   constructor(private store: Store) {
   }
 
-  searchText(e: { detail: { value: string } }): void {
-    const {
-      detail: { value },
-    } = e;
+  searchText({ detail: { value } }): void {
     this.store.dispatch(searchArticlesAction({ text: value }));
-  }
-
-  ionViewDidEnter(): void {
-    const searchedElements = document.getElementsByTagName('ion-searchbar');
-    if (searchedElements) {
-      const { value } = document.getElementsByTagName('ion-searchbar')[0];
-      this.store.dispatch(searchArticlesAction({ text: value }));
-    }
   }
 
   openArticleWithSearch(): void {
