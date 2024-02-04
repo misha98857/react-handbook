@@ -19,7 +19,7 @@ import { selectFragment, selectSearchText } from '../../store/selectors/articles
 import { selectRestoreProgress } from '../../store/selectors/settings.selectors';
 import { NavigationState } from '../../store/state/navigation.state';
 import { selectNavigationState } from '../../store/selectors/navigation.selectors';
-import { setArticleProgressStateAction } from '../../store/actions/progress.actions';
+import { saveArticlesProgressStateAction, setArticleProgressStateAction } from '../../store/actions/progress.actions';
 import {
   increaseOpenArticleCountAction,
   returnDefaultNavigationStateAction,
@@ -43,7 +43,9 @@ export class ArticleRenderComponent implements AfterViewInit {
   @ViewChild('renderElement') renderElement: ElementRef<HTMLDivElement>;
 
   @Input() html: Article;
+
   destroyRef = inject(DestroyRef);
+
   private searchText$: Observable<string> = this.store.select(selectSearchText);
   private fragment$: Observable<string> = this.store.select(selectFragment);
   private restoreProgress$: Observable<boolean> = this.store.select(selectRestoreProgress);
@@ -70,6 +72,7 @@ export class ArticleRenderComponent implements AfterViewInit {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(([_, { scrollHeight, offsetHeight }, __, progressState]) => {
+        // TODO: when trigger this action this.html empty. Need to fix it
         this.content
           .scrollToPoint(0, ((scrollHeight - offsetHeight) * progressState[this.html.key]) / 100, 0)
           .then(() => {
@@ -86,6 +89,10 @@ export class ArticleRenderComponent implements AfterViewInit {
         this.scrollToFragment(fragment, navigationState);
         this.scrollToReadProgress();
       });
+
+    this.readProgressState$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(progressState => {
+      this.store.dispatch(saveArticlesProgressStateAction({ progressState }));
+    });
 
     this.store.dispatch(increaseOpenArticleCountAction());
   }

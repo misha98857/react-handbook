@@ -20,7 +20,10 @@ export class HistoryEffects {
     () =>
       this.actions$.pipe(
         ofType(loadLatestPageAction),
-        switchMap(({ url }) => this.router.navigate([url])),
+        switchMap(({ url }) => {
+          const [targetUrl, fragment] = url.split('#');
+          return this.router.navigate([targetUrl], { fragment: fragment });
+        }),
       ),
     { dispatch: false },
   );
