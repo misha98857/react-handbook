@@ -32,6 +32,7 @@ import { languageOutline, search } from 'ionicons/icons';
 import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
+import { GithubStarComponent } from '../../widgets/github-star/github-star.component';
 
 @Component({
   selector: 'app-articles',
@@ -64,6 +65,7 @@ import { ArticleListItemComponent } from '../../widgets/article-list-item/articl
     AsyncPipe,
     TranslateModule,
     ArticleListItemComponent,
+    GithubStarComponent,
   ],
 })
 export class ArticlesComponent implements OnDestroy {

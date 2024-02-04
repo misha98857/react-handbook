@@ -26,6 +26,7 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
+import { GithubStarComponent } from '../../widgets/github-star/github-star.component';
 
 @Component({
   selector: 'app-search',
@@ -56,6 +57,7 @@ import { ArticleListItemComponent } from '../../widgets/article-list-item/articl
     AsyncPipe,
     TranslateModule,
     ArticleListItemComponent,
+    GithubStarComponent,
   ],
 })
 export class SearchComponent {

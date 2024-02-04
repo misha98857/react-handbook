@@ -11,7 +11,6 @@
 </ion-header>
 <ion-content [fullscreen]="true" id='main'>
   <ion-accordion-group>
-    <!-- TODO: should preserve the state of the accordion after return -->
     <ion-accordion *ngFor='let articleGroup of articleGroups$ | async'>
       <ion-item slot='header'>
         <ion-label> {{ articleGroup.key }}</ion-label>
@@ -27,4 +26,5 @@
       </ion-list>
     </ion-accordion>
   </ion-accordion-group>
+  <app-github-star></app-github-star>
 </ion-content>
