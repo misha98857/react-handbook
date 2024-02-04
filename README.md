@@ -1,2 +1,10 @@
-# Оффлайн документация по React
-Мобильное приложение с документацией по React и переводом на большое количество языков
+# Reach Handbook
+
+## Build
+
+```bash
+npm install
+npm run build
+npm run sync
+npm run android
+```
