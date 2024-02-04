@@ -7,7 +7,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 import { selectLanguage } from '../selectors/settings.selectors';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
-import { from } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { increaseOpenArticleCountAction } from '../actions/navigation.actions';
 import { Preferences } from '@capacitor/preferences';
 import { Articles } from '../../entities/articles/models/article';
@@ -17,22 +17,12 @@ export class AppEffects {
   private loadArticles = createEffect(() =>
     this.actions$.pipe(
       ofType(loadReactArticlesAction),
-      switchMap(() => this.store.pipe(select(selectLanguage))),
+      switchMap(() => this.store.select(selectLanguage)),
       switchMap(language => {
         if (['en', 'ru'].includes(language)) {
-          return this.http.get(`shared/assets/articles/react/${language}.articles.json`);
-        } else {
-          return from(
-            Filesystem.readFile({
-              path: `${language}.articles.json`,
-              directory: Directory.Data,
-              encoding: Encoding.UTF8,
-            }),
-          ).pipe(
-            map(fileReadResult => JSON.parse(fileReadResult.data as string) as Array<Articles>),
-            catchError(() => this.http.get(`shared/assets/articles/react/en.articles.json`)),
-          );
+          return this.loadArticlesFile(language);
         }
+        return this.loadDownloadedArticles(language);
       }),
       map((articles: Array<Articles>) => {
         return loadReactArticlesSuccessAction({ articles });
@@ -40,6 +30,7 @@ export class AppEffects {
     ),
   );
 
+  // TODO: need refactor or delete
   private openArticle = createEffect(
     () =>
       this.actions$.pipe(
@@ -60,5 +51,25 @@ export class AppEffects {
     private translate: TranslateService,
     private store: Store,
   ) {
+  }
+
+  private loadArticlesFile(language: string): Observable<Articles[]> {
+    return this.http.get<Articles[]>(`shared/assets/articles/react/${language}.articles.json`);
+  }
+
+  private loadDownloadedArticles(language: string): Observable<Articles[]> {
+    return from(
+      Filesystem.readFile({
+        path: `${language}.articles.json`,
+        directory: Directory.Data,
+        encoding: Encoding.UTF8,
+      }),
+    ).pipe(
+      map(fileReadResult => {
+        const fileReadResultData = fileReadResult.data as string;
+        return JSON.parse(fileReadResultData) as Articles[];
+      }),
+      catchError(() => this.loadArticlesFile('en')),
+    );
   }
 }

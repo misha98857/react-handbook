@@ -1,4 +1,4 @@
-import { IAppState } from '../state/app.state';
-import { IProgressState } from '../state/progress.state';
+import { AppState } from '../state/app.state';
+import { ProgressState } from '../state/progress.state';
 
-export const selectProgressState = (state: IAppState): IProgressState => state.progress;
+export const selectProgressState = (state: AppState): ProgressState => state.progress;

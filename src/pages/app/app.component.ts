@@ -6,13 +6,13 @@ import { Observable, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Device } from '@capacitor/device';
-import { increaseOpenCountAction, initApplicationDataAction } from '../../store/actions/settings.actions';
+import { initApplicationDataAction } from '../../store/actions/settings.actions';
 import { loadReactArticlesAction } from '../../store/actions/react.actions';
 import { loadProgressStateAction } from '../../store/actions/progress.actions';
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { loadLatestPageAction, saveLatestPageAction } from '../../store/actions/history.actions';
 import { selectRouterState } from '../../store/selectors/react.selectors';
-import { ISettingsState } from '../../store/state/settings.state';
+import { SettingsState } from '../../store/state/settings.state';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { selectAppTheme } from '../../store/selectors/settings.selectors';
@@ -115,19 +115,19 @@ export class AppComponent implements OnInit, OnDestroy {
     const { value: fontSize } = await Preferences.get({ key: 'fontSize' });
     const { value: isRated } = await Preferences.get({ key: 'isRated' });
     const { value: progress } = await Preferences.get({ key: 'progress' });
-    const { value: visibleProgress } = await Preferences.get({ key: 'visibleProgress' });
+    const { value: showProgress } = await Preferences.get({ key: 'showProgress' });
     const { value: restoreProgress } = await Preferences.get({ key: 'restoreProgress' });
     const { value: restoreState } = await Preferences.get({ key: 'restoreState' });
     const { value: latestPage } = await Preferences.get({ key: 'latestPage' });
 
-    const settings: ISettingsState = {
+    const settings: SettingsState = {
       fontSize: parseFloat(fontSize ?? '1.0'),
       darkTheme: (darkTheme ?? 'false') === 'true',
       language,
       isRated: (isRated ?? 'false') === 'true',
       openCount: parseInt(openCount ?? '0', 10),
       navButton: (navButton ?? 'true') === 'true',
-      visibleProgress: (visibleProgress ?? 'true') === 'true',
+      showProgress: (showProgress ?? 'true') === 'true',
       restoreProgress: (restoreProgress ?? 'true') === 'true',
       restoreState: (restoreState ?? 'true') === 'true',
     };
@@ -135,12 +135,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.store.dispatch(initApplicationDataAction({ settings }));
     this.store.dispatch(loadReactArticlesAction());
     this.store.dispatch(loadProgressStateAction({ progressState: JSON.parse(progress) as Record<string, number> }));
-    this.store.dispatch(
-      increaseOpenCountAction({
-        openCount: parseInt(openCount ?? '0', 10) + 1,
-        language,
-      }),
-    );
     if (restoreState === 'true') {
       this.store.dispatch(openWithProgressAction());
       this.store.dispatch(loadLatestPageAction({ url: latestPage.replace(/"/g, '') }));

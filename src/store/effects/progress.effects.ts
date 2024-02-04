@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { Preferences } from '@capacitor/preferences';
 import { saveArticlesProgressStateAction } from '../actions/progress.actions';
 
@@ -10,10 +10,11 @@ export class ProgressEffects {
     () =>
       this.actions$.pipe(
         ofType(saveArticlesProgressStateAction),
-        map(({ progressState }) => Preferences.set({ key: 'progress', value: JSON.stringify(progressState) }))
+        switchMap(({ progressState }) => Preferences.set({ key: 'progress', value: JSON.stringify(progressState) })),
       ),
-    { dispatch: false }
+    { dispatch: false },
   );
 
-  constructor(private actions$: Actions) {}
+  constructor(private actions$: Actions) {
+  }
 }

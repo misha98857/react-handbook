@@ -1,4 +1,4 @@
-import { IAppState } from '../state/app.state';
-import { INavigationState } from '../state/navigation.state';
+import { AppState } from '../state/app.state';
+import { NavigationState } from '../state/navigation.state';
 
-export const selectNavigationState = (state: IAppState): INavigationState => state.navigation;
+export const selectNavigationState = (state: AppState): NavigationState => state.navigation;

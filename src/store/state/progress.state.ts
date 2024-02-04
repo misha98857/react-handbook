@@ -1,3 +1,3 @@
-export type IProgressState = Record<string, number>;
+export type ProgressState = Record<string, number>;
 
-export const initialProgressState: IProgressState = {};
+export const initialProgressState: ProgressState = {};

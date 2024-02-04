@@ -27,7 +27,7 @@
   <ion-toolbar *ngIf='navButtonsState | async'>
     <app-article-navigation-toolbar
       [article]="article$ | async"
-      [showProgress]="visibleProgress | async"
+      [showProgress]="showProgress | async"
       [readProgress]="progress | async">
     </app-article-navigation-toolbar>
   </ion-toolbar>

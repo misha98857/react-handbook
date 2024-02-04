@@ -24,7 +24,7 @@
       <ion-list slot='content'>
         <app-article-list-item
           [articles]="articleGroup.values"
-          [showProgress]="visibleProgress$ | async"
+          [showProgress]="showProgress$ | async"
           [readProgress]="progress$ | async"
           (openArticle)="openArticle()">
         </app-article-list-item>

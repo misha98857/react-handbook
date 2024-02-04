@@ -1,11 +1,12 @@
 import { Articles } from '../../entities/articles/models/article';
 
-export interface IReactState {
+export interface ReactState {
   articles: Array<Articles>;
   searchText: string;
 }
 
-export const initialReactState: IReactState = {
+// TODO: rename state to articles
+export const initialReactState: ReactState = {
   articles: [],
   searchText: '',
 };

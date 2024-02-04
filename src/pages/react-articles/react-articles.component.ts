@@ -25,7 +25,7 @@ import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { App } from '@capacitor/app';
 import { selectReactArticles } from '../../store/selectors/react.selectors';
 import { selectProgressState } from '../../store/selectors/progress.selectors';
-import { selectLanguage, selectVisibleProgress } from '../../store/selectors/settings.selectors';
+import { selectLanguage, selectshowProgress } from '../../store/selectors/settings.selectors';
 import { ReactService } from '../../features/services/react.service';
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { addIcons } from 'ionicons';
@@ -72,7 +72,7 @@ import { ArticleListItemComponent } from '../../widgets/article-list-item/articl
 export class ReactArticlesComponent implements OnDestroy {
   public articleGroups$: Observable<Articles[]> = this.store.pipe(select(selectReactArticles));
   public progress$: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
-  public visibleProgress$: Observable<boolean> = this.store.pipe(select(selectVisibleProgress));
+  public showProgress$: Observable<boolean> = this.store.pipe(select(selectshowProgress));
   public language: Observable<string> = this.store.pipe(select(selectLanguage));
 
   private backButtonSubscribe: Subscription;

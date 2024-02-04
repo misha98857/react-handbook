@@ -18,12 +18,12 @@ import {
   selectAppTheme,
   selectNavButtons,
   selectRestoreProgress, selectRestoreState,
-  selectVisibleProgress,
+  selectshowProgress,
 } from '../../store/selectors/settings.selectors';
 import {
   toggleNavigationButtonAction, toggleRestoreProgressAction, toggleRestoreStateAction,
   toggleThemeAction,
-  toggleVisibleProgressAction,
+  toggleShowProgressAction,
 } from '../../store/actions/settings.actions';
 
 @Component({
@@ -47,16 +47,17 @@ import {
   ],
 })
 export class MenuComponent {
-  public navButtonState: Observable<boolean> = this.store.pipe(select(selectNavButtons));
-  public darkMode: Observable<boolean> = this.store.pipe(select(selectAppTheme));
-  public visibleProgress: Observable<boolean> = this.store.pipe(select(selectVisibleProgress));
-  public restoreProgress: Observable<boolean> = this.store.pipe(select(selectRestoreProgress));
-  public restoreState: Observable<boolean> = this.store.pipe(select(selectRestoreState));
+  navButtonState: Observable<boolean> = this.store.pipe(select(selectNavButtons));
+  darkMode: Observable<boolean> = this.store.pipe(select(selectAppTheme));
+  showProgress: Observable<boolean> = this.store.pipe(select(selectshowProgress));
+  restoreProgress: Observable<boolean> = this.store.pipe(select(selectRestoreProgress));
+  restoreState: Observable<boolean> = this.store.pipe(select(selectRestoreState));
 
   constructor(private store: Store) {
   }
 
   public changeNavigationButtonState(checked: boolean): void {
+    // TODO: should use method from service in features
     this.store.dispatch(toggleNavigationButtonAction({ navButton: checked }));
   }
 
@@ -64,8 +65,8 @@ export class MenuComponent {
     this.store.dispatch(toggleThemeAction({ darkTheme: checked }));
   }
 
-  public toggleVisibleProgress(checked: boolean): void {
-    this.store.dispatch(toggleVisibleProgressAction({ visibleProgress: checked }));
+  public toggleshowProgress(checked: boolean): void {
+    this.store.dispatch(toggleShowProgressAction({ showProgress: checked }));
   }
 
   public toggleRestoreProgress(checked: boolean): void {

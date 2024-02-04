@@ -4,13 +4,12 @@ import {
   changeAppLanguageAction,
   decreaseFontSizeAction,
   increaseFontSizeAction,
-  increaseOpenCountAction,
   initApplicationDataAction,
   toggleNavigationButtonAction,
   toggleRestoreProgressAction,
   toggleRestoreStateAction,
   toggleThemeAction,
-  toggleVisibleProgressAction,
+  toggleShowProgressAction,
 } from '../actions/settings.actions';
 
 export const settingsReducer = createReducer(
@@ -24,10 +23,6 @@ export const settingsReducer = createReducer(
     ...state,
     navButton: action.navButton,
   })),
-  on(increaseOpenCountAction, (state, action) => ({
-    ...state,
-    openCount: action.openCount,
-  })),
   on(changeAppLanguageAction, (state, action) => ({
     ...state,
     language: action.language,
@@ -40,9 +35,9 @@ export const settingsReducer = createReducer(
     ...state,
     fontSize: action.fontSize,
   })),
-  on(toggleVisibleProgressAction, (state, action) => ({
+  on(toggleShowProgressAction, (state, action) => ({
     ...state,
-    visibleProgress: action.visibleProgress,
+    showProgress: action.showProgress,
   })),
   on(toggleRestoreProgressAction, (state, action) => ({
     ...state,

@@ -1,13 +1,13 @@
-import { IReactState } from './react.state';
+import { ReactState } from './react.state';
 import { RouterReducerState } from '@ngrx/router-store';
-import { IProgressState } from './progress.state';
-import { ISettingsState } from './settings.state';
-import { INavigationState } from './navigation.state';
+import { ProgressState } from './progress.state';
+import { SettingsState } from './settings.state';
+import { NavigationState } from './navigation.state';
 
-export interface IAppState {
-  react: IReactState;
-  progress: IProgressState;
+export interface AppState {
+  react: ReactState;
+  progress: ProgressState;
   router: RouterReducerState;
-  settings: ISettingsState;
-  navigation: INavigationState;
+  settings: SettingsState;
+  navigation: NavigationState;
 }

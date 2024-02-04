@@ -1,8 +1,8 @@
 import { createAction, props } from '@ngrx/store';
-import { ISettingsState } from '../state/settings.state';
+import { SettingsState } from '../state/settings.state';
 
 export const initApplicationDataAction = createAction('[Settings Module] initApplicationDataAction', props<{
-  settings: ISettingsState
+  settings: SettingsState
 }>());
 
 export const toggleThemeAction = createAction('[Settings Module] toggleThemeAction', props<{ darkTheme: boolean }>());
@@ -15,18 +15,13 @@ export const changeAppLanguageAction = createAction('[Settings Module] toggleApp
   language: string
 }>());
 
-export const increaseOpenCountAction = createAction(
-  '[Settings Module] increaseOpenCountAction',
-  props<{ openCount: number; language: string }>(),
-);
-
 export const increaseFontSizeAction = createAction('[Settings Module] increaseFontSize', props<{ fontSize: number }>());
 
 export const decreaseFontSizeAction = createAction('[Settings Module] decreaseFontSize', props<{ fontSize: number }>());
 
-export const toggleVisibleProgressAction = createAction(
-  '[Settings Module] changeVisibleProgressAction',
-  props<{ visibleProgress: boolean }>(),
+export const toggleShowProgressAction = createAction(
+  '[Settings Module] changeShowProgressAction',
+  props<{ showProgress: boolean }>(),
 );
 
 export const toggleRestoreProgressAction = createAction(

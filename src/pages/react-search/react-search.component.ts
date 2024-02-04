@@ -4,7 +4,7 @@ import { Articles } from '../../entities/articles/models/article';
 import { select, Store } from '@ngrx/store';
 import { selectSearchedReactArticles } from '../../store/selectors/react.selectors';
 import { selectProgressState } from '../../store/selectors/progress.selectors';
-import { selectVisibleProgress } from '../../store/selectors/settings.selectors';
+import { selectshowProgress } from '../../store/selectors/settings.selectors';
 import { ReactService } from '../../features/services/react.service';
 import { searchReactArticlesAction } from '../../store/actions/react.actions';
 import { openWithSearchAction } from '../../store/actions/navigation.actions';
@@ -49,7 +49,7 @@ export class ReactSearchComponent {
     public articleGroups$: Observable<Array<Articles>> = this.store.pipe(select(selectSearchedReactArticles));
     public openStatus: Map<string, boolean> = new Map<string, boolean>();
     public progress: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
-    public visibleProgress: Observable<boolean> = this.store.pipe(select(selectVisibleProgress));
+    public showProgress: Observable<boolean> = this.store.pipe(select(selectshowProgress));
 
     constructor(private store: Store) {
     }

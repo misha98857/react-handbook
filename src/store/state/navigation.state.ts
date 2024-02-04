@@ -1,10 +1,10 @@
-export interface INavigationState {
+export interface NavigationState {
   isSearch: boolean;
   isProgress: boolean;
   isInternalLink: boolean;
 }
 
-export const initialNavigationState: INavigationState = {
+export const initialNavigationState: NavigationState = {
   isSearch: false,
   isProgress: false,
   isInternalLink: false,

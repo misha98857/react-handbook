@@ -1,18 +1,18 @@
 import { createSelector } from '@ngrx/store';
-import { IReactState } from '../state/react.state';
-import { IAppState } from '../state/app.state';
+import { ReactState } from '../state/react.state';
+import { AppState } from '../state/app.state';
 import { SerializedRouterStateSnapshot } from '@ngrx/router-store';
 import { Articles } from '../../entities/articles/models/article';
 
-export const selectReactState = (state: IAppState): IReactState => state.react;
-export const selectRouterState = (state: IAppState): SerializedRouterStateSnapshot => state.router.state;
+export const selectReactState = (state: AppState): ReactState => state.react;
+export const selectRouterState = (state: AppState): SerializedRouterStateSnapshot => state.router.state;
 
-export const selectReactArticles = createSelector(selectReactState, (reactState: IReactState) => reactState.articles);
+export const selectReactArticles = createSelector(selectReactState, (reactState: ReactState) => reactState.articles);
 
 export const selectReactCurrentArticle = createSelector(
   selectReactState,
   selectRouterState,
-  (reactState: IReactState, routerState: SerializedRouterStateSnapshot) => {
+  (reactState: ReactState, routerState: SerializedRouterStateSnapshot) => {
     let url: string = routerState.url;
     if (routerState.root.fragment) {
       url = url.replace(`#${routerState.root.fragment}`, '');
@@ -34,7 +34,7 @@ export const selectReactFragment = createSelector(
   (routerState: SerializedRouterStateSnapshot) => routerState.root.fragment,
 );
 
-export const selectSearchedReactArticles = createSelector(selectReactState, (reactState: IReactState): Articles[] => {
+export const selectSearchedReactArticles = createSelector(selectReactState, (reactState: ReactState): Articles[] => {
   const searchedArticles: Articles[] = [];
 
   for (const groupArticles of reactState.articles) {
@@ -59,5 +59,5 @@ export const selectSearchedReactArticles = createSelector(selectReactState, (rea
 
 export const selectSearchText = createSelector(
   selectReactState,
-  (reactState: IReactState): string => reactState.searchText,
+  (reactState: ReactState): string => reactState.searchText,
 );

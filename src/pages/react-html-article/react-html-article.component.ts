@@ -18,10 +18,10 @@ import * as Mark from 'mark.js';
 import { first } from 'rxjs/operators';
 import { selectReactFragment, selectSearchText } from '../../store/selectors/react.selectors';
 import { selectRestoreProgress } from '../../store/selectors/settings.selectors';
-import { INavigationState } from '../../store/state/navigation.state';
+import { NavigationState } from '../../store/state/navigation.state';
 import { selectNavigationState } from '../../store/selectors/navigation.selectors';
 import { selectProgressState } from '../../store/selectors/progress.selectors';
-import { IProgressState } from '../../store/state/progress.state';
+import { ProgressState } from '../../store/state/progress.state';
 import {
     saveArticlesProgressStateAction,
     setArticleProgressStateAction,
@@ -55,9 +55,9 @@ export class ReactHtmlArticleComponent implements OnInit, AfterViewChecked, OnDe
     private textSubscription: Subscription;
     public htmlSubscription: Subscription;
     private fragmentSubscription: Subscription;
-    private navigationState: Observable<INavigationState> = this.store.pipe(select(selectNavigationState));
+    private navigationState: Observable<NavigationState> = this.store.pipe(select(selectNavigationState));
     private navigationStateSubscription: Subscription;
-    private progressState$: Observable<IProgressState> = this.store.pipe(select(selectProgressState));
+    private progressState$: Observable<ProgressState> = this.store.pipe(select(selectProgressState));
     private progressStateSubscription: Subscription;
     private isSearch: boolean;
     private isProgress: boolean;

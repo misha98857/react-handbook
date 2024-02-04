@@ -27,8 +27,8 @@
       <ion-item>
         <ion-label>{{ 'visible-progress' | translate }}</ion-label>
         <ion-toggle
-          [checked]='visibleProgress | async'
-          (ionChange)='toggleVisibleProgress($event.detail.checked)'
+          [checked]='showProgress | async'
+          (ionChange)='toggleshowProgress($event.detail.checked)'
           color='primary'>
         </ion-toggle>
       </ion-item>

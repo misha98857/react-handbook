@@ -9,7 +9,7 @@ import { selectReactCurrentArticle } from '../../store/selectors/react.selectors
 import {
   selectFontSize,
   selectNavButtons,
-  selectVisibleProgress,
+  selectshowProgress,
 } from '../../store/selectors/settings.selectors';
 import { selectProgressState } from '../../store/selectors/progress.selectors';
 import { ReactService } from '../../features/services/react.service';
@@ -77,7 +77,7 @@ export class ReactArticleComponent {
   public fontSize: Observable<number> = this.store.pipe(select(selectFontSize));
   public navButtonsState: Observable<boolean> = this.store.pipe(select(selectNavButtons));
   public progress: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
-  public visibleProgress: Observable<boolean> = this.store.pipe(select(selectVisibleProgress));
+  public showProgress: Observable<boolean> = this.store.pipe(select(selectshowProgress));
 
   constructor(private store: Store, private reactService: ReactService, private router: Router) {
     addIcons({ removeOutline, addOutline, arrowBackCircleOutline, arrowForwardCircleOutline });
