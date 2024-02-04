@@ -1,8 +1,8 @@
 import { booleanAttribute, Component, DestroyRef, inject, numberAttribute, OnInit } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
-import { Platform } from '@ionic/angular/standalone';
+import { IonApp, IonContent, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { combineLatest, forkJoin, from, Observable, of, switchMap, tap } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Device } from '@capacitor/device';
@@ -16,25 +16,18 @@ import { initialSettingsState, SettingsState } from '../../store/state/settings.
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { selectAppTheme } from '../../store/selectors/settings.selectors';
-import { IonApp, IonContent, IonRouterOutlet } from '@ionic/angular/standalone';
 import { AsyncPipe } from '@angular/common';
 import { MenuComponent } from '../menu/menu.component';
 import { allowedLanguages, langMap } from '../../shared/translate/const/const';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   standalone: true,
-  imports: [
-    IonApp,
-    IonContent,
-    IonRouterOutlet,
-    AsyncPipe,
-    MenuComponent,
-  ],
+  imports: [IonApp, IonContent, IonRouterOutlet, AsyncPipe, MenuComponent],
 })
 export class AppComponent implements OnInit {
   darkMode: Observable<boolean> = this.store.select(selectAppTheme);
@@ -45,38 +38,45 @@ export class AppComponent implements OnInit {
     private platform: Platform,
     private store: Store,
     private translate: TranslateService,
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
-    void this.initializeApp();
+    this.initializeApp();
   }
 
-  async initializeApp(): Promise<void> {
-    await this.platform.ready();
-    this.initApplicationData().then(async () => {
-      this.initRouterWatcher();
-      this.darkThemeHandler();
-      await PushNotifications.register();
-    });
+  initializeApp(): void {
+    from(this.platform.ready())
+      .pipe(
+        switchMap(() => this.initApplicationData()),
+        tap(() => {
+          this.initRouterWatcher();
+          this.darkThemeHandler();
+        }),
+        switchMap(() => PushNotifications.register()),
+      )
+      .subscribe();
   }
 
-  private async initLanguage(language: string | null): Promise<string> {
+  private getLanguage(language: string | null): Observable<string> {
     if (language) {
-      return language;
+      return of(language);
     }
 
-    let { value: deviceLang } = await Device.getLanguageCode();
+    let deviceLanguage$ = from(Device.getLanguageCode());
 
-    if (!allowedLanguages.includes(deviceLang)) {
-      return deviceLang === 'ru-RU' || deviceLang === 'ru' ? 'ru' : 'en';
-    }
+    return deviceLanguage$.pipe(
+      map(({ value: deviceLanguage }) => {
+        if (!allowedLanguages.includes(deviceLanguage)) {
+          return deviceLanguage === 'ru-RU' || deviceLanguage === 'ru' ? 'ru' : 'en';
+        }
 
-    if (Object.keys(langMap).includes(deviceLang)) {
-      deviceLang = langMap[deviceLang];
-    }
+        if (Object.keys(langMap).includes(deviceLanguage)) {
+          deviceLanguage = langMap[deviceLanguage];
+        }
 
-    return deviceLang;
+        return deviceLanguage;
+      }),
+    );
   }
 
   private darkThemeHandler() {
@@ -86,38 +86,50 @@ export class AppComponent implements OnInit {
     });
   }
 
-  private async initApplicationData() {
-    const settings = await this.initSettings();
-    const { value: progress } = await Preferences.get({ key: 'progress' });
-    const { value: latestPage } = await Preferences.get({ key: 'latestPage' });
+  private initApplicationData() {
+    const settings$ = this.initSettings();
+    const language$ = settings$.pipe(switchMap(settings => this.getLanguage(settings['language'])));
 
-    let language = settings['language'];
-    language = await this.initLanguage(language);
-    this.translate.use(language);
-
-    this.store.dispatch(initApplicationDataAction({ settings: { ...settings, language } }));
-    this.store.dispatch(loadArticlesAction());
-    this.store.dispatch(loadProgressStateAction({ progressState: JSON.parse(progress) as Record<string, number> }));
-
-    this.restoreLatestPage(settings['restoreState'], latestPage);
-    await SplashScreen.hide();
+    return combineLatest([
+      settings$,
+      language$,
+      Preferences.get({ key: 'progress' }),
+      Preferences.get({ key: 'latestPage' }),
+    ]).pipe(
+      switchMap(([settings, language, { value: progress }, { value: latestPage }]) => {
+        console.log(settings, language, progress, latestPage);
+        this.store.dispatch(initApplicationDataAction({ settings: { ...settings, language } }));
+        this.store.dispatch(loadArticlesAction());
+        this.store.dispatch(loadProgressStateAction({ progressState: JSON.parse(progress) as Record<string, number> }));
+        this.restoreLatestPage(settings['restoreState'], latestPage);
+        return SplashScreen.hide();
+      }),
+    );
   }
 
   private initRouterWatcher() {
-    this.store.select(selectRouterState).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((routerState) => {
-      this.store.dispatch(saveLatestPageAction({ url: routerState.url }));
-    });
+    this.store
+      .select(selectRouterState)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(routerState => {
+        this.store.dispatch(saveLatestPageAction({ url: routerState.url }));
+      });
   }
 
-  private async initSettings() {
-    let settings: SettingsState = initialSettingsState;
+  private initSettings() {
+    const settingsKeys = Object.keys(initialSettingsState);
 
-    for (const setting of Object.keys(initialSettingsState)) {
-      const { value } = await Preferences.get({ key: setting });
-      settings = value ? { ...settings, [setting]: this.coerceSettingsProperty(setting, value) } : { ...settings };
-    }
-
-    return settings;
+    return forkJoin(settingsKeys.map(setting => Preferences.get({ key: setting }))).pipe(
+      map(values => {
+        return settingsKeys.reduce((acc, setting, index) => {
+          const settingValue = values[index].value;
+          return {
+            ...acc,
+            [setting]: settingValue ? this.coerceSettingsProperty(setting, settingValue) : acc[setting],
+          };
+        }, initialSettingsState);
+      }),
+    );
   }
 
   private restoreLatestPage(restoreState: boolean, latestPage: string) {
