@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Articles } from '../../entities/articles/models/article';
+import { ArticleGroup } from '../../entities/articles/models/article';
 import {
   Platform,
   ToastController,
@@ -23,7 +23,7 @@ import {
 import { Observable, Subscription } from 'rxjs';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { App } from '@capacitor/app';
-import { selectReactArticles } from '../../store/selectors/react.selectors';
+import { selectArticleGroups } from '../../store/selectors/articles.selectors';
 import { selectProgressState } from '../../store/selectors/progress.selectors';
 import { selectLanguage, selectshowProgress } from '../../store/selectors/settings.selectors';
 import { ReactService } from '../../features/services/react.service';
@@ -70,7 +70,7 @@ import { ArticleListItemComponent } from '../../widgets/article-list-item/articl
 })
 
 export class ReactArticlesComponent implements OnDestroy {
-  public articleGroups$: Observable<Articles[]> = this.store.pipe(select(selectReactArticles));
+  public articleGroups$: Observable<ArticleGroup[]> = this.store.pipe(select(selectArticleGroups));
   public progress$: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
   public showProgress$: Observable<boolean> = this.store.pipe(select(selectshowProgress));
   public language: Observable<string> = this.store.pipe(select(selectLanguage));

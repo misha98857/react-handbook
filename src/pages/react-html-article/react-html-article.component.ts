@@ -16,7 +16,7 @@ import { select, Store } from '@ngrx/store';
 import { IonContent } from '@ionic/angular/standalone';
 import * as Mark from 'mark.js';
 import { first } from 'rxjs/operators';
-import { selectReactFragment, selectSearchText } from '../../store/selectors/react.selectors';
+import { selectFragment, selectSearchText } from '../../store/selectors/articles.selectors';
 import { selectRestoreProgress } from '../../store/selectors/settings.selectors';
 import { NavigationState } from '../../store/state/navigation.state';
 import { selectNavigationState } from '../../store/selectors/navigation.selectors';
@@ -47,7 +47,7 @@ export class ReactHtmlArticleComponent implements OnInit, AfterViewChecked, OnDe
 
     private articleKey: string;
     private text$: Observable<string> = this.store.pipe(select(selectSearchText));
-    private fragment$: Observable<string> = this.store.pipe(select(selectReactFragment));
+    private fragment$: Observable<string> = this.store.pipe(select(selectFragment));
     private restoreProgress: Observable<boolean> = this.store.pipe(select(selectRestoreProgress));
     private fragment: string;
     private text: string;

@@ -5,7 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
-import { selectReactCurrentArticle } from '../../store/selectors/react.selectors';
+import { selectCurrentArticle } from '../../store/selectors/articles.selectors';
 import {
   selectFontSize,
   selectNavButtons,
@@ -73,7 +73,7 @@ import { ArticleNavigationToolbarComponent } from '../../widgets/navigation-tool
 })
 export class ReactArticleComponent {
   @Input() articleKey: string;
-  public article$: Observable<Article> = this.store.pipe(select(selectReactCurrentArticle));
+  public article$: Observable<Article> = this.store.pipe(select(selectCurrentArticle));
   public fontSize: Observable<number> = this.store.pipe(select(selectFontSize));
   public navButtonsState: Observable<boolean> = this.store.pipe(select(selectNavButtons));
   public progress: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));

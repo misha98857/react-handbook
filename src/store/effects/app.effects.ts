@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
-import { loadReactArticlesAction, loadReactArticlesSuccessAction } from '../actions/react.actions';
+import { loadArticlesAction, loadArticlesSuccessAction } from '../actions/articles.actions';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 import { selectLanguage } from '../selectors/settings.selectors';
@@ -10,13 +10,13 @@ import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 import { from, Observable } from 'rxjs';
 import { increaseOpenArticleCountAction } from '../actions/navigation.actions';
 import { Preferences } from '@capacitor/preferences';
-import { Articles } from '../../entities/articles/models/article';
+import { ArticleGroup } from '../../entities/articles/models/article';
 
 @Injectable()
 export class AppEffects {
   private loadArticles = createEffect(() =>
     this.actions$.pipe(
-      ofType(loadReactArticlesAction),
+      ofType(loadArticlesAction),
       switchMap(() => this.store.select(selectLanguage)),
       switchMap(language => {
         if (['en', 'ru'].includes(language)) {
@@ -24,8 +24,8 @@ export class AppEffects {
         }
         return this.loadDownloadedArticles(language);
       }),
-      map((articles: Array<Articles>) => {
-        return loadReactArticlesSuccessAction({ articles });
+      map((articleGroups: ArticleGroup[]) => {
+        return loadArticlesSuccessAction({ articleGroups });
       }),
     ),
   );
@@ -53,11 +53,11 @@ export class AppEffects {
   ) {
   }
 
-  private loadArticlesFile(language: string): Observable<Articles[]> {
-    return this.http.get<Articles[]>(`shared/assets/articles/react/${language}.articles.json`);
+  private loadArticlesFile(language: string): Observable<ArticleGroup[]> {
+    return this.http.get<ArticleGroup[]>(`shared/assets/articles/react/${language}.articles.json`);
   }
 
-  private loadDownloadedArticles(language: string): Observable<Articles[]> {
+  private loadDownloadedArticles(language: string): Observable<ArticleGroup[]> {
     return from(
       Filesystem.readFile({
         path: `${language}.articles.json`,
@@ -67,7 +67,7 @@ export class AppEffects {
     ).pipe(
       map(fileReadResult => {
         const fileReadResultData = fileReadResult.data as string;
-        return JSON.parse(fileReadResultData) as Articles[];
+        return JSON.parse(fileReadResultData) as ArticleGroup[];
       }),
       catchError(() => this.loadArticlesFile('en')),
     );

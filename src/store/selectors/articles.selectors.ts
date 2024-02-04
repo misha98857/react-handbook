@@ -1,24 +1,24 @@
 import { createSelector } from '@ngrx/store';
-import { ReactState } from '../state/react.state';
+import { ArticlesState } from '../state/articles.state';
 import { AppState } from '../state/app.state';
 import { SerializedRouterStateSnapshot } from '@ngrx/router-store';
-import { Articles } from '../../entities/articles/models/article';
+import { ArticleGroup } from '../../entities/articles/models/article';
 
-export const selectReactState = (state: AppState): ReactState => state.react;
+export const selectArticlesState = (state: AppState): ArticlesState => state.articles;
 export const selectRouterState = (state: AppState): SerializedRouterStateSnapshot => state.router.state;
 
-export const selectReactArticles = createSelector(selectReactState, (reactState: ReactState) => reactState.articles);
+export const selectArticleGroups = createSelector(selectArticlesState, (articlesState: ArticlesState) => articlesState.articleGroups);
 
-export const selectReactCurrentArticle = createSelector(
-  selectReactState,
+export const selectCurrentArticle = createSelector(
+  selectArticlesState,
   selectRouterState,
-  (reactState: ReactState, routerState: SerializedRouterStateSnapshot) => {
+  (reactState: ArticlesState, routerState: SerializedRouterStateSnapshot) => {
     let url: string = routerState.url.split('#')[0];
 
-    for (const i of reactState.articles) {
-      for (const j of i.values) {
-        if (url === j.path) {
-          return j;
+    for (const articleGroup of reactState.articleGroups) {
+      for (const article of articleGroup.values) {
+        if (url === article.path) {
+          return article;
         }
       }
     }
@@ -27,15 +27,15 @@ export const selectReactCurrentArticle = createSelector(
   },
 );
 
-export const selectReactFragment = createSelector(
+export const selectFragment = createSelector(
   selectRouterState,
   (routerState: SerializedRouterStateSnapshot) => routerState.root.fragment,
 );
 
-export const selectSearchedReactArticles = createSelector(selectReactState, (reactState: ReactState): Articles[] => {
-  const searchedArticles: Articles[] = [];
+export const selectSearchedArticles = createSelector(selectArticlesState, (reactState: ArticlesState): ArticleGroup[] => {
+  const searchedArticles: ArticleGroup[] = [];
 
-  for (const groupArticles of reactState.articles) {
+  for (const groupArticles of reactState.articleGroups) {
     let groupHasFound = false;
     const searchedGroupArticles = [];
 
@@ -56,6 +56,6 @@ export const selectSearchedReactArticles = createSelector(selectReactState, (rea
 });
 
 export const selectSearchText = createSelector(
-  selectReactState,
-  (reactState: ReactState): string => reactState.searchText,
+  selectArticlesState,
+  (reactState: ArticlesState): string => reactState.searchText,
 );

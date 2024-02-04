@@ -13,7 +13,7 @@ import {
 } from '../actions/settings.actions';
 import { map, switchMap } from 'rxjs/operators';
 import { Preferences } from '@capacitor/preferences';
-import { loadReactArticlesAction } from '../actions/react.actions';
+import { loadArticlesAction } from '../actions/articles.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpEventType } from '@angular/common/http';
 import { EMPTY, forkJoin } from 'rxjs';
@@ -48,7 +48,7 @@ export class SettingsEffects {
         this.translate.use(language);
         return Preferences.set({ key: 'language', value: language });
       }),
-      map(() => loadReactArticlesAction()),
+      map(() => loadArticlesAction()),
     ),
   );
 

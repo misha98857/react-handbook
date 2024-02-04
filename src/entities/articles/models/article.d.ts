@@ -1,4 +1,4 @@
-export interface Articles {
+export interface ArticleGroup {
   key: string;
   values: Article[];
 }

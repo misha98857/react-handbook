@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Articles } from '../../entities/articles/models/article';
+import { ArticleGroup } from '../../entities/articles/models/article';
 import { select, Store } from '@ngrx/store';
-import { selectSearchedReactArticles } from '../../store/selectors/react.selectors';
+import { selectSearchedArticles } from '../../store/selectors/articles.selectors';
 import { selectProgressState } from '../../store/selectors/progress.selectors';
 import { selectshowProgress } from '../../store/selectors/settings.selectors';
 import { ReactService } from '../../features/services/react.service';
-import { searchReactArticlesAction } from '../../store/actions/react.actions';
+import { searchArticlesAction } from '../../store/actions/articles.actions';
 import { openWithSearchAction } from '../../store/actions/navigation.actions';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
@@ -46,7 +46,7 @@ import { ArticleListItemComponent } from '../../widgets/article-list-item/articl
     ],
 })
 export class ReactSearchComponent {
-    public articleGroups$: Observable<Array<Articles>> = this.store.pipe(select(selectSearchedReactArticles));
+    public articleGroups$: Observable<Array<ArticleGroup>> = this.store.pipe(select(selectSearchedArticles));
     public openStatus: Map<string, boolean> = new Map<string, boolean>();
     public progress: Observable<Record<string, number>> = this.store.pipe(select(selectProgressState));
     public showProgress: Observable<boolean> = this.store.pipe(select(selectshowProgress));
@@ -58,14 +58,14 @@ export class ReactSearchComponent {
         const {
             detail: { value },
         } = e;
-        this.store.dispatch(searchReactArticlesAction({ text: value }));
+        this.store.dispatch(searchArticlesAction({ text: value }));
     }
 
     public ionViewDidEnter(): void {
         const searchedElements = document.getElementsByTagName('ion-searchbar');
         if (searchedElements) {
             const { value } = document.getElementsByTagName('ion-searchbar')[0];
-            this.store.dispatch(searchReactArticlesAction({ text: value }));
+            this.store.dispatch(searchArticlesAction({ text: value }));
         }
     }
 

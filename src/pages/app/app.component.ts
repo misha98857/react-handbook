@@ -7,11 +7,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Device } from '@capacitor/device';
 import { initApplicationDataAction } from '../../store/actions/settings.actions';
-import { loadReactArticlesAction } from '../../store/actions/react.actions';
+import { loadArticlesAction } from '../../store/actions/articles.actions';
 import { loadProgressStateAction } from '../../store/actions/progress.actions';
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { loadLatestPageAction, saveLatestPageAction } from '../../store/actions/history.actions';
-import { selectRouterState } from '../../store/selectors/react.selectors';
+import { selectRouterState } from '../../store/selectors/articles.selectors';
 import { SettingsState } from '../../store/state/settings.state';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -133,7 +133,7 @@ export class AppComponent implements OnInit, OnDestroy {
     };
     this.translate.use(language);
     this.store.dispatch(initApplicationDataAction({ settings }));
-    this.store.dispatch(loadReactArticlesAction());
+    this.store.dispatch(loadArticlesAction());
     this.store.dispatch(loadProgressStateAction({ progressState: JSON.parse(progress) as Record<string, number> }));
     if (restoreState === 'true') {
       this.store.dispatch(openWithProgressAction());
