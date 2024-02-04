@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { initialProgressState } from '../state/progress.state';
+import { initialReadProgressState } from '../state/read-progress.state';
 import {
   loadProgressStateAction,
   saveArticlesProgressStateAction,
@@ -7,7 +7,7 @@ import {
 } from '../actions/progress.actions';
 
 export const progressReducer = createReducer(
-  initialProgressState,
+  initialReadProgressState,
   on(loadProgressStateAction, (_, action) => ({
     ...action.progressState,
   })),

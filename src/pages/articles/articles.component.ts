@@ -24,7 +24,7 @@ import { Observable, Subscription } from 'rxjs';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { App } from '@capacitor/app';
 import { selectArticleGroups } from '../../store/selectors/articles.selectors';
-import { selectProgressState } from '../../store/selectors/progress.selectors';
+import { selectReadProgressState } from '../../store/selectors/progress.selectors';
 import { selectLanguage, selectShowProgress } from '../../store/selectors/settings.selectors';
 import { ArticlesService } from '../../features/services/articles.service';
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
@@ -70,7 +70,7 @@ import { ArticleListItemComponent } from '../../widgets/article-list-item/articl
 
 export class ArticlesComponent implements OnDestroy {
   articleGroups$: Observable<ArticleGroup[]> = this.store.select(selectArticleGroups);
-  progress$: Observable<Record<string, number>> = this.store.select(selectProgressState);
+  progress$: Observable<Record<string, number>> = this.store.select(selectReadProgressState);
   showProgress$: Observable<boolean> = this.store.select(selectShowProgress);
   language: Observable<string> = this.store.select(selectLanguage);
 

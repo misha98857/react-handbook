@@ -1,14 +1,12 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component, DestroyRef, ElementRef, inject,
   Input,
-  OnInit,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Observable, withLatestFrom } from 'rxjs';
+import { combineLatest, filter, Observable, withLatestFrom } from 'rxjs';
 import { Article } from '../../entities/articles/models/articles';
 import { Store } from '@ngrx/store';
 import { IonContent } from '@ionic/angular/standalone';
@@ -24,105 +22,95 @@ import {
   returnDefaultNavigationStateAction,
 } from '../../store/actions/navigation.actions';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { selectReadProgressState } from '../../store/selectors/progress.selectors';
+import { ReadProgressState } from '../../store/state/read-progress.state';
+import { SanitizeHtmlPipe } from '../../shared/articles/pipes/sanitaze.pipe';
 
 @Component({
-  selector: 'app-html-html-article',
+  selector: 'app-article-render',
   templateUrl: './article-render.component.html',
   styleUrls: ['./article-render.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [IonContent],
+  imports: [IonContent, SanitizeHtmlPipe],
 })
-export class ArticleRenderComponent implements OnInit {
+export class ArticleRenderComponent implements AfterViewInit {
   @ViewChild(IonContent) content: IonContent;
   @ViewChild('renderElement') renderElement: ElementRef<HTMLDivElement>;
 
-  @Input() html: Observable<Article>;
-  article: SafeHtml;
+  @Input() html: Article;
 
   private searchText$: Observable<string> = this.store.select(selectSearchText);
   private fragment$: Observable<string> = this.store.select(selectFragment);
   private restoreProgress$: Observable<boolean> = this.store.select(selectRestoreProgress);
   private navigationState$: Observable<NavigationState> = this.store.select(selectNavigationState);
-
-  private articleKey: string;
-  private fragment: string;
-  private isSearch: boolean;
-  private isProgress: boolean;
-  private isInternalLink: boolean;
-  private progressState: Record<string, number>;
+  private readProgressState$: Observable<ReadProgressState> = this.store.select(selectReadProgressState);
 
   destroyRef = inject(DestroyRef);
 
-  constructor(private sanitizer: DomSanitizer, private cdRef: ChangeDetectorRef, private store: Store) {
+  constructor(private store: Store) {
   }
 
   saveReadProgress({ offsetHeight, scrollTop, scrollHeight }): void {
     const articleProgress = ((scrollTop / (scrollHeight - offsetHeight)) * 100).toFixed(4);
-    this.store.dispatch(setArticleProgressStateAction({ key: this.articleKey, value: articleProgress }));
+    this.store.dispatch(setArticleProgressStateAction({ key: this.html.key, value: articleProgress }));
   }
 
-  progressScroll(): void {
-    this.restoreProgress$.pipe(first()).subscribe((restoreProgress) => {
-      if (this.isProgress && restoreProgress) {
-        void this.content.getScrollElement().then((element) => {
-          const { scrollHeight, offsetHeight } = element;
-          void this.content.scrollToPoint(0, ((scrollHeight - offsetHeight) * this.progressState[this.articleKey]) / 100, 0).then(() => {
-            this.store.dispatch(returnDefaultNavigationStateAction());
-          });
+  scrollToReadProgress(): void {
+    combineLatest([
+      this.restoreProgress$,
+      this.content.getScrollElement(),
+      this.navigationState$,
+      this.readProgressState$,
+    ]).pipe(
+      first(),
+      filter(
+        ([restoreProgress, _, navigationState]) => restoreProgress && navigationState.isProgress,
+      ),
+      takeUntilDestroyed(this.destroyRef))
+      .subscribe(([_, { scrollHeight, offsetHeight }, __, progressState]) => {
+        this.content.scrollToPoint(0, ((scrollHeight - offsetHeight) * progressState[this.html.key]) / 100, 0).then(() => {
+          this.store.dispatch(returnDefaultNavigationStateAction());
         });
-      } else {
-        this.store.dispatch(returnDefaultNavigationStateAction());
-      }
-    });
+      });
   }
 
-  ngOnInit(): void {
-    this.navigationState$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
-      this.isSearch = state.isSearch;
-      this.isProgress = state.isProgress;
-      this.isInternalLink = state.isInternalLink;
-    });
-
-    this.html.pipe(withLatestFrom(this.searchText$), takeUntilDestroyed(this.destroyRef)).subscribe(([html, text]) => {
-      this.article = this.sanitizer.bypassSecurityTrustHtml(html.value);
-      this.articleKey = html.key;
-      this.cdRef.detectChanges();
-      this.scrollToText(text);
-    });
-
-    this.fragment$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((fragment) => {
-      if (fragment) {
-        this.fragment = fragment;
-      }
+  ngAfterViewInit(): void {
+    this.navigationState$.pipe(withLatestFrom(this.searchText$, this.fragment$), takeUntilDestroyed(this.destroyRef)).subscribe(([navigationState, searchText, fragment]) => {
+      this.scrollToSearchedText(searchText, navigationState);
+      this.scrollToFragment(fragment, navigationState);
+      this.scrollToReadProgress();
     });
 
     this.store.dispatch(increaseOpenArticleCountAction());
   }
 
-  private scrollToText(text: string): void {
-    if (text && this.isSearch) {
-      const instance: Mark = new Mark(this.renderElement.nativeElement);
-      instance.mark(text, { accuracy: 'complementary' });
-      const markedElements = document.getElementsByTagName('mark');
-      if (markedElements.length) {
-        setTimeout(() => markedElements[0].scrollIntoView(), 0);
-      }
+  private scrollToSearchedText(text: string, { isSearch }: NavigationState): void {
+    if (!text || !isSearch) {
+      return;
     }
 
-    if (this.fragment && this.isInternalLink) {
-      const element = document.getElementById(this.fragment);
-      if (element) {
-        const offset = element.offsetTop;
-        void this.content.scrollToPoint(0, offset, 300).then(() => {
-          this.store.dispatch(returnDefaultNavigationStateAction());
-        });
-      }
+    const instance: Mark = new Mark(this.renderElement.nativeElement);
+    instance.mark(text, { accuracy: 'complementary' });
+    const markedElements = document.getElementsByTagName('mark');
+
+    if (markedElements.length) {
+      setTimeout(() => markedElements?.[0].scrollIntoView());
+      this.store.dispatch(returnDefaultNavigationStateAction());
+    }
+  }
+
+  private scrollToFragment(fragment: string, { isInternalLink }: NavigationState): void {
+    if (!fragment || !isInternalLink) {
+      return;
     }
 
-    if (this.articleKey) {
-      this.progressScroll();
+    const element: HTMLElement = this.renderElement.nativeElement.querySelector(`#${fragment}`);
+    if (element) {
+      this.content.scrollToPoint(0, element.offsetTop).then(() => {
+        this.store.dispatch(returnDefaultNavigationStateAction());
+      });
     }
   }
 }

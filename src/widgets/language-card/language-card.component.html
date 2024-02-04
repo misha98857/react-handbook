@@ -1,6 +1,6 @@
 <ion-card [disabled]='disabled' (click)='setLanguage()'>
   <ion-card-content>
-    <img ngSrc='{{ imagePath }}' alt='{{ message }}' width="auto" height="auto" loading="eager" />
+    <img src='{{ imagePath }}' alt='{{ message }}' />
     <ion-card-title class='language-card-title' [color]="selected ? 'primary' : ''">{{ message }}</ion-card-title>
   </ion-card-content>
 </ion-card>

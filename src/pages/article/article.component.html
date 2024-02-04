@@ -16,12 +16,12 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <app-html-html-article
-    [html]='article$'
+  <app-article-render
+    [html]='article$ | async'
     (click)='getRoute($event)'
     [ngStyle]="{'font-size': (fontSize | async).toString() + 'rem'}"
   >
-  </app-html-html-article>
+  </app-article-render>
 </ion-content>
 <ion-footer>
   <ion-toolbar *ngIf='navButtonsState | async'>

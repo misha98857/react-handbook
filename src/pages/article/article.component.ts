@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Article } from '../../entities/articles/models/articles';
 import { Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
 import { selectCurrentArticle } from '../../store/selectors/articles.selectors';
 import {
@@ -11,7 +11,7 @@ import {
   selectNavButtons,
   selectShowProgress,
 } from '../../store/selectors/settings.selectors';
-import { selectProgressState } from '../../store/selectors/progress.selectors';
+import { selectReadProgressState } from '../../store/selectors/progress.selectors';
 import { ArticlesService } from '../../features/services/articles.service';
 import { decreaseFontSizeAction, increaseFontSizeAction } from '../../store/actions/settings.actions';
 import { openInternalLinkAction } from '../../store/actions/navigation.actions';
@@ -39,6 +39,7 @@ import {
 import {
   ArticleNavigationToolbarComponent,
 } from '../../widgets/navigation-toolbar/article-navigation-toolbar.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-react-article',
@@ -78,10 +79,10 @@ export class ArticleComponent {
   article$: Observable<Article> = this.store.select(selectCurrentArticle);
   fontSize: Observable<number> = this.store.select(selectFontSize);
   navButtonsState: Observable<boolean> = this.store.select(selectNavButtons);
-  progress: Observable<Record<string, number>> = this.store.select(selectProgressState);
+  progress: Observable<Record<string, number>> = this.store.select(selectReadProgressState);
   showProgress: Observable<boolean> = this.store.select(selectShowProgress);
 
-  constructor(private store: Store, private router: Router) {
+  constructor(private store: Store, private router: Router, private domSanitazer: DomSanitizer) {
     addIcons({ removeOutline, addOutline, arrowBackCircleOutline, arrowForwardCircleOutline });
   }
 
