@@ -5,7 +5,7 @@
   "homepage": "https://github.com/misha98857/react-handbook",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --configuration=development",
     "build": "ng build --configuration=production",
     "sync": "ng build --configuration=production && npx ionic capacitor sync --configuration=production",
     "android": "npx cap open android",
