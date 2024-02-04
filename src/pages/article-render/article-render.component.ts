@@ -4,13 +4,12 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-  OnDestroy,
   OnInit,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Article } from '../../entities/articles/models/articles';
 import { Store } from '@ngrx/store';
 import { IonContent } from '@ionic/angular/standalone';
@@ -20,16 +19,12 @@ import { selectFragment, selectSearchText } from '../../store/selectors/articles
 import { selectRestoreProgress } from '../../store/selectors/settings.selectors';
 import { NavigationState } from '../../store/state/navigation.state';
 import { selectNavigationState } from '../../store/selectors/navigation.selectors';
-import { selectProgressState } from '../../store/selectors/progress.selectors';
-import { ProgressState } from '../../store/state/progress.state';
-import {
-  saveArticlesProgressStateAction,
-  setArticleProgressStateAction,
-} from '../../store/actions/progress.actions';
+import { setArticleProgressStateAction } from '../../store/actions/progress.actions';
 import {
   increaseOpenArticleCountAction,
   returnDefaultNavigationStateAction,
 } from '../../store/actions/navigation.actions';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-html-html-article',
@@ -40,7 +35,7 @@ import {
   standalone: true,
   imports: [IonContent],
 })
-export class ArticleRenderComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class ArticleRenderComponent implements OnInit, AfterViewChecked {
   @ViewChild(IonContent) content: IonContent;
   @Input() html: Observable<Article>;
   article: SafeHtml;
@@ -52,13 +47,7 @@ export class ArticleRenderComponent implements OnInit, AfterViewChecked, OnDestr
   private fragment: string;
   private text: string;
   private lock: boolean;
-  private textSubscription: Subscription;
-  htmlSubscription: Subscription;
-  private fragmentSubscription: Subscription;
   private navigationState: Observable<NavigationState> = this.store.select(selectNavigationState);
-  private navigationStateSubscription: Subscription;
-  private progressState$: Observable<ProgressState> = this.store.select(selectProgressState);
-  private progressStateSubscription: Subscription;
   private isSearch: boolean;
   private isProgress: boolean;
   private isInternalLink: boolean;
@@ -91,32 +80,27 @@ export class ArticleRenderComponent implements OnInit, AfterViewChecked, OnDestr
   }
 
   ngOnInit(): void {
-    this.navigationStateSubscription = this.navigationState.subscribe((state) => {
+    this.navigationState.pipe(takeUntilDestroyed()).subscribe((state) => {
       this.isSearch = state.isSearch;
       this.isProgress = state.isProgress;
       this.isInternalLink = state.isInternalLink;
     });
 
-    this.htmlSubscription = this.html.subscribe((html) => {
+    this.html.pipe(takeUntilDestroyed()).subscribe((html) => {
       this.article = this.sanitizer.bypassSecurityTrustHtml(html.value);
       this.articleKey = html.key;
       this.cdRef.markForCheck();
     });
 
-    this.progressStateSubscription = this.progressState$.subscribe((state) => {
-      this.progressState = state;
-      if (Object.keys(state).length !== 0) {
-        this.store.dispatch(saveArticlesProgressStateAction({ progressState: state }));
-      }
-    });
 
-    this.textSubscription = this.text$.subscribe((text) => {
+    this.text$.pipe(takeUntilDestroyed()).subscribe((text) => {
       if (text) {
         this.lock = false;
         this.text = text;
       }
     });
-    this.fragmentSubscription = this.fragment$.subscribe((fragment) => {
+
+    this.fragment$.pipe(takeUntilDestroyed()).subscribe((fragment) => {
       if (fragment) {
         this.lock = false;
         this.fragment = fragment;
@@ -150,13 +134,5 @@ export class ArticleRenderComponent implements OnInit, AfterViewChecked, OnDestr
     if (this.articleKey) {
       this.progressScroll();
     }
-  }
-
-  ngOnDestroy(): void {
-    this.htmlSubscription.unsubscribe();
-    this.fragmentSubscription.unsubscribe();
-    this.textSubscription.unsubscribe();
-    this.navigationStateSubscription.unsubscribe();
-    this.progressStateSubscription.unsubscribe();
   }
 }
