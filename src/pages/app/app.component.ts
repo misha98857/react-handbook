@@ -6,7 +6,7 @@ import { combineLatest, forkJoin, from, Observable, of, switchMap, tap } from 'r
 import { TranslateService } from '@ngx-translate/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Device } from '@capacitor/device';
-import { initApplicationDataAction } from '../../store/actions/settings.actions';
+import { increaseOpenCountAction, initApplicationDataAction } from '../../store/actions/settings.actions';
 import { loadArticlesAction } from '../../store/actions/articles.actions';
 import { loadProgressStateAction } from '../../store/actions/progress.actions';
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
@@ -95,10 +95,11 @@ export class AppComponent implements OnInit {
       language$,
       Preferences.get({ key: 'progress' }),
       Preferences.get({ key: 'latestPage' }),
+      Preferences.get({ key: 'openCount' }),
     ]).pipe(
-      switchMap(([settings, language, { value: progress }, { value: latestPage }]) => {
-        console.log(settings, language, progress, latestPage);
+      switchMap(([settings, language, { value: progress }, { value: latestPage }, { value: openCount }]) => {
         this.store.dispatch(initApplicationDataAction({ settings: { ...settings, language } }));
+        this.store.dispatch(increaseOpenCountAction({ openCount: parseInt(openCount ?? '0', 10) + 1, language }));
         this.store.dispatch(loadArticlesAction());
         this.store.dispatch(loadProgressStateAction({ progressState: JSON.parse(progress) as Record<string, number> }));
         this.restoreLatestPage(settings['restoreState'], latestPage);

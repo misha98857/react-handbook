@@ -4,6 +4,7 @@ import {
   changeAppLanguageAction,
   decreaseFontSizeAction,
   increaseFontSizeAction,
+  increaseOpenCountAction,
   initApplicationDataAction,
   toggleNavigationButtonAction,
   toggleRestoreProgressAction,
@@ -35,6 +36,22 @@ export class SettingsEffects {
       this.actions$.pipe(
         ofType(toggleNavigationButtonAction),
         switchMap(({ navButton }) => void Preferences.set({ key: 'navButton', value: navButton.toString() })),
+      ),
+    { dispatch: false },
+  );
+
+  private increaseOpenCount = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(increaseOpenCountAction),
+        map(({ openCount, language }) => {
+          void Preferences.set({ key: 'openCount', value: openCount.toString() });
+          setTimeout(() => {
+            if (openCount === 1) {
+              return this.downloadArticlesFile(language);
+            }
+          }, 1000);
+        }),
       ),
     { dispatch: false },
   );

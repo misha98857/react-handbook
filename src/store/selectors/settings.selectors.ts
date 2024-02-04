@@ -19,6 +19,11 @@ export const selectNavButtons = createSelector(
   (settingsState: SettingsState) => settingsState.navButton,
 );
 
+export const selectOpenCount = createSelector(
+  selectSettingsState,
+  (settingsState: SettingsState) => settingsState.openCount,
+);
+
 export const selectFontSize = createSelector(
   selectSettingsState,
   (settingsState: SettingsState) => settingsState.fontSize,
