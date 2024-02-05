@@ -26,7 +26,7 @@ export class SettingsEffects {
     () =>
       this.actions$.pipe(
         ofType(toggleThemeAction),
-        switchMap(({ darkTheme }) => void Preferences.set({ key: 'darkTheme', value: darkTheme.toString() })),
+        switchMap(({ darkTheme }) => Preferences.set({ key: 'darkTheme', value: darkTheme.toString() })),
       ),
     { dispatch: false },
   );
@@ -35,7 +35,7 @@ export class SettingsEffects {
     () =>
       this.actions$.pipe(
         ofType(toggleNavigationButtonAction),
-        switchMap(({ navButton }) => void Preferences.set({ key: 'navButton', value: navButton.toString() })),
+        switchMap(({ navButton }) => Preferences.set({ key: 'navButton', value: navButton.toString() })),
       ),
     { dispatch: false },
   );
