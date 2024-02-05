@@ -19,8 +19,10 @@ export class SettingsService {
     let localSettings = { ...initialSettingsState };
 
     settings.forEach(({ key, value }) => {
-      const normalizedValue = this.coerceSettingsProperty(key, value);
-      localSettings = normalizedValue ? { ...localSettings, [key]: normalizedValue } : localSettings;
+      if (value !== undefined && value !== null) {
+        const normalizedValue = this.coerceSettingsProperty(key, value);
+        localSettings = { ...localSettings, [key]: normalizedValue };
+      }
     });
 
     return localSettings;
