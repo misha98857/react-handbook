@@ -39,7 +39,7 @@ export class AppEffects {
           const { value: openArticleCount } = await Preferences.get({ key: 'openArticleCount' });
           const openArticleCountNumber = +(openArticleCount ?? '0') + 1;
 
-          await Preferences.set({ key: 'openArticleCount', value: openArticleCountNumber.toString() });
+          return Preferences.set({ key: 'openArticleCount', value: openArticleCountNumber.toString() });
         }),
       ),
     { dispatch: false },
