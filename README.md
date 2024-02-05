@@ -38,7 +38,8 @@ npm run android
 
 ## Roadmap
 
-I have a really tight deadline. Here are some planned changes related to cleaning up the project:
+
+I have a tight deadline and didn't manage to complete everything. Here are some planned changes related to cleaning up the project:
 
 1. Remove all void/async/await from the project. It's Angular with RxJS, and these should be avoided.
 2. Move all dispatches from widgets/pages to the feature slice.
