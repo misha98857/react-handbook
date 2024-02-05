@@ -1,26 +1,27 @@
-import { booleanAttribute, Component, DestroyRef, inject, numberAttribute, OnInit } from '@angular/core';
-import { Preferences } from '@capacitor/preferences';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { IonApp, IonContent, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
-import { combineLatest, forkJoin, from, Observable, of, switchMap, tap } from 'rxjs';
+import { forkJoin, from, Observable, of, switchMap, tap } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Device } from '@capacitor/device';
-import { increaseOpenCountAction, initApplicationDataAction } from '../../store/actions/settings.actions';
-import { loadArticlesAction } from '../../store/actions/articles.actions';
-import { loadProgressStateAction } from '../../store/actions/progress.actions';
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { loadLatestPageAction, saveLatestPageAction } from '../../store/actions/history.actions';
 import { selectRouterState } from '../../store/selectors/articles.selectors';
-import { initialSettingsState } from '../../store/state/settings.state';
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { SplashScreen } from '@capacitor/splash-screen';
 import { selectAppTheme } from '../../store/selectors/settings.selectors';
 import { AsyncPipe } from '@angular/common';
 import { MenuComponent } from '../menu/menu.component';
 import { allowedLanguages, langMap } from '../../shared/translate/const/const';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
+import { SettingsService } from '../../features/services/settings.service';
+import { SettingsState } from '../../store/state/settings.state';
+import { increaseOpenCountAction, initApplicationDataAction } from '../../store/actions/settings.actions';
+import { loadArticlesAction } from '../../store/actions/articles.actions';
+import { loadProgressStateAction } from '../../store/actions/progress.actions';
+import { Preferences } from '@capacitor/preferences';
+import { SplashScreen } from '@capacitor/splash-screen';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +39,7 @@ export class AppComponent implements OnInit {
     private platform: Platform,
     private store: Store,
     private translate: TranslateService,
+    private settingsService: SettingsService,
   ) {}
 
   ngOnInit(): void {
@@ -47,7 +49,8 @@ export class AppComponent implements OnInit {
   initializeApp(): void {
     from(this.platform.ready())
       .pipe(
-        switchMap(() => this.initApplicationData()),
+        switchMap(() => this.settingsService.initSettings$()),
+        switchMap(settings => this.initApplicationData(settings)),
         tap(() => {
           this.initRouterWatcher();
           this.darkThemeHandler();
@@ -86,24 +89,19 @@ export class AppComponent implements OnInit {
     });
   }
 
-  private initApplicationData() {
-    const settings$ = this.initSettings();
-    const language$ = settings$.pipe(switchMap(settings => this.getLanguage(settings['language'])));
+  private initApplicationData(settings: SettingsState) {
+    const language$ = this.getLanguage(settings['language']);
 
-    return combineLatest([
-      settings$,
-      language$,
-      Preferences.get({ key: 'progress' }),
-      Preferences.get({ key: 'latestPage' }),
-      Preferences.get({ key: 'openCount' }),
-    ]).pipe(
-      switchMap(([settings, language, { value: progress }, { value: latestPage }, { value: openCount }]) => {
+    return forkJoin([language$, Preferences.get({ key: 'progress' }), Preferences.get({ key: 'latestPage' })]).pipe(
+      switchMap(([language, progress, latestPage]) => {
         this.translate.use(language);
         this.store.dispatch(initApplicationDataAction({ settings: { ...settings, language } }));
-        this.store.dispatch(increaseOpenCountAction({ openCount: parseInt(openCount ?? '0', 10) + 1, language }));
+        this.store.dispatch(increaseOpenCountAction({ openCount: settings['openCount'] + 1, language }));
         this.store.dispatch(loadArticlesAction());
-        this.store.dispatch(loadProgressStateAction({ progressState: JSON.parse(progress) as Record<string, number> }));
-        this.restoreLatestPage(settings['restoreState'], latestPage);
+        this.store.dispatch(
+          loadProgressStateAction({ progressState: JSON.parse(progress.value) as Record<string, number> }),
+        );
+        this.restoreLatestPage(settings['restoreState'], latestPage.value);
         return SplashScreen.hide();
       }),
     );
@@ -118,22 +116,6 @@ export class AppComponent implements OnInit {
       });
   }
 
-  private initSettings() {
-    const settingsKeys = Object.keys(initialSettingsState);
-
-    return forkJoin(settingsKeys.map(setting => Preferences.get({ key: setting }))).pipe(
-      map(values => {
-        return settingsKeys.reduce((acc, setting, index) => {
-          const settingValue = values[index].value;
-          return {
-            ...acc,
-            [setting]: settingValue ? this.coerceSettingsProperty(setting, settingValue) : acc[setting],
-          };
-        }, initialSettingsState);
-      }),
-    );
-  }
-
   private restoreLatestPage(restoreState: boolean, latestPage: string) {
     if (restoreState && latestPage) {
       this.store.dispatch(openWithProgressAction());
@@ -144,17 +126,5 @@ export class AppComponent implements OnInit {
     if (location.pathname !== '/react') {
       location.assign('/react');
     }
-  }
-
-  private coerceSettingsProperty(settingKey: string, value: string) {
-    if (typeof initialSettingsState[settingKey] === 'boolean') {
-      return booleanAttribute(value);
-    }
-
-    if (typeof initialSettingsState[settingKey] === 'number') {
-      return numberAttribute(value, 1);
-    }
-
-    return value;
   }
 }
