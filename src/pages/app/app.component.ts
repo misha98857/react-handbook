@@ -62,7 +62,7 @@ export class AppComponent implements OnInit {
       return of(language);
     }
 
-    let deviceLanguage$ = from(Device.getLanguageCode());
+    const deviceLanguage$ = from(Device.getLanguageCode());
 
     return deviceLanguage$.pipe(
       map(({ value: deviceLanguage }) => {
@@ -98,6 +98,7 @@ export class AppComponent implements OnInit {
       Preferences.get({ key: 'openCount' }),
     ]).pipe(
       switchMap(([settings, language, { value: progress }, { value: latestPage }, { value: openCount }]) => {
+        this.translate.use(language);
         this.store.dispatch(initApplicationDataAction({ settings: { ...settings, language } }));
         this.store.dispatch(increaseOpenCountAction({ openCount: parseInt(openCount ?? '0', 10) + 1, language }));
         this.store.dispatch(loadArticlesAction());

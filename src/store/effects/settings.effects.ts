@@ -47,7 +47,7 @@ export class SettingsEffects {
         map(({ openCount, language }) => {
           void Preferences.set({ key: 'openCount', value: openCount.toString() });
           setTimeout(() => {
-            if (openCount === 1) {
+            if (openCount === 1 && !['ru', 'en'].includes(language)) {
               return this.downloadArticlesFile(language);
             }
           }, 1000);
