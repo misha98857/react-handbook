@@ -7,7 +7,7 @@ android {
         applicationId "dev.misha98857.react_article"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 99
+        versionCode 102
         versionName "5.0.0~beta1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
