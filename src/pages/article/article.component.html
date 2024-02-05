@@ -17,8 +17,9 @@
 </ion-header>
 <ion-content>
   <app-article-render
-    [html]='article$ | async'
+    *ngIf="(article$ | async).key"
     (click)='getRoute($event)'
+    [html]='article$ | async'
     [ngStyle]="{'font-size': (fontSize | async).toString() + 'rem'}"
   >
   </app-article-render>

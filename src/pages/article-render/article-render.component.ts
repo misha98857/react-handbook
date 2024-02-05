@@ -9,7 +9,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { combineLatest, filter, Observable, withLatestFrom } from 'rxjs';
+import { combineLatest, filter, Observable } from 'rxjs';
 import { Article } from '../../entities/articles/models/articles';
 import { Store } from '@ngrx/store';
 import { IonContent } from '@ionic/angular/standalone';
@@ -82,8 +82,8 @@ export class ArticleRenderComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.navigationState$
-      .pipe(withLatestFrom(this.searchText$, this.fragment$), takeUntilDestroyed(this.destroyRef))
+    combineLatest([this.navigationState$, this.searchText$, this.fragment$])
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(([navigationState, searchText, fragment]) => {
         this.scrollToSearchedText(searchText, navigationState);
         this.scrollToFragment(fragment, navigationState);
