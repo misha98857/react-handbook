@@ -1,6 +1,6 @@
 import { booleanAttribute, Injectable, numberAttribute } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
-import { forkJoin, from, switchMap } from 'rxjs';
+import { forkJoin, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { initialSettingsState } from '../../store/state/settings.state';
 
@@ -9,8 +9,7 @@ import { initialSettingsState } from '../../store/state/settings.state';
 })
 export class SettingsService {
   initSettings$() {
-    return from(Preferences.keys()).pipe(
-      switchMap(({ keys }) => forkJoin([...keys.map(key => this.getPreference(key))])),
+    return forkJoin([...Object.keys(initialSettingsState).map(key => this.getPreference(key))]).pipe(
       map(settings => this.mergeSettings(settings)),
     );
   }
