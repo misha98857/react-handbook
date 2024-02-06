@@ -11,20 +11,22 @@
 </ion-header>
 <ion-content [fullscreen]="true" id='main'>
   <ion-accordion-group>
-    <ion-accordion *ngFor='let articleGroup of articleGroups$ | async'>
-      <ion-item slot='header'>
-        <ion-label> {{ articleGroup.key }}</ion-label>
-      </ion-item>
-      <ion-list slot='content'>
-        <app-article-list-item
-          (openArticle)="openArticleWithSearch()"
-          [articles]="articleGroup.values"
-          [readProgress]="progress | async"
-          [showProgress]="showProgress | async"
-        >
-        </app-article-list-item>
-      </ion-list>
-    </ion-accordion>
+    @for (articleGroup of articleGroups$ | async; track articleGroup.key) {
+      <ion-accordion>
+        <ion-item slot='header'>
+          <ion-label> {{ articleGroup.key }}</ion-label>
+        </ion-item>
+        <ion-list slot='content'>
+          <app-article-list-item
+            (openArticle)="openArticleWithSearch()"
+            [articles]="articleGroup.values"
+            [readProgress]="progress | async"
+            [showProgress]="showProgress | async"
+          >
+          </app-article-list-item>
+        </ion-list>
+      </ion-accordion>
+    }
   </ion-accordion-group>
   <app-github-star></app-github-star>
 </ion-content>
