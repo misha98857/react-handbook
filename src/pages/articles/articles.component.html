@@ -17,19 +17,35 @@
 </ion-header>
 <ion-content>
   <ion-accordion-group>
-    <ion-accordion *ngFor='let articleGroup of articleGroups$ | async'>
-      <ion-item slot='header'>
-        <ion-label> {{ articleGroup.key }}</ion-label>
-      </ion-item>
-      <ion-list slot='content'>
-        <app-article-list-item
-          (openArticle)="openArticle()"
-          [articles]="articleGroup.values"
-          [readProgress]="progress$ | async"
-          [showProgress]="showProgress$ | async">
-        </app-article-list-item>
-      </ion-list>
-    </ion-accordion>
+    @for (articleGroup of articleGroups$ | async; track articleGroup.key) {
+      <ion-accordion>
+        <ion-item slot='header'>
+          <ion-label> {{ articleGroup.key }}</ion-label>
+        </ion-item>
+        <ion-list slot='content'>
+          <app-article-list-item
+            (openArticle)="openArticle()"
+            [articles]="articleGroup.values"
+            [readProgress]="progress$ | async"
+            [showProgress]="showProgress$ | async">
+          </app-article-list-item>
+        </ion-list>
+      </ion-accordion>
+    } @empty {
+      <ng-container *ngTemplateOutlet="skeleton"></ng-container>
+    }
   </ion-accordion-group>
   <app-github-star></app-github-star>
 </ion-content>
+
+<ng-template #skeleton>
+  @for (loadingItem of skeletonLoadingItems; track $index) {
+    <ion-accordion [readonly]="true">
+      <ion-item slot='header'>
+        <ion-label>
+          <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+        </ion-label>
+      </ion-item>
+    </ion-accordion>
+  }
+</ng-template>

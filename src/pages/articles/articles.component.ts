@@ -15,6 +15,7 @@ import {
   IonLabel,
   IonList,
   IonMenuButton,
+  IonSkeletonText,
   IonTitle,
   IonToolbar,
   Platform,
@@ -29,7 +30,7 @@ import { selectLanguage, selectShowProgress } from '../../store/selectors/settin
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { addIcons } from 'ionicons';
 import { languageOutline, search } from 'ionicons/icons';
-import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 import { GithubStarComponent } from '../../widgets/github-star/github-star.component';
@@ -66,6 +67,8 @@ import { GithubStarComponent } from '../../widgets/github-star/github-star.compo
     TranslateModule,
     ArticleListItemComponent,
     GithubStarComponent,
+    IonSkeletonText,
+    NgTemplateOutlet,
   ],
 })
 export class ArticlesComponent implements OnDestroy {
@@ -73,6 +76,8 @@ export class ArticlesComponent implements OnDestroy {
   progress$: Observable<Record<string, number>> = this.store.select(selectReadProgressState);
   showProgress$: Observable<boolean> = this.store.select(selectShowProgress);
   language: Observable<string> = this.store.select(selectLanguage);
+
+  skeletonLoadingItems = [...Array(8).keys()];
 
   private backButtonSubscribe: Subscription;
   private backCounter = 0;
