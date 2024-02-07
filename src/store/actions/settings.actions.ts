@@ -19,7 +19,7 @@ export const toggleNavigationButtonAction = createAction(
 
 export const increaseOpenCountAction = createAction(
   '[Settings Module] increaseOpenCountAction',
-  props<{ openCount: number; language: string }>(),
+  props<{ openCount: number }>(),
 );
 
 export const changeAppLanguageAction = createAction(

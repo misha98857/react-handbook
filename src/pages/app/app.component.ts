@@ -94,9 +94,8 @@ export class AppComponent implements OnInit {
 
     return forkJoin([language$, Preferences.get({ key: 'progress' }), Preferences.get({ key: 'latestPage' })]).pipe(
       switchMap(([language, progress, latestPage]) => {
-        this.translate.use(language);
         this.store.dispatch(initApplicationDataAction({ settings: { ...settings, language } }));
-        this.store.dispatch(increaseOpenCountAction({ openCount: settings['openCount'] + 1, language }));
+        this.store.dispatch(increaseOpenCountAction({ openCount: settings['openCount'] + 1 }));
         this.store.dispatch(loadArticlesAction());
         this.store.dispatch(
           loadProgressStateAction({ progressState: JSON.parse(progress.value) as Record<string, number> }),
