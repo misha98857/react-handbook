@@ -2,7 +2,6 @@ import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { IonApp, IonContent, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
 import { forkJoin, from, Observable, of, switchMap, tap } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Device } from '@capacitor/device';
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
@@ -38,7 +37,6 @@ export class AppComponent implements OnInit {
   constructor(
     private platform: Platform,
     private store: Store,
-    private translate: TranslateService,
     private settingsService: SettingsService,
   ) {}
 
