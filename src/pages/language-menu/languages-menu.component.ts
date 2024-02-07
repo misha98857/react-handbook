@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { concatMap, EMPTY, filter, Observable, of } from 'rxjs';
 import {
   IonBackButton,
   IonButtons,
@@ -22,6 +22,7 @@ import { ArticlesService } from '../../features/services/articles.service';
 import { LanguageCardComponent } from '../../widgets/language-card/language-card.component';
 import { AsyncPipe, NgFor } from '@angular/common';
 import { Language } from '../../entities/languages/models/languages';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-languages-menu',
@@ -77,22 +78,35 @@ export class LanguagesMenuComponent {
 
   private async downloadLanguagePack(language: string): Promise<void> {
     await this.presentLoading();
-    this.languageService.downloadLanguage(language).subscribe({
-      next: event => {
-        if (event.type === HttpEventType.DownloadProgress) {
-          this.loadingPercentage = (event.loaded / event.total) * 100;
-          this.loadingProgressMessage.message = `${this.translate.instant('download-localization')}${this.loadingPercentage.toFixed(0)}%`;
-        } else if (event.type === HttpEventType.Response) {
+    this.languageService
+      .downloadLanguage(language)
+      .pipe(
+        concatMap(event => {
+          if (event.type === HttpEventType.Response) {
+            this.loadingProgressMessage.dismiss();
+            this.loadingPercentage = 0;
+            return this.languageService.saveArticlesFile(language, event.body);
+          }
+
+          if (event.type === HttpEventType.DownloadProgress) {
+            this.loadingPercentage = (event.loaded / event.total) * 100;
+            this.loadingProgressMessage.message = `${this.translate.instant('download-localization')}${this.loadingPercentage.toFixed(0)}%`;
+          }
+
+          return of('');
+        }),
+        filter(fileResult => !!fileResult),
+        catchError(() => {
           this.loadingProgressMessage.dismiss();
           this.loadingPercentage = 0;
-          void this.languageService.saveArticlesFile(language, event.body);
+          this.articlesService.presentErrorDownloadAlert();
+          return EMPTY;
+        }),
+      )
+      .subscribe(fileResult => {
+        if (fileResult) {
+          this.store.dispatch(changeAppLanguageAction({ language }));
         }
-      },
-      error: () => {
-        this.loadingProgressMessage.dismiss();
-        this.loadingPercentage = 0;
-        this.articlesService.presentErrorDownloadAlert();
-      },
-    });
+      });
   }
 }

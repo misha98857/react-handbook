@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 import { ArticlesService } from './articles.service';
-import { Store } from '@ngrx/store';
-import { changeAppLanguageAction } from '../../store/actions/settings.actions';
+import { from, throwError } from 'rxjs';
+import { ArticleGroup } from '../../entities/articles/models/articles';
 
 @Injectable({
   providedIn: 'root',
@@ -12,11 +12,10 @@ export class LanguageService {
   constructor(
     private http: HttpClient,
     private articlesService: ArticlesService,
-    private store: Store,
   ) {}
 
   downloadLanguage(language: string) {
-    return this.http.get(`https://misha98857.dev/react/articles/${language}.articles.json`, {
+    return this.http.get<ArticleGroup[]>(`https://misha98857.dev/react/articles/${language}.articles.json`, {
       reportProgress: true,
       observe: 'events',
       headers: new HttpHeaders({
@@ -25,17 +24,19 @@ export class LanguageService {
     });
   }
 
-  async saveArticlesFile(language: string, body: object) {
+  saveArticlesFile(language: string, body: object) {
     try {
-      await Filesystem.writeFile({
-        path: `${language}.articles.json`,
-        data: JSON.stringify(body),
-        directory: Directory.Data,
-        encoding: Encoding.UTF8,
-      });
-      this.store.dispatch(changeAppLanguageAction({ language }));
+      return from(
+        Filesystem.writeFile({
+          path: `${language}.articles.json`,
+          data: JSON.stringify(body),
+          directory: Directory.Data,
+          encoding: Encoding.UTF8,
+        }),
+      );
     } catch (e) {
-      await this.articlesService.presentErrorDownloadAlert();
+      void this.articlesService.presentErrorDownloadAlert();
+      return throwError(() => new Error(`${e}`));
     }
   }
 }

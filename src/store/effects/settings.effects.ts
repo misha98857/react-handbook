@@ -4,7 +4,6 @@ import {
   changeAppLanguageAction,
   decreaseFontSizeAction,
   increaseFontSizeAction,
-  increaseOpenCountAction,
   initApplicationDataAction,
   toggleNavigationButtonAction,
   toggleRestoreProgressAction,
@@ -16,9 +15,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { Preferences } from '@capacitor/preferences';
 import { loadArticlesAction } from '../actions/articles.actions';
 import { TranslateService } from '@ngx-translate/core';
-import { HttpEventType } from '@angular/common/http';
-import { EMPTY, forkJoin, of } from 'rxjs';
-import { LanguageService } from '../../features/services/language.service';
+import { forkJoin, of } from 'rxjs';
 
 @Injectable()
 export class SettingsEffects {
@@ -36,22 +33,6 @@ export class SettingsEffects {
       this.actions$.pipe(
         ofType(toggleNavigationButtonAction),
         switchMap(({ navButton }) => Preferences.set({ key: 'navButton', value: navButton.toString() })),
-      ),
-    { dispatch: false },
-  );
-
-  private increaseOpenCount = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(increaseOpenCountAction),
-        map(({ openCount, language }) => {
-          void Preferences.set({ key: 'openCount', value: openCount.toString() });
-          setTimeout(() => {
-            if (openCount === 1 && !['ru', 'en'].includes(language)) {
-              return this.downloadArticlesFile(language);
-            }
-          }, 1000);
-        }),
       ),
     { dispatch: false },
   );
@@ -140,20 +121,5 @@ export class SettingsEffects {
   constructor(
     private actions$: Actions,
     private translate: TranslateService,
-    private languageService: LanguageService,
   ) {}
-
-  // TODO: save download articles attempt to local storage
-  private downloadArticlesFile(language: string) {
-    return this.languageService.downloadLanguage(language).subscribe(event => {
-      if (event.type === HttpEventType.Response) {
-        if (event.status < 300) {
-          void this.languageService.saveArticlesFile(language, event.body);
-        } else {
-          changeAppLanguageAction({ language: 'en' });
-          return EMPTY;
-        }
-      }
-    });
-  }
 }
