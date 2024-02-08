@@ -119,7 +119,7 @@ export class ArticleRenderComponent implements AfterViewInit {
 
     const element: HTMLElement = this.renderElement.nativeElement.querySelector(`#${fragment}`);
     if (element) {
-      this.content.scrollToPoint(0, element.offsetTop).then(() => {
+      this.content.scrollToPoint(0, element.offsetTop, 300).then(() => {
         this.store.dispatch(returnDefaultNavigationStateAction());
       });
     }
