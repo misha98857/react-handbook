@@ -72,7 +72,6 @@ export class ArticleRenderComponent implements AfterViewInit {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(([_, { scrollHeight, offsetHeight }, __, progressState]) => {
-        // TODO: when trigger this action this.html empty. Need to fix it
         this.content
           .scrollToPoint(0, ((scrollHeight - offsetHeight) * progressState[this.html.key]) / 100, 0)
           .then(() => {
