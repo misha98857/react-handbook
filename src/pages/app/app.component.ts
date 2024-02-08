@@ -16,8 +16,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { SettingsService } from '../../features/services/settings.service';
 import { SettingsState } from '../../store/state/settings.state';
-import { increaseOpenCountAction, initApplicationDataAction } from '../../store/actions/settings.actions';
-import { loadArticlesAction } from '../../store/actions/articles.actions';
+import {
+  changeAppLanguageAction,
+  increaseOpenCountAction,
+  initApplicationDataAction,
+} from '../../store/actions/settings.actions';
 import { loadProgressStateAction } from '../../store/actions/progress.actions';
 import { Preferences } from '@capacitor/preferences';
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -93,8 +96,8 @@ export class AppComponent implements OnInit {
     return forkJoin([language$, Preferences.get({ key: 'progress' }), Preferences.get({ key: 'latestPage' })]).pipe(
       switchMap(([language, progress, latestPage]) => {
         this.store.dispatch(initApplicationDataAction({ settings: { ...settings, language } }));
+        this.store.dispatch(changeAppLanguageAction({ language }));
         this.store.dispatch(increaseOpenCountAction({ openCount: settings['openCount'] + 1 }));
-        this.store.dispatch(loadArticlesAction());
         this.store.dispatch(
           loadProgressStateAction({ progressState: JSON.parse(progress.value) as Record<string, number> }),
         );
