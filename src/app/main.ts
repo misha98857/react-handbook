@@ -13,7 +13,7 @@ import { HistoryEffects } from '../store/effects/history.effects';
 import { AppComponent } from '../pages/app/app.component';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideRouterStore } from '@ngrx/router-store';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withFetch } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { createTranslateLoader } from '../shared/translate/utils/create-translate-loader';
 import {
@@ -44,7 +44,7 @@ bootstrapApplication(AppComponent, {
         },
       }),
     ),
-    provideHttpClient(),
+    provideHttpClient(withFetch()),
     provideRouter(
       routes,
       withPreloading(PreloadAllModules),

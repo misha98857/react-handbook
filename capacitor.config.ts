@@ -1,6 +1,5 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
-
 const config: CapacitorConfig = {
   appId: 'dev.misha98857.react',
   appName: 'React handbook',
@@ -17,8 +16,10 @@ const config: CapacitorConfig = {
       splashFullScreen: false,
       splashImmersive: false,
     },
+    CapacitorHttp: {
+      enabled: true,
+    },
   },
 };
-
 
 export default config;
