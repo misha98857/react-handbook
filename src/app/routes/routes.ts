@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { ArticlesComponent } from '../../pages/articles/articles.component';
 import { ArticleComponent } from '../../pages/article/article.component';
+import { LanguagesMenuComponent } from '../../pages/language-menu/languages-menu.component';
+import { SearchComponent } from '../../pages/search/search.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'react', pathMatch: 'full' },
@@ -20,12 +22,11 @@ export const routes: Routes = [
   },
   {
     path: 'languages',
-    loadComponent: () =>
-      import('../../pages/language-menu/languages-menu.component').then(m => m.LanguagesMenuComponent),
+    component: LanguagesMenuComponent,
   },
   {
     path: 'search',
-    loadComponent: () => import('../../pages/search/search.component').then(m => m.SearchComponent),
+    component: SearchComponent,
     pathMatch: 'full',
   },
   {
