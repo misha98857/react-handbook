@@ -71,7 +71,7 @@ export class AppComponent implements OnInit {
     return deviceLanguage$.pipe(
       map(({ value: deviceLanguage }) => {
         if (!allowedLanguages.includes(deviceLanguage)) {
-          return deviceLanguage === 'ru-RU' || deviceLanguage === 'ru' ? 'ru' : 'en';
+          return 'en';
         }
 
         if (Object.keys(langMap).includes(deviceLanguage)) {
