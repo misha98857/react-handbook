@@ -1,5 +1,4 @@
 export interface SettingsState {
-  openCount: number;
   language: string;
   navButton: boolean;
   darkTheme: boolean;
@@ -11,7 +10,6 @@ export interface SettingsState {
 }
 
 export const initialSettingsState: SettingsState = {
-  openCount: 0,
   language: '',
   navButton: true,
   darkTheme: false,

@@ -4,7 +4,6 @@ import {
   changeAppLanguageAction,
   decreaseFontSizeAction,
   increaseFontSizeAction,
-  increaseOpenCountAction,
   initApplicationDataAction,
   toggleNavigationButtonAction,
   toggleRestoreProgressAction,
@@ -23,10 +22,6 @@ export const settingsReducer = createReducer(
   on(toggleNavigationButtonAction, (state, action) => ({
     ...state,
     navButton: action.navButton,
-  })),
-  on(increaseOpenCountAction, (state, action) => ({
-    ...state,
-    openCount: action.openCount,
   })),
   on(changeAppLanguageAction, (state, action) => ({
     ...state,
