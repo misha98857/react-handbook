@@ -11,7 +11,6 @@
     "android": "npx cap open android",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
     "res": "capacitor-resources -p android",
     "postinstall": "npx jetifier"
   },
@@ -87,7 +86,6 @@
     "karma-jasmine": "5.1.0",
     "karma-jasmine-html-reporter": "2.1.0",
     "prettier": "3.2.5",
-    "protractor": "7.0.0",
     "ts-node": "10.9.2",
     "tslib": "2.6.2",
     "tslint": "6.1.3",
