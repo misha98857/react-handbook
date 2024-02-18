@@ -20,10 +20,7 @@ import { selectRestoreProgress } from '../../store/selectors/settings.selectors'
 import { NavigationState } from '../../store/state/navigation.state';
 import { selectNavigationState } from '../../store/selectors/navigation.selectors';
 import { saveArticlesProgressStateAction, setArticleProgressStateAction } from '../../store/actions/progress.actions';
-import {
-  increaseOpenArticleCountAction,
-  returnDefaultNavigationStateAction,
-} from '../../store/actions/navigation.actions';
+import { returnDefaultNavigationStateAction } from '../../store/actions/navigation.actions';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { selectReadProgressState } from '../../store/selectors/progress.selectors';
 import { ReadProgressState } from '../../store/state/read-progress.state';
@@ -92,8 +89,6 @@ export class ArticleRenderComponent implements AfterViewInit {
     this.readProgressState$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(progressState => {
       this.store.dispatch(saveArticlesProgressStateAction({ progressState }));
     });
-
-    this.store.dispatch(increaseOpenArticleCountAction());
   }
 
   private scrollToSearchedText(text: string, { isSearch }: NavigationState): void {

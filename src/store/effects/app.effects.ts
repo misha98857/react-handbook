@@ -4,8 +4,6 @@ import { loadArticlesAction, loadArticlesSuccessAction } from '../actions/articl
 import { map, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { selectLanguage } from '../selectors/settings.selectors';
-import { increaseOpenArticleCountAction } from '../actions/navigation.actions';
-import { Preferences } from '@capacitor/preferences';
 import { ArticleGroup } from '../../entities/articles/models/articles';
 import { LanguageService } from '../../features/services/language.service';
 
@@ -22,21 +20,6 @@ export class AppEffects {
         return loadArticlesSuccessAction({ articleGroups });
       }),
     ),
-  );
-
-  // TODO: need refactor or delete
-  private openArticle = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(increaseOpenArticleCountAction),
-        switchMap(async () => {
-          const { value: openArticleCount } = await Preferences.get({ key: 'openArticleCount' });
-          const openArticleCountNumber = +(openArticleCount ?? '0') + 1;
-
-          return Preferences.set({ key: 'openArticleCount', value: openArticleCountNumber.toString() });
-        }),
-      ),
-    { dispatch: false },
   );
 
   constructor(
