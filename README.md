@@ -36,6 +36,10 @@ npm run sync
 npm run android
 ```
 
+## TODO
+
+1. Migrate to [SignalStore](https://ngrx.io/guide/signals/signal-store)
+
 ## License
 
 This product is licensed under
