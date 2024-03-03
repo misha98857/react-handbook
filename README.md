@@ -39,6 +39,7 @@ npm run android
 ## TODO
 
 1. Migrate to [SignalStore](https://ngrx.io/guide/signals/signal-store)
+2. Add docker compose to build app by one command
 
 ## License
 
