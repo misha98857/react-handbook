@@ -12,5 +12,3 @@ export const searchArticlesAction = createAction(
     text: string;
   }>(),
 );
-
-export const loadArticlesAction = createAction('[React Module] loadArticles');

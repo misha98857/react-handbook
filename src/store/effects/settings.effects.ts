@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   changeAppLanguageAction,
@@ -13,12 +13,14 @@ import {
 } from '../actions/settings.actions';
 import { map, switchMap } from 'rxjs/operators';
 import { Preferences } from '@capacitor/preferences';
-import { loadArticlesAction } from '../actions/articles.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin, of } from 'rxjs';
+import { ArticlesService } from '../../features/services/articles.service';
 
 @Injectable()
 export class SettingsEffects {
+  private readonly articlesService = inject(ArticlesService);
+
   private toggleTheme = createEffect(
     () =>
       this.actions$.pipe(
@@ -37,15 +39,19 @@ export class SettingsEffects {
     { dispatch: false },
   );
 
-  private changeAppLanguage = createEffect(() =>
-    this.actions$.pipe(
-      ofType(changeAppLanguageAction),
-      switchMap(({ language }) => {
-        this.translate.use(language);
-        return Preferences.set({ key: 'language', value: language });
-      }),
-      map(() => loadArticlesAction()),
-    ),
+  private changeAppLanguage = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(changeAppLanguageAction),
+        switchMap(({ language }) => {
+          this.translate.use(language);
+          return Preferences.set({ key: 'language', value: language });
+        }),
+        map(() => {
+          this.articlesService.loadArticlesFile();
+        }),
+      ),
+    { dispatch: false },
   );
 
   private increaseFontSize = createEffect(

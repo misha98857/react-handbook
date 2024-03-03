@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { initialArticlesState } from '../state/articles.state';
-import { loadArticlesAction, loadArticlesSuccessAction, searchArticlesAction } from '../actions/articles.actions';
+import { loadArticlesSuccessAction, searchArticlesAction } from '../actions/articles.actions';
 
 export const articlesReducer = createReducer(
   initialArticlesState,
@@ -12,5 +12,4 @@ export const articlesReducer = createReducer(
     ...state,
     searchText: action.text,
   })),
-  on(loadArticlesAction, state => ({ ...state })),
 );

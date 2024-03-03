@@ -17,7 +17,7 @@
 </ion-header>
 <ion-content>
   <ion-accordion-group>
-    @for (articleGroup of articleGroups$ | async; track articleGroup.key) {
+    @for (articleGroup of articlesStore.articleGroups(); track articleGroup.key) {
       <ion-accordion>
         <ion-item slot='header'>
           <ion-label> {{ articleGroup.key }}</ion-label>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ArticleGroup } from '../../entities/articles/models/articles';
 import {
@@ -34,6 +34,7 @@ import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, NgTemp
 import { RouterLink } from '@angular/router';
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 import { GithubStarComponent } from '../../widgets/github-star/github-star.component';
+import { ArticlesStore } from '../../store/signal-store/articles.store';
 
 @Component({
   selector: 'app-articles',
@@ -72,6 +73,8 @@ import { GithubStarComponent } from '../../widgets/github-star/github-star.compo
   ],
 })
 export class ArticlesComponent implements OnDestroy {
+  readonly articlesStore = inject(ArticlesStore);
+
   articleGroups$: Observable<ArticleGroup[]> = this.store.select(selectArticleGroups);
   progress$: Observable<Record<string, number>> = this.store.select(selectReadProgressState);
   showProgress$: Observable<boolean> = this.store.select(selectShowProgress);
