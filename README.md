@@ -4,7 +4,27 @@ Code for my application https://play.google.com/store/apps/details?id=dev.misha9
 
 ## Quick Start
 
-1. Clone project
+The easiest way to start running the server with the application is by running our docker-compose file. Before executing
+the installation command, make sure you have [Docker](https://www.docker.com/products/docker-desktop/) installed on your
+machine:
+
+1. Clone the project:
+
+```bash
+git clone https://github.com/misha98857/react-handbook.git
+```
+
+2. Start the development server:
+
+```bash
+docker compose up
+```
+
+3. Go to http://localhost:9000 to access the application from your browser.
+
+## Development
+
+1. Clone the project:
 
 ```bash
 git clone https://github.com/misha98857/react-handbook.git
@@ -39,6 +59,8 @@ npm run android
 ## TODO
 
 1. Migrate to [SignalStore](https://ngrx.io/guide/signals/signal-store)
+2. Move article title to the article body
+3. Add a "Return to Home" button in the header
 
 ## License
 
