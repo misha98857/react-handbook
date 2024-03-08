@@ -1,11 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Article } from '../../entities/articles/models/articles';
 import { Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
-import { selectCurrentArticle } from '../../store/selectors/articles.selectors';
 import { selectFontSize, selectNavButtons, selectShowProgress } from '../../store/selectors/settings.selectors';
 import { selectReadProgressState } from '../../store/selectors/progress.selectors';
 import { decreaseFontSizeAction, increaseFontSizeAction } from '../../store/actions/settings.actions';
@@ -33,6 +31,7 @@ import {
 } from '@ionic/angular/standalone';
 import { ArticleNavigationToolbarComponent } from '../../widgets/navigation-toolbar/article-navigation-toolbar.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ArticlesStore } from '../../store/signal-store/articles.store';
 
 @Component({
   selector: 'app-react-article',
@@ -69,7 +68,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class ArticleComponent {
   @Input() articleKey: string;
-  article$: Observable<Article> = this.store.select(selectCurrentArticle);
+
+  readonly articlesStore = inject(ArticlesStore);
+
   fontSize: Observable<number> = this.store.select(selectFontSize);
   navButtonsState: Observable<boolean> = this.store.select(selectNavButtons);
   progress: Observable<Record<string, number>> = this.store.select(selectReadProgressState);

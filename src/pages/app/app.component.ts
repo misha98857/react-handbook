@@ -6,7 +6,7 @@ import { PushNotifications } from '@capacitor/push-notifications';
 import { Device } from '@capacitor/device';
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { loadLatestPageAction, saveLatestPageAction } from '../../store/actions/history.actions';
-import { selectRouterState } from '../../store/selectors/articles.selectors';
+import { selectRouterState } from '../../store/selectors/router-state.selectors';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { selectAppTheme } from '../../store/selectors/settings.selectors';
 import { AsyncPipe } from '@angular/common';

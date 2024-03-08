@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ArticleGroup } from '../../entities/articles/models/articles';
 import {
   IonAccordion,
   IonAccordionGroup,
@@ -24,7 +23,6 @@ import {
 import { Observable, Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { App } from '@capacitor/app';
-import { selectArticleGroups } from '../../store/selectors/articles.selectors';
 import { selectReadProgressState } from '../../store/selectors/progress.selectors';
 import { selectLanguage, selectShowProgress } from '../../store/selectors/settings.selectors';
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
@@ -75,7 +73,6 @@ import { ArticlesStore } from '../../store/signal-store/articles.store';
 export class ArticlesComponent implements OnDestroy {
   readonly articlesStore = inject(ArticlesStore);
 
-  articleGroups$: Observable<ArticleGroup[]> = this.store.select(selectArticleGroups);
   progress$: Observable<Record<string, number>> = this.store.select(selectReadProgressState);
   showProgress$: Observable<boolean> = this.store.select(selectShowProgress);
   language: Observable<string> = this.store.select(selectLanguage);

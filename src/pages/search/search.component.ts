@@ -1,11 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ArticleGroup } from '../../entities/articles/models/articles';
 import { Store } from '@ngrx/store';
-import { selectSearchedArticles } from '../../store/selectors/articles.selectors';
 import { selectReadProgressState } from '../../store/selectors/progress.selectors';
 import { selectShowProgress } from '../../store/selectors/settings.selectors';
-import { searchArticlesAction } from '../../store/actions/articles.actions';
 import { openWithSearchAction } from '../../store/actions/navigation.actions';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
@@ -27,6 +24,7 @@ import {
 } from '@ionic/angular/standalone';
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 import { GithubStarComponent } from '../../widgets/github-star/github-star.component';
+import { ArticlesStore } from '../../store/signal-store/articles.store';
 
 @Component({
   selector: 'app-search',
@@ -61,14 +59,15 @@ import { GithubStarComponent } from '../../widgets/github-star/github-star.compo
   ],
 })
 export class SearchComponent {
-  articleGroups$: Observable<Array<ArticleGroup>> = this.store.select(selectSearchedArticles);
+  readonly articlesStore = inject(ArticlesStore);
+
   progress: Observable<Record<string, number>> = this.store.select(selectReadProgressState);
   showProgress: Observable<boolean> = this.store.select(selectShowProgress);
 
   constructor(private store: Store) {}
 
   searchText({ detail: { value } }): void {
-    this.store.dispatch(searchArticlesAction({ text: value }));
+    this.articlesStore.updateSearchText(value);
   }
 
   openArticleWithSearch(): void {

@@ -15,7 +15,6 @@ import { Store } from '@ngrx/store';
 import { IonContent } from '@ionic/angular/standalone';
 import * as Mark from 'mark.js';
 import { first } from 'rxjs/operators';
-import { selectFragment, selectSearchText } from '../../store/selectors/articles.selectors';
 import { selectRestoreProgress } from '../../store/selectors/settings.selectors';
 import { NavigationState } from '../../store/state/navigation.state';
 import { selectNavigationState } from '../../store/selectors/navigation.selectors';
@@ -25,6 +24,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { selectReadProgressState } from '../../store/selectors/progress.selectors';
 import { ReadProgressState } from '../../store/state/read-progress.state';
 import { SanitizeHtmlPipe } from '../../shared/articles/pipes/sanitaze.pipe';
+import { ArticlesStore } from '../../store/signal-store/articles.store';
 
 @Component({
   selector: 'app-article-render',
@@ -41,10 +41,9 @@ export class ArticleRenderComponent implements AfterViewInit {
 
   @Input() html: Article;
 
-  destroyRef = inject(DestroyRef);
+  readonly destroyRef = inject(DestroyRef);
+  readonly articlesStore = inject(ArticlesStore);
 
-  private searchText$: Observable<string> = this.store.select(selectSearchText);
-  private fragment$: Observable<string> = this.store.select(selectFragment);
   private restoreProgress$: Observable<boolean> = this.store.select(selectRestoreProgress);
   private navigationState$: Observable<NavigationState> = this.store.select(selectNavigationState);
   private readProgressState$: Observable<ReadProgressState> = this.store.select(selectReadProgressState);
@@ -78,11 +77,11 @@ export class ArticleRenderComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    combineLatest([this.navigationState$, this.searchText$, this.fragment$])
+    combineLatest([this.navigationState$])
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(([navigationState, searchText, fragment]) => {
-        this.scrollToSearchedText(searchText, navigationState);
-        this.scrollToFragment(fragment, navigationState);
+      .subscribe(([navigationState]) => {
+        this.scrollToSearchedText(this.articlesStore.searchText(), navigationState);
+        this.scrollToFragment(this.articlesStore.currentFragment(), navigationState);
         this.scrollToReadProgress();
       });
 
