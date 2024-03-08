@@ -1,8 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import {
   IonBackButton,
   IonButtons,
@@ -14,11 +12,10 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { selectLanguage } from '../../store/selectors/settings.selectors';
-import { changeAppLanguageAction } from '../../store/actions/settings.actions';
 import { LanguageCardComponent } from '../../widgets/language-card/language-card.component';
 import { AsyncPipe, NgFor } from '@angular/common';
 import { Language } from '../../entities/languages/models/languages';
+import { SettingsStore } from '../../store/signal-store/settings.store';
 
 @Component({
   selector: 'app-languages-menu',
@@ -42,15 +39,13 @@ import { Language } from '../../entities/languages/models/languages';
   ],
 })
 export class LanguagesMenuComponent {
-  data = this.http.get<Language[]>('shared/assets/locale/languages.json');
-  currentLang: Observable<string> = this.store.select(selectLanguage);
+  readonly settingsStore = inject(SettingsStore);
 
-  constructor(
-    private http: HttpClient,
-    private store: Store,
-  ) {}
+  data = this.http.get<Language[]>('shared/assets/locale/languages.json');
+
+  constructor(private http: HttpClient) {}
 
   changeLanguage(language: string): void {
-    this.store.dispatch(changeAppLanguageAction({ language }));
+    this.settingsStore.updateSettings({ language });
   }
 }

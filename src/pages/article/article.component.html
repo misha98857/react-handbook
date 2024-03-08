@@ -20,16 +20,16 @@
     *ngIf="articlesStore.currentArticle().key"
     (click)='getRoute($event)'
     [html]='articlesStore.currentArticle()'
-    [ngStyle]="{'font-size': (fontSize | async).toString() + 'rem'}"
+    [ngStyle]="{'font-size': settingsStore.fontSize().toString() + 'rem'}"
   >
   </app-article-render>
 </ion-content>
 <ion-footer>
-  <ion-toolbar *ngIf='navButtonsState | async'>
+  <ion-toolbar *ngIf='settingsStore.showNavigationButtons()'>
     <app-article-navigation-toolbar
       [article]="articlesStore.currentArticle()"
       [readProgress]="progress | async"
-      [showProgress]="showProgress | async">
+      [showProgress]="settingsStore.showArticleProgress()">
     </app-article-navigation-toolbar>
   </ion-toolbar>
 </ion-footer>

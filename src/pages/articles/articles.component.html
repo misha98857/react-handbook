@@ -27,7 +27,7 @@
             (openArticle)="openArticle()"
             [articles]="articleGroup.values"
             [readProgress]="progress$ | async"
-            [showProgress]="showProgress$ | async">
+            [showProgress]="settingsStore.showArticleProgress()">
           </app-article-list-item>
         </ion-list>
       </ion-accordion>

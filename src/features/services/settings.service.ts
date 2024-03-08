@@ -2,7 +2,7 @@ import { booleanAttribute, Injectable, numberAttribute } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { forkJoin, from } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { initialSettingsState } from '../../store/state/settings.state';
+import { initialSettingsState } from '../../store/signal-store/settings.store';
 
 @Injectable({
   providedIn: 'root',

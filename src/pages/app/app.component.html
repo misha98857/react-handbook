@@ -1,4 +1,4 @@
-<ion-app [class.dark]='darkMode | async'>
+<ion-app [class.dark]='settingsStore.darkTheme()'>
   <app-menu></app-menu>
   <ion-content fullscreen id='main'>
     <ion-router-outlet></ion-router-outlet>

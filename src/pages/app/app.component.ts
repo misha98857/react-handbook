@@ -1,4 +1,12 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  effect,
+  EnvironmentInjector,
+  inject,
+  OnInit,
+  runInInjectionContext,
+} from '@angular/core';
 import { IonApp, IonContent, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
 import { forkJoin, from, Observable, of, switchMap, tap } from 'rxjs';
@@ -8,18 +16,17 @@ import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { loadLatestPageAction, saveLatestPageAction } from '../../store/actions/history.actions';
 import { selectRouterState } from '../../store/selectors/router-state.selectors';
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { selectAppTheme } from '../../store/selectors/settings.selectors';
 import { AsyncPipe } from '@angular/common';
 import { MenuComponent } from '../menu/menu.component';
 import { allowedLanguages, langMap } from '../../shared/translate/const/const';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { SettingsService } from '../../features/services/settings.service';
-import { SettingsState } from '../../store/state/settings.state';
-import { changeAppLanguageAction, initApplicationDataAction } from '../../store/actions/settings.actions';
 import { loadProgressStateAction } from '../../store/actions/progress.actions';
 import { Preferences } from '@capacitor/preferences';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { SettingsState, SettingsStore } from '../../store/signal-store/settings.store';
+import { ArticlesService } from '../../features/services/articles.service';
 
 @Component({
   selector: 'app-root',
@@ -29,14 +36,17 @@ import { SplashScreen } from '@capacitor/splash-screen';
   imports: [IonApp, IonContent, IonRouterOutlet, AsyncPipe, MenuComponent],
 })
 export class AppComponent implements OnInit {
-  darkMode: Observable<boolean> = this.store.select(selectAppTheme);
+  readonly settingsStore = inject(SettingsStore);
 
   destroyRef = inject(DestroyRef);
+
+  private environmentInjector = inject(EnvironmentInjector);
 
   constructor(
     private platform: Platform,
     private store: Store,
     private settingsService: SettingsService,
+    private articlesService: ArticlesService,
   ) {}
 
   ngOnInit(): void {
@@ -80,9 +90,11 @@ export class AppComponent implements OnInit {
   }
 
   private darkThemeHandler() {
-    this.darkMode.subscribe(darkMode => {
-      void StatusBar.setStyle({ style: darkMode ? Style.Dark : Style.Light });
-      void StatusBar.setBackgroundColor({ color: darkMode ? '#000000' : '#ffffff' });
+    runInInjectionContext(this.environmentInjector, () => {
+      effect(() => {
+        void StatusBar.setStyle({ style: this.settingsStore.darkTheme() ? Style.Dark : Style.Light });
+        void StatusBar.setBackgroundColor({ color: this.settingsStore.darkTheme() ? '#000000' : '#ffffff' });
+      });
     });
   }
 
@@ -91,8 +103,8 @@ export class AppComponent implements OnInit {
 
     return forkJoin([language$, Preferences.get({ key: 'progress' }), Preferences.get({ key: 'latestPage' })]).pipe(
       switchMap(([language, progress, latestPage]) => {
-        this.store.dispatch(initApplicationDataAction({ settings: { ...settings, language } }));
-        this.store.dispatch(changeAppLanguageAction({ language }));
+        this.settingsStore.updateSettings({ language });
+        this.articlesService.loadArticlesFile();
         this.store.dispatch(
           loadProgressStateAction({ progressState: JSON.parse(progress.value) as Record<string, number> }),
         );

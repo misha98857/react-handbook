@@ -15,7 +15,6 @@ import { Store } from '@ngrx/store';
 import { IonContent } from '@ionic/angular/standalone';
 import * as Mark from 'mark.js';
 import { first } from 'rxjs/operators';
-import { selectRestoreProgress } from '../../store/selectors/settings.selectors';
 import { NavigationState } from '../../store/state/navigation.state';
 import { selectNavigationState } from '../../store/selectors/navigation.selectors';
 import { saveArticlesProgressStateAction, setArticleProgressStateAction } from '../../store/actions/progress.actions';
@@ -25,6 +24,7 @@ import { selectReadProgressState } from '../../store/selectors/progress.selector
 import { ReadProgressState } from '../../store/state/read-progress.state';
 import { SanitizeHtmlPipe } from '../../shared/articles/pipes/sanitaze.pipe';
 import { ArticlesStore } from '../../store/signal-store/articles.store';
+import { SettingsStore } from '../../store/signal-store/settings.store';
 
 @Component({
   selector: 'app-article-render',
@@ -43,8 +43,8 @@ export class ArticleRenderComponent implements AfterViewInit {
 
   readonly destroyRef = inject(DestroyRef);
   readonly articlesStore = inject(ArticlesStore);
+  readonly settingsStore = inject(SettingsStore);
 
-  private restoreProgress$: Observable<boolean> = this.store.select(selectRestoreProgress);
   private navigationState$: Observable<NavigationState> = this.store.select(selectNavigationState);
   private readProgressState$: Observable<ReadProgressState> = this.store.select(selectReadProgressState);
 
@@ -56,18 +56,13 @@ export class ArticleRenderComponent implements AfterViewInit {
   }
 
   scrollToReadProgress(): void {
-    combineLatest([
-      this.restoreProgress$,
-      this.content.getScrollElement(),
-      this.navigationState$,
-      this.readProgressState$,
-    ])
+    combineLatest([this.content.getScrollElement(), this.navigationState$, this.readProgressState$])
       .pipe(
         first(),
-        filter(([restoreProgress, _, navigationState]) => restoreProgress && navigationState.isProgress),
+        filter(([_, navigationState]) => this.settingsStore.restoreArticleProgress() && navigationState.isProgress),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(([_, { scrollHeight, offsetHeight }, __, progressState]) => {
+      .subscribe(([{ scrollHeight, offsetHeight }, __, progressState]) => {
         this.content
           .scrollToPoint(0, ((scrollHeight - offsetHeight) * progressState[this.html.key]) / 100, 0)
           .then(() => {

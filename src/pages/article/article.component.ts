@@ -2,11 +2,8 @@ import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core
 import { Store } from '@ngrx/store';
 import { Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
-import { selectFontSize, selectNavButtons, selectShowProgress } from '../../store/selectors/settings.selectors';
 import { selectReadProgressState } from '../../store/selectors/progress.selectors';
-import { decreaseFontSizeAction, increaseFontSizeAction } from '../../store/actions/settings.actions';
 import { openInternalLinkAction } from '../../store/actions/navigation.actions';
 import { addIcons } from 'ionicons';
 import { addOutline, arrowBackCircleOutline, arrowForwardCircleOutline, removeOutline } from 'ionicons/icons';
@@ -32,6 +29,7 @@ import {
 import { ArticleNavigationToolbarComponent } from '../../widgets/navigation-toolbar/article-navigation-toolbar.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ArticlesStore } from '../../store/signal-store/articles.store';
+import { SettingsStore } from '../../store/signal-store/settings.store';
 
 @Component({
   selector: 'app-react-article',
@@ -70,11 +68,9 @@ export class ArticleComponent {
   @Input() articleKey: string;
 
   readonly articlesStore = inject(ArticlesStore);
+  readonly settingsStore = inject(SettingsStore);
 
-  fontSize: Observable<number> = this.store.select(selectFontSize);
-  navButtonsState: Observable<boolean> = this.store.select(selectNavButtons);
   progress: Observable<Record<string, number>> = this.store.select(selectReadProgressState);
-  showProgress: Observable<boolean> = this.store.select(selectShowProgress);
 
   constructor(
     private store: Store,
@@ -85,15 +81,11 @@ export class ArticleComponent {
   }
 
   increaseFontSize(): void {
-    this.fontSize.pipe(first()).subscribe(fontSize => {
-      this.store.dispatch(increaseFontSizeAction({ fontSize: fontSize + 0.1 }));
-    });
+    this.settingsStore.updateSettings({ fontSize: this.settingsStore.fontSize() + 0.1 });
   }
 
   decreaseFontSize(): void {
-    this.fontSize.pipe(first()).subscribe(fontSize => {
-      this.store.dispatch(decreaseFontSizeAction({ fontSize: fontSize - 0.1 }));
-    });
+    this.settingsStore.updateSettings({ fontSize: this.settingsStore.fontSize() - 0.1 });
   }
 
   getRoute(e: MouseEvent): void {

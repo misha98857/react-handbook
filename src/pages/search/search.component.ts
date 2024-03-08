@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectReadProgressState } from '../../store/selectors/progress.selectors';
-import { selectShowProgress } from '../../store/selectors/settings.selectors';
 import { openWithSearchAction } from '../../store/actions/navigation.actions';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
@@ -25,6 +24,7 @@ import {
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 import { GithubStarComponent } from '../../widgets/github-star/github-star.component';
 import { ArticlesStore } from '../../store/signal-store/articles.store';
+import { SettingsStore } from '../../store/signal-store/settings.store';
 
 @Component({
   selector: 'app-search',
@@ -60,9 +60,9 @@ import { ArticlesStore } from '../../store/signal-store/articles.store';
 })
 export class SearchComponent {
   readonly articlesStore = inject(ArticlesStore);
+  readonly settingsStore = inject(SettingsStore);
 
   progress: Observable<Record<string, number>> = this.store.select(selectReadProgressState);
-  showProgress: Observable<boolean> = this.store.select(selectShowProgress);
 
   constructor(private store: Store) {}
 

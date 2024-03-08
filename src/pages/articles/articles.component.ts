@@ -24,7 +24,6 @@ import { Observable, Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { App } from '@capacitor/app';
 import { selectReadProgressState } from '../../store/selectors/progress.selectors';
-import { selectLanguage, selectShowProgress } from '../../store/selectors/settings.selectors';
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { addIcons } from 'ionicons';
 import { languageOutline, search } from 'ionicons/icons';
@@ -33,6 +32,7 @@ import { RouterLink } from '@angular/router';
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 import { GithubStarComponent } from '../../widgets/github-star/github-star.component';
 import { ArticlesStore } from '../../store/signal-store/articles.store';
+import { SettingsStore } from '../../store/signal-store/settings.store';
 
 @Component({
   selector: 'app-articles',
@@ -72,10 +72,9 @@ import { ArticlesStore } from '../../store/signal-store/articles.store';
 })
 export class ArticlesComponent implements OnDestroy {
   readonly articlesStore = inject(ArticlesStore);
+  readonly settingsStore = inject(SettingsStore);
 
   progress$: Observable<Record<string, number>> = this.store.select(selectReadProgressState);
-  showProgress$: Observable<boolean> = this.store.select(selectShowProgress);
-  language: Observable<string> = this.store.select(selectLanguage);
 
   skeletonLoadingItems = [...Array(8).keys()];
 
