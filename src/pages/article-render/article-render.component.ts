@@ -17,10 +17,10 @@ import * as Mark from 'mark.js';
 import { first } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SanitizeHtmlPipe } from '../../shared/articles/pipes/sanitaze.pipe';
-import { ArticlesStore } from '../../store/signal-store/articles.store';
-import { SettingsStore } from '../../store/signal-store/settings.store';
-import { ReadProgressStore } from '../../store/signal-store/read-progress.store';
-import { initialNavigationState, NavigationState, NavigationStore } from 'src/store/signal-store/navigationStore';
+import { ArticlesStore } from '../../store/articles.store';
+import { SettingsStore } from '../../store/settings.store';
+import { ReadProgressStore } from '../../store/read-progress.store';
+import { initialNavigationState, NavigationState, NavigationStore } from 'src/store/navigation.store';
 
 @Component({
   selector: 'app-article-render',

@@ -15,7 +15,7 @@ import {
 import { LanguageCardComponent } from '../../widgets/language-card/language-card.component';
 import { AsyncPipe, NgFor } from '@angular/common';
 import { Language } from '../../entities/languages/models/languages';
-import { SettingsStore } from '../../store/signal-store/settings.store';
+import { SettingsStore } from '../../store/settings.store';
 
 @Component({
   selector: 'app-languages-menu',

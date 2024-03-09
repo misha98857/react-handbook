@@ -24,10 +24,10 @@ import {
 } from '@ionic/angular/standalone';
 import { ArticleNavigationToolbarComponent } from '../../widgets/navigation-toolbar/article-navigation-toolbar.component';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ArticlesStore } from '../../store/signal-store/articles.store';
-import { SettingsStore } from '../../store/signal-store/settings.store';
-import { ReadProgressStore } from '../../store/signal-store/read-progress.store';
-import { NavigationStore } from '../../store/signal-store/navigationStore';
+import { ArticlesStore } from '../../store/articles.store';
+import { SettingsStore } from '../../store/settings.store';
+import { ReadProgressStore } from '../../store/read-progress.store';
+import { NavigationStore } from '../../store/navigation.store';
 
 @Component({
   selector: 'app-react-article',

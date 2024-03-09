@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ArticleGroup } from '../../entities/articles/models/articles';
-import { ArticlesStore } from '../../store/signal-store/articles.store';
-import { SettingsStore } from '../../store/signal-store/settings.store';
+import { ArticlesStore } from '../../store/articles.store';
+import { SettingsStore } from '../../store/settings.store';
 
 @Injectable({
   providedIn: 'root',

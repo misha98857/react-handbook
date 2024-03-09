@@ -12,7 +12,7 @@ import {
   IonToggle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { SettingsState, SettingsStore } from '../../store/signal-store/settings.store';
+import { SettingsState, SettingsStore } from '../../store/settings.store';
 
 @Component({
   selector: 'app-menu',

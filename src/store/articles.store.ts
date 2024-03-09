@@ -1,5 +1,5 @@
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { ArticleGroup } from '../../entities/articles/models/articles';
+import { ArticleGroup } from '../entities/articles/models/articles';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe } from 'rxjs';
 import { map } from 'rxjs/operators';

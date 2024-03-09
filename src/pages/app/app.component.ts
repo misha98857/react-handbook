@@ -20,11 +20,11 @@ import { map } from 'rxjs/operators';
 import { SettingsService } from '../../features/services/settings.service';
 import { Preferences } from '@capacitor/preferences';
 import { SplashScreen } from '@capacitor/splash-screen';
-import { SettingsState, SettingsStore } from '../../store/signal-store/settings.store';
+import { SettingsState, SettingsStore } from '../../store/settings.store';
 import { ArticlesService } from '../../features/services/articles.service';
-import { ReadProgressStore } from '../../store/signal-store/read-progress.store';
-import { NavigationStore } from '../../store/signal-store/navigationStore';
-import { HistoryStore } from '../../store/signal-store/historyStore';
+import { ReadProgressStore } from '../../store/read-progress.store';
+import { NavigationStore } from '../../store/navigation.store';
+import { HistoryStore } from '../../store/history.store';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({

@@ -19,10 +19,10 @@ import {
 } from '@ionic/angular/standalone';
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 import { GithubStarComponent } from '../../widgets/github-star/github-star.component';
-import { ArticlesStore } from '../../store/signal-store/articles.store';
-import { SettingsStore } from '../../store/signal-store/settings.store';
-import { ReadProgressStore } from '../../store/signal-store/read-progress.store';
-import { NavigationStore } from '../../store/signal-store/navigationStore';
+import { ArticlesStore } from '../../store/articles.store';
+import { SettingsStore } from '../../store/settings.store';
+import { ReadProgressStore } from '../../store/read-progress.store';
+import { NavigationStore } from '../../store/navigation.store';
 
 @Component({
   selector: 'app-search',
