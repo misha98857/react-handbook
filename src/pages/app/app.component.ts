@@ -8,13 +8,9 @@ import {
   runInInjectionContext,
 } from '@angular/core';
 import { IonApp, IonContent, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
-import { Store } from '@ngrx/store';
 import { forkJoin, from, Observable, of, switchMap, tap } from 'rxjs';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Device } from '@capacitor/device';
-import { openWithProgressAction } from '../../store/actions/navigation.actions';
-import { loadLatestPageAction, saveLatestPageAction } from '../../store/actions/history.actions';
-import { selectRouterState } from '../../store/selectors/router-state.selectors';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { AsyncPipe } from '@angular/common';
 import { MenuComponent } from '../menu/menu.component';
@@ -27,6 +23,9 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { SettingsState, SettingsStore } from '../../store/signal-store/settings.store';
 import { ArticlesService } from '../../features/services/articles.service';
 import { ReadProgressStore } from '../../store/signal-store/read-progress.store';
+import { NavigationStore } from '../../store/signal-store/navigationStore';
+import { HistoryStore } from '../../store/signal-store/historyStore';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +37,8 @@ import { ReadProgressStore } from '../../store/signal-store/read-progress.store'
 export class AppComponent implements OnInit {
   readonly settingsStore = inject(SettingsStore);
   readonly readProgressStore = inject(ReadProgressStore);
+  readonly navigationStore = inject(NavigationStore);
+  readonly historyStore = inject(HistoryStore);
 
   destroyRef = inject(DestroyRef);
 
@@ -45,9 +46,10 @@ export class AppComponent implements OnInit {
 
   constructor(
     private platform: Platform,
-    private store: Store,
     private settingsService: SettingsService,
     private articlesService: ArticlesService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -114,18 +116,14 @@ export class AppComponent implements OnInit {
   }
 
   private initRouterWatcher() {
-    this.store
-      .select(selectRouterState)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(routerState => {
-        this.store.dispatch(saveLatestPageAction({ url: routerState.url }));
-      });
+    this.activatedRoute.url.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.historyStore.updateLatestPage(this.router.url);
+    });
   }
 
   private restoreLatestPage(restoreState: boolean, latestPage: string) {
     if (restoreState && latestPage) {
-      this.store.dispatch(openWithProgressAction());
-      this.store.dispatch(loadLatestPageAction({ url: latestPage.replace(/"/g, '') }));
+      this.navigationStore.updateNavigationState({ isProgress: true });
       return;
     }
 

@@ -4,8 +4,8 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { computed, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '../state/app.state';
+import { Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 export interface ArticlesState {
   articleGroups: ArticleGroup[];
@@ -20,10 +20,9 @@ export const initialArticlesState: ArticlesState = {
 export const ArticlesStore = signalStore(
   { providedIn: 'root' },
   withState(initialArticlesState),
-  withComputed((store, routerStore = inject(Store)) => ({
+  withComputed((store, router = inject(Router)) => ({
     currentArticle: computed(() => {
-      const urlSignal = routerStore.selectSignal((state: AppState) => state.router.state.url);
-      const url: string = urlSignal().split('#')[0];
+      const url: string = router.url.split('#')[0];
 
       for (const articleGroup of store.articleGroups()) {
         for (const article of articleGroup.values) {
@@ -36,7 +35,7 @@ export const ArticlesStore = signalStore(
       return { key: '', value: '', path: '', nav: ['', ''] };
     }),
     currentFragment: computed(() => {
-      return routerStore.selectSignal((state: AppState) => state.router.state.root.fragment)();
+      return toSignal(router.routerState.root.fragment)();
     }),
     searchedArticles: computed(() => {
       const searchedArticles: ArticleGroup[] = [];

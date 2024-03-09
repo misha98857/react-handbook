@@ -1,7 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { openWithSearchAction } from '../../store/actions/navigation.actions';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
 import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
@@ -25,6 +22,7 @@ import { GithubStarComponent } from '../../widgets/github-star/github-star.compo
 import { ArticlesStore } from '../../store/signal-store/articles.store';
 import { SettingsStore } from '../../store/signal-store/settings.store';
 import { ReadProgressStore } from '../../store/signal-store/read-progress.store';
+import { NavigationStore } from '../../store/signal-store/navigationStore';
 
 @Component({
   selector: 'app-search',
@@ -62,14 +60,13 @@ export class SearchComponent {
   readonly articlesStore = inject(ArticlesStore);
   readonly settingsStore = inject(SettingsStore);
   readonly readProgressStore = inject(ReadProgressStore);
-
-  constructor(private store: Store) {}
+  readonly navigationStore = inject(NavigationStore);
 
   searchText({ detail: { value } }): void {
     this.articlesStore.updateSearchText(value);
   }
 
   openArticleWithSearch(): void {
-    this.store.dispatch(openWithSearchAction());
+    this.navigationStore.updateNavigationState({ isSearch: true });
   }
 }

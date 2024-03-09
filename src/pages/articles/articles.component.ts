@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
 import {
   IonAccordion,
   IonAccordionGroup,
@@ -23,7 +22,6 @@ import {
 import { Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { App } from '@capacitor/app';
-import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { addIcons } from 'ionicons';
 import { languageOutline, search } from 'ionicons/icons';
 import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, NgTemplateOutlet } from '@angular/common';
@@ -33,6 +31,7 @@ import { GithubStarComponent } from '../../widgets/github-star/github-star.compo
 import { ArticlesStore } from '../../store/signal-store/articles.store';
 import { SettingsStore } from '../../store/signal-store/settings.store';
 import { ReadProgressStore } from '../../store/signal-store/read-progress.store';
+import { NavigationStore } from '../../store/signal-store/navigationStore';
 
 @Component({
   selector: 'app-articles',
@@ -74,6 +73,7 @@ export class ArticlesComponent implements OnDestroy {
   readonly articlesStore = inject(ArticlesStore);
   readonly settingsStore = inject(SettingsStore);
   readonly readProgressStore = inject(ReadProgressStore);
+  readonly navigationStore = inject(NavigationStore);
 
   skeletonLoadingItems = [...Array(8).keys()];
 
@@ -82,7 +82,6 @@ export class ArticlesComponent implements OnDestroy {
   private changeLanguageSubscription: Subscription;
 
   constructor(
-    private store: Store,
     private toastController: ToastController,
     private platform: Platform,
     private translate: TranslateService,
@@ -112,7 +111,7 @@ export class ArticlesComponent implements OnDestroy {
   }
 
   openArticle(): void {
-    this.store.dispatch(openWithProgressAction());
+    this.navigationStore.updateNavigationState({ isProgress: true });
   }
 
   private async onBackButtonPress(): Promise<void> {
