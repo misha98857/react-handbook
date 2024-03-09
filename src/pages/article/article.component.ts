@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Router, RouterLink } from '@angular/router';
-import { Observable } from 'rxjs';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
-import { selectReadProgressState } from '../../store/selectors/progress.selectors';
 import { openInternalLinkAction } from '../../store/actions/navigation.actions';
 import { addIcons } from 'ionicons';
 import { addOutline, arrowBackCircleOutline, arrowForwardCircleOutline, removeOutline } from 'ionicons/icons';
@@ -30,6 +28,7 @@ import { ArticleNavigationToolbarComponent } from '../../widgets/navigation-tool
 import { DomSanitizer } from '@angular/platform-browser';
 import { ArticlesStore } from '../../store/signal-store/articles.store';
 import { SettingsStore } from '../../store/signal-store/settings.store';
+import { ReadProgressStore } from '../../store/signal-store/read-progress.store';
 
 @Component({
   selector: 'app-react-article',
@@ -69,8 +68,7 @@ export class ArticleComponent {
 
   readonly articlesStore = inject(ArticlesStore);
   readonly settingsStore = inject(SettingsStore);
-
-  progress: Observable<Record<string, number>> = this.store.select(selectReadProgressState);
+  readonly readProgressStore = inject(ReadProgressStore);
 
   constructor(
     private store: Store,

@@ -28,7 +28,7 @@
   <ion-toolbar *ngIf='settingsStore.showNavigationButtons()'>
     <app-article-navigation-toolbar
       [article]="articlesStore.currentArticle()"
-      [readProgress]="progress | async"
+      [readProgress]="readProgressStore.readProgressState()"
       [showProgress]="settingsStore.showArticleProgress()">
     </app-article-navigation-toolbar>
   </ion-toolbar>

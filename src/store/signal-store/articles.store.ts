@@ -36,8 +36,7 @@ export const ArticlesStore = signalStore(
       return { key: '', value: '', path: '', nav: ['', ''] };
     }),
     currentFragment: computed(() => {
-      const fragmentSignal = routerStore.selectSignal((state: AppState) => state.router.state.root.fragment);
-      return fragmentSignal();
+      return routerStore.selectSignal((state: AppState) => state.router.state.root.fragment)();
     }),
     searchedArticles: computed(() => {
       const searchedArticles: ArticleGroup[] = [];

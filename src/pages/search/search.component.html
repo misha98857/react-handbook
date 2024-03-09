@@ -20,7 +20,7 @@
           <app-article-list-item
             (openArticle)="openArticleWithSearch()"
             [articles]="articleGroup.values"
-            [readProgress]="progress | async"
+            [readProgress]="readProgressStore.readProgressState()"
             [showProgress]="settingsStore.showArticleProgress()"
           >
           </app-article-list-item>

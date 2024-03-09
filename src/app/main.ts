@@ -6,7 +6,6 @@ import { provideStore } from '@ngrx/store';
 import { appReducers } from '../store/reducers/app.reduces';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { provideEffects } from '@ngrx/effects';
-import { ProgressEffects } from '../store/effects/progress.effects';
 import { HistoryEffects } from '../store/effects/history.effects';
 import { AppComponent } from '../pages/app/app.component';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
@@ -30,7 +29,7 @@ bootstrapApplication(AppComponent, {
   providers: [
     provideIonicAngular(),
     provideStore(appReducers),
-    provideEffects([ProgressEffects, HistoryEffects]),
+    provideEffects([HistoryEffects]),
     provideRouterStore(),
     importProvidersFrom(
       TranslateModule.forRoot({

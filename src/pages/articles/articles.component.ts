@@ -20,10 +20,9 @@ import {
   Platform,
   ToastController,
 } from '@ionic/angular/standalone';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { App } from '@capacitor/app';
-import { selectReadProgressState } from '../../store/selectors/progress.selectors';
 import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { addIcons } from 'ionicons';
 import { languageOutline, search } from 'ionicons/icons';
@@ -33,6 +32,7 @@ import { ArticleListItemComponent } from '../../widgets/article-list-item/articl
 import { GithubStarComponent } from '../../widgets/github-star/github-star.component';
 import { ArticlesStore } from '../../store/signal-store/articles.store';
 import { SettingsStore } from '../../store/signal-store/settings.store';
+import { ReadProgressStore } from '../../store/signal-store/read-progress.store';
 
 @Component({
   selector: 'app-articles',
@@ -73,8 +73,7 @@ import { SettingsStore } from '../../store/signal-store/settings.store';
 export class ArticlesComponent implements OnDestroy {
   readonly articlesStore = inject(ArticlesStore);
   readonly settingsStore = inject(SettingsStore);
-
-  progress$: Observable<Record<string, number>> = this.store.select(selectReadProgressState);
+  readonly readProgressStore = inject(ReadProgressStore);
 
   skeletonLoadingItems = [...Array(8).keys()];
 

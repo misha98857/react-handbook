@@ -22,11 +22,11 @@ import { allowedLanguages, langMap } from '../../shared/translate/const/const';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { SettingsService } from '../../features/services/settings.service';
-import { loadProgressStateAction } from '../../store/actions/progress.actions';
 import { Preferences } from '@capacitor/preferences';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { SettingsState, SettingsStore } from '../../store/signal-store/settings.store';
 import { ArticlesService } from '../../features/services/articles.service';
+import { ReadProgressStore } from '../../store/signal-store/read-progress.store';
 
 @Component({
   selector: 'app-root',
@@ -37,6 +37,7 @@ import { ArticlesService } from '../../features/services/articles.service';
 })
 export class AppComponent implements OnInit {
   readonly settingsStore = inject(SettingsStore);
+  readonly readProgressStore = inject(ReadProgressStore);
 
   destroyRef = inject(DestroyRef);
 
@@ -105,10 +106,8 @@ export class AppComponent implements OnInit {
       switchMap(([language, progress, latestPage]) => {
         this.settingsStore.updateSettings({ language });
         this.articlesService.loadArticlesFile();
-        this.store.dispatch(
-          loadProgressStateAction({ progressState: JSON.parse(progress.value) as Record<string, number> }),
-        );
-        this.restoreLatestPage(settings['restoreState'], latestPage.value);
+        this.readProgressStore.updateReadProgress(JSON.parse(progress.value) as Record<string, number>);
+        this.restoreLatestPage(!!settings['restoreState'], latestPage.value);
         return SplashScreen.hide();
       }),
     );
