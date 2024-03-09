@@ -7,7 +7,6 @@ import { AsyncPipe, Location } from '@angular/common';
 import { MenuComponent } from '../menu/menu.component';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { SettingsStore } from '../../store/settings.store';
-import { NavigationStore } from '../../store/navigation.store';
 import { HistoryStore } from '../../store/history.store';
 import { ArticlesService } from '../../features/services/articles.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -21,11 +20,9 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AppComponent implements OnInit {
   readonly settingsStore = inject(SettingsStore);
-  readonly navigationStore = inject(NavigationStore);
   readonly historyStore = inject(HistoryStore);
 
   private readonly environmentInjector = inject(EnvironmentInjector);
-  private isRestored = false;
 
   constructor(
     private platform: Platform,
@@ -39,10 +36,6 @@ export class AppComponent implements OnInit {
         if (language) {
           this.articlesService.loadArticlesFile(language);
           this.translate.use(language);
-          if (!this.isRestored) {
-            this.restoreLatestPage(this.settingsStore.restoreAppState(), this.historyStore.latestPage());
-            this.isRestored = true;
-          }
         }
       },
       { allowSignalWrites: true },
@@ -75,16 +68,5 @@ export class AppComponent implements OnInit {
     this.location.onUrlChange((url: string) => {
       this.historyStore.updateLatestPage(url);
     });
-  }
-
-  private restoreLatestPage(restoreState: boolean, latestPage: string) {
-    if (restoreState && latestPage) {
-      this.navigationStore.updateNavigationState({ isProgress: true });
-      return;
-    }
-
-    if (location.pathname !== '/react') {
-      location.assign('/react');
-    }
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import {
   IonAccordion,
   IonAccordionGroup,
@@ -32,7 +32,6 @@ import { ArticlesStore } from '../../store/articles.store';
 import { SettingsStore } from '../../store/settings.store';
 import { ReadProgressStore } from '../../store/read-progress.store';
 import { NavigationStore } from '../../store/navigation.store';
-import { ArticlesService } from '../../features/services/articles.service';
 
 @Component({
   selector: 'app-articles',
@@ -98,7 +97,7 @@ export class ArticlesComponent implements OnDestroy {
         setTimeout(() => (this.backCounter = 0), 2000);
       }
       if (this.backCounter === 2) {
-        App.exitApp();
+        void App.exitApp();
       }
     });
   }

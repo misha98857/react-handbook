@@ -40,7 +40,6 @@ import { SettingsStore } from '../../store/settings.store';
 })
 export class LanguagesMenuComponent {
   readonly settingsStore = inject(SettingsStore);
-  
   private readonly http = inject(HttpClient);
 
   data = this.http.get<Language[]>('shared/assets/locale/languages.json');

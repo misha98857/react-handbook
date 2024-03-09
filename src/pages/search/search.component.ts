@@ -62,7 +62,7 @@ export class SearchComponent {
   readonly readProgressStore = inject(ReadProgressStore);
   readonly navigationStore = inject(NavigationStore);
 
-  searchText({ detail: { value } }): void {
+  searchText({ detail: { value } }: { detail: { value: string } }): void {
     this.articlesStore.updateSearchText(value);
   }
 

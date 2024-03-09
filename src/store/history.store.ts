@@ -16,7 +16,7 @@ export const HistoryStore = signalStore(
   })),
   withHooks(store => ({
     onInit: () => {
-      Preferences.get({ key: 'latestPage' }).then(({ value }) => {
+      void Preferences.get({ key: 'latestPage' }).then(({ value }) => {
         patchState(store, { latestPage: value });
       });
     },

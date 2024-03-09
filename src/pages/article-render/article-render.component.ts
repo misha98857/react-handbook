@@ -52,8 +52,6 @@ export class ArticleRenderComponent {
           isSearch: this.navigationStore.isSearch(),
         };
 
-        console.log(navigationState);
-
         this.scrollToSearchedText(this.articlesStore.searchText(), navigationState);
         this.scrollToFragment(this.articlesStore.fragment(), navigationState);
         this.scrollToReadProgress();

@@ -69,7 +69,6 @@ export class ArticleComponent {
   readonly settingsStore = inject(SettingsStore);
   readonly readProgressStore = inject(ReadProgressStore);
   readonly navigationStore = inject(NavigationStore);
-
   readonly router = inject(Router);
 
   currentArticle: Signal<Article> = computed(() => {
