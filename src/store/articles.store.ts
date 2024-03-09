@@ -1,41 +1,29 @@
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { ArticleGroup } from '../entities/articles/models/articles';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { computed, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 export interface ArticlesState {
   articleGroups: ArticleGroup[];
   searchText: string;
+  urlPath: string;
+  fragment: string;
 }
 
 export const initialArticlesState: ArticlesState = {
   articleGroups: [],
   searchText: '',
+  urlPath: '/react',
+  fragment: '',
 };
 
 export const ArticlesStore = signalStore(
   { providedIn: 'root' },
   withState(initialArticlesState),
-  withComputed((store, router = inject(Router)) => ({
-    currentArticle: computed(() => {
-      const url: string = router.url.split('#')[0];
-
-      for (const articleGroup of store.articleGroups()) {
-        for (const article of articleGroup.values) {
-          if (url === article.path) {
-            return article;
-          }
-        }
-      }
-
-      return { key: '', value: '', path: '', nav: ['', ''] };
-    }),
-    currentFragment: computed(() => {
-      return router.routerState.root.fragment;
-    }),
+  withComputed(store => ({
     searchedArticles: computed(() => {
       const searchedArticles: ArticleGroup[] = [];
 
@@ -69,6 +57,15 @@ export const ArticlesStore = signalStore(
     ),
     updateSearchText: (searchText: string) => {
       patchState(store, state => ({ ...state, searchText }));
+    },
+  })),
+  withHooks((store, location = inject(Location)) => ({
+    onInit: () => {
+      location.onUrlChange(() => {
+        const [path, fragment] = location.path(true).split('#');
+        console.log('path', path, 'fragment', fragment);
+        patchState(store, state => ({ ...state, urlPath: path, fragment }));
+      });
     },
   })),
 );

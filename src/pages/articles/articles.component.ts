@@ -86,15 +86,8 @@ export class ArticlesComponent implements OnDestroy {
     private toastController: ToastController,
     private platform: Platform,
     private translate: TranslateService,
-    private articlesService: ArticlesService,
   ) {
     addIcons({ search, languageOutline });
-
-    effect(() => {
-      const language = this.settingsStore.language();
-      this.articlesService.loadArticlesFile(language);
-      this.translate.use(language);
-    });
   }
 
   ionViewWillEnter(): void {

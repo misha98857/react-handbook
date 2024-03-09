@@ -1,8 +1,7 @@
 import { getState, patchState, signalStore, withHooks, withMethods, withState } from '@ngrx/signals';
-import { DestroyRef, inject } from '@angular/core';
+import { inject } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { from } from 'rxjs';
+import { LanguageService } from '../features/services/language.service';
 
 export interface SettingsState {
   language: string;
@@ -15,7 +14,7 @@ export interface SettingsState {
 }
 
 export const initialSettingsState: SettingsState = {
-  language: 'en',
+  language: '',
   showNavigationButtons: true,
   darkTheme: false,
   fontSize: 1.0,
@@ -34,12 +33,10 @@ export const SettingsStore = signalStore(
     },
   })),
   withHooks({
-    onInit: (store, destroyRef = inject(DestroyRef)) => {
-      from(Preferences.get({ key: 'settings' }))
-        .pipe(takeUntilDestroyed(destroyRef))
-        .subscribe(({ value }) => {
-          patchState(store, state => ({ ...state, ...JSON.parse(value) }));
-        });
+    onInit: async (store, languageService = inject(LanguageService)) => {
+      const settings = JSON.parse((await Preferences.get({ key: 'settings' })).value);
+      const language = await languageService.getLanguage(settings?.language);
+      patchState(store, state => ({ ...state, ...settings, language }));
     },
   }),
 );

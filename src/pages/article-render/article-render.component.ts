@@ -13,7 +13,7 @@ import { filter, from, switchMap } from 'rxjs';
 import { Article } from '../../entities/articles/models/articles';
 import { IonContent } from '@ionic/angular/standalone';
 import * as Mark from 'mark.js';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SanitizeHtmlPipe } from '../../shared/articles/pipes/sanitaze.pipe';
 import { ArticlesStore } from '../../store/articles.store';
 import { SettingsStore } from '../../store/settings.store';
@@ -44,22 +44,22 @@ export class ArticleRenderComponent {
   readonly router = inject(Router);
 
   constructor() {
-    const fragment = toSignal(this.router.routerState.root.fragment);
+    effect(
+      () => {
+        const navigationState = {
+          isProgress: this.navigationStore.isProgress(),
+          isInternalLink: this.navigationStore.isInternalLink(),
+          isSearch: this.navigationStore.isSearch(),
+        };
 
-    effect(() => {
-      const navigationState = {
-        isProgress: this.navigationStore.isProgress(),
-        isInternalLink: this.navigationStore.isInternalLink(),
-        isSearch: this.navigationStore.isSearch(),
-      };
+        console.log(navigationState);
 
-      console.log(navigationState);
-      console.log(fragment());
-
-      this.scrollToSearchedText(this.articlesStore.searchText(), navigationState);
-      this.scrollToFragment(fragment(), navigationState);
-      this.scrollToReadProgress();
-    });
+        this.scrollToSearchedText(this.articlesStore.searchText(), navigationState);
+        this.scrollToFragment(this.articlesStore.fragment(), navigationState);
+        this.scrollToReadProgress();
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   saveReadProgress({ offsetHeight, scrollTop, scrollHeight }): void {
@@ -103,10 +103,10 @@ export class ArticleRenderComponent {
     }
 
     const element: HTMLElement = this.renderElement.nativeElement.querySelector(`#${fragment}`);
+
     if (element) {
-      this.content.scrollToPoint(0, element.offsetTop, 300).then(() => {
-        this.navigationStore.updateNavigationState(initialNavigationState);
-      });
+      setTimeout(() => void this.content.scrollToPoint(0, element.offsetTop, 300));
+      this.navigationStore.updateNavigationState(initialNavigationState);
     }
   }
 }

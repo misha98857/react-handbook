@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Input, Signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
 import { addIcons } from 'ionicons';
@@ -27,6 +27,7 @@ import { ArticlesStore } from '../../store/articles.store';
 import { SettingsStore } from '../../store/settings.store';
 import { ReadProgressStore } from '../../store/read-progress.store';
 import { NavigationStore } from '../../store/navigation.store';
+import { Article } from '../../entities/articles/models/articles';
 
 @Component({
   selector: 'app-react-article',
@@ -69,7 +70,20 @@ export class ArticleComponent {
   readonly readProgressStore = inject(ReadProgressStore);
   readonly navigationStore = inject(NavigationStore);
 
-  constructor(private router: Router) {
+  readonly router = inject(Router);
+
+  currentArticle: Signal<Article> = computed(() => {
+    const url = this.articlesStore.urlPath();
+    const fallbackArticle = { key: '', value: '', path: '', nav: ['', ''] };
+    const currentArticle = this.articlesStore
+      .articleGroups()
+      .flatMap(group => group.values)
+      .find(article => article.path === url);
+
+    return currentArticle ?? fallbackArticle;
+  });
+
+  constructor() {
     addIcons({ removeOutline, addOutline, arrowBackCircleOutline, arrowForwardCircleOutline });
   }
 
@@ -83,7 +97,7 @@ export class ArticleComponent {
 
   getRoute(e: MouseEvent): void {
     const path = e?.composedPath() as HTMLElement[];
-    // TODO handle url with type "localhost/react/incorrect-name
+
     for (const node of path) {
       if (node.localName === 'img') {
         const src = node.attributes.getNamedItem('src') ?? { value: '' };

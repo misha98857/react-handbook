@@ -1,28 +1,16 @@
-import {
-  Component,
-  DestroyRef,
-  effect,
-  EnvironmentInjector,
-  inject,
-  OnInit,
-  runInInjectionContext,
-} from '@angular/core';
+import { Component, effect, EnvironmentInjector, inject, OnInit, runInInjectionContext } from '@angular/core';
 import { IonApp, IonContent, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
-import { from, Observable, of, switchMap, tap } from 'rxjs';
+import { from } from 'rxjs';
 import { PushNotifications } from '@capacitor/push-notifications';
-import { Device } from '@capacitor/device';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { AsyncPipe, Location } from '@angular/common';
 import { MenuComponent } from '../menu/menu.component';
-import { allowedLanguages, langMap } from '../../shared/translate/const/const';
-import { map } from 'rxjs/operators';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { SettingsStore } from '../../store/settings.store';
-import { ReadProgressStore } from '../../store/read-progress.store';
 import { NavigationStore } from '../../store/navigation.store';
 import { HistoryStore } from '../../store/history.store';
-import { getState } from '@ngrx/signals';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ArticlesService } from '../../features/services/articles.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -33,76 +21,53 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class AppComponent implements OnInit {
   readonly settingsStore = inject(SettingsStore);
-  readonly readProgressStore = inject(ReadProgressStore);
   readonly navigationStore = inject(NavigationStore);
   readonly historyStore = inject(HistoryStore);
 
-  private readonly destroyRef = inject(DestroyRef);
   private readonly environmentInjector = inject(EnvironmentInjector);
+  private isRestored = false;
 
   constructor(
     private platform: Platform,
     private location: Location,
-  ) {}
+    private articlesService: ArticlesService,
+    private translate: TranslateService,
+  ) {
+    effect(
+      () => {
+        const language = this.settingsStore.language();
+        if (language) {
+          this.articlesService.loadArticlesFile(language);
+          this.translate.use(language);
+          if (!this.isRestored) {
+            this.restoreLatestPage(this.settingsStore.restoreAppState(), this.historyStore.latestPage());
+            this.isRestored = true;
+          }
+        }
+      },
+      { allowSignalWrites: true },
+    );
+  }
 
   ngOnInit(): void {
     this.initializeApp();
   }
 
   initializeApp(): void {
-    from(this.platform.ready())
-      .pipe(
-        tap(() => {
-          this.initUrlChangeWatcher();
-          this.darkThemeHandler();
-        }),
-        switchMap(() => PushNotifications.register()),
-      )
-      .subscribe(() => {
-        this.initApplicationData();
-      });
+    from(this.platform.ready()).subscribe(() => {
+      this.initUrlChangeWatcher();
+      this.darkThemeChangeEffect();
+      void PushNotifications.register();
+      void SplashScreen.hide();
+    });
   }
 
-  private getLanguage(language: string | null): Observable<string> {
-    if (language) {
-      return of(language);
-    }
-
-    const deviceLanguage$ = from(Device.getLanguageCode());
-
-    return deviceLanguage$.pipe(
-      map(({ value: deviceLanguage }) => {
-        if (!allowedLanguages.includes(deviceLanguage)) {
-          return 'en';
-        }
-
-        if (Object.keys(langMap).includes(deviceLanguage)) {
-          deviceLanguage = langMap[deviceLanguage];
-        }
-
-        return deviceLanguage;
-      }),
-    );
-  }
-
-  private darkThemeHandler() {
+  private darkThemeChangeEffect() {
     runInInjectionContext(this.environmentInjector, () => {
       effect(() => {
         void StatusBar.setStyle({ style: this.settingsStore.darkTheme() ? Style.Dark : Style.Light });
         void StatusBar.setBackgroundColor({ color: this.settingsStore.darkTheme() ? '#000000' : '#ffffff' });
       });
-    });
-  }
-
-  private initApplicationData() {
-    const settings = getState(this.settingsStore);
-    const language$ = this.getLanguage(settings['language']);
-
-    language$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(language => {
-      const latestPage = this.historyStore.latestPage();
-      this.settingsStore.updateSettings({ language });
-      this.restoreLatestPage(!!settings['restoreState'], latestPage);
-      SplashScreen.hide();
     });
   }
 

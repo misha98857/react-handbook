@@ -21,16 +21,23 @@ export const ReadProgressStore = signalStore(
   withMethods(store => ({
     updateReadProgress: (articleProgressState: Record<string, number>) => {
       patchState(store, (state: ReadProgressStore) => {
-        return { ...state, readProgressState: { ...state.readProgressState, ...articleProgressState } };
+        return { readProgressState: { ...state.readProgressState, ...articleProgressState } };
       });
     },
   })),
   withHooks({
     onInit: store => {
+      Preferences.get({ key: 'progress' }).then(({ value }) => {
+        if (value) {
+          patchState(store, state => ({ ...state, readProgressState: JSON.parse(value) }));
+        }
+      });
+
       effect(() => {
         const progressState = store.readProgressState();
+
         if (Object.values(progressState).length > 0) {
-          void Preferences.set({ key: 'progress', value: JSON.stringify(store.readProgressState()) });
+          void Preferences.set({ key: 'progress', value: JSON.stringify(progressState) });
         }
       });
     },
