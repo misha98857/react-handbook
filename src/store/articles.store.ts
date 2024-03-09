@@ -63,7 +63,6 @@ export const ArticlesStore = signalStore(
     onInit: () => {
       location.onUrlChange(() => {
         const [path, fragment] = location.path(true).split('#');
-        console.log('path', path, 'fragment', fragment);
         patchState(store, state => ({ ...state, urlPath: path, fragment }));
       });
     },

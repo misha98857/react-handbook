@@ -10,6 +10,8 @@ import { SettingsStore } from '../../store/settings.store';
 import { HistoryStore } from '../../store/history.store';
 import { ArticlesService } from '../../features/services/articles.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
+import { NavigationStore } from '../../store/navigation.store';
 
 @Component({
   selector: 'app-root',
@@ -20,22 +22,25 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AppComponent implements OnInit {
   readonly settingsStore = inject(SettingsStore);
+  readonly navigationStore = inject(NavigationStore);
   readonly historyStore = inject(HistoryStore);
-
   private readonly environmentInjector = inject(EnvironmentInjector);
+
+  private isAppStateRestored = false;
 
   constructor(
     private platform: Platform,
     private location: Location,
     private articlesService: ArticlesService,
     private translate: TranslateService,
+    private router: Router,
   ) {
     effect(
       () => {
         const language = this.settingsStore.language();
         if (language) {
-          this.articlesService.loadArticlesFile(language);
-          this.translate.use(language);
+          this.setLanguage(language);
+          this.restoreAppState(this.settingsStore.restoreAppState(), this.historyStore.latestPage());
         }
       },
       { allowSignalWrites: true },
@@ -68,5 +73,20 @@ export class AppComponent implements OnInit {
     this.location.onUrlChange((url: string) => {
       this.historyStore.updateLatestPage(url);
     });
+  }
+
+  private setLanguage(language: string): void {
+    this.articlesService.loadArticlesFile(language);
+    this.translate.use(language);
+  }
+
+  private restoreAppState(restoreAppState: boolean, latestPage: string): void {
+    if (this.isAppStateRestored || !restoreAppState || !latestPage) {
+      return;
+    }
+
+    this.navigationStore.updateNavigationState({ isProgress: true });
+    void this.router.navigateByUrl(latestPage.replace(/"/g, ''));
+    this.isAppStateRestored = true;
   }
 }
