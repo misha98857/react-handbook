@@ -40,10 +40,10 @@ import { SettingsStore } from '../../store/settings.store';
 })
 export class LanguagesMenuComponent {
   readonly settingsStore = inject(SettingsStore);
+  
+  private readonly http = inject(HttpClient);
 
   data = this.http.get<Language[]>('shared/assets/locale/languages.json');
-
-  constructor(private http: HttpClient) {}
 
   changeLanguage(language: string): void {
     this.settingsStore.updateSettings({ language });

@@ -5,7 +5,6 @@ import { pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 export interface ArticlesState {
   articleGroups: ArticleGroup[];
@@ -35,7 +34,7 @@ export const ArticlesStore = signalStore(
       return { key: '', value: '', path: '', nav: ['', ''] };
     }),
     currentFragment: computed(() => {
-      return toSignal(router.routerState.root.fragment)();
+      return router.routerState.root.fragment;
     }),
     searchedArticles: computed(() => {
       const searchedArticles: ArticleGroup[] = [];

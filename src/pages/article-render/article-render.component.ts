@@ -6,21 +6,20 @@ import {
   ElementRef,
   inject,
   Input,
-  Signal,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { combineLatest, filter } from 'rxjs';
+import { filter, from, switchMap } from 'rxjs';
 import { Article } from '../../entities/articles/models/articles';
 import { IonContent } from '@ionic/angular/standalone';
 import * as Mark from 'mark.js';
-import { first } from 'rxjs/operators';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { SanitizeHtmlPipe } from '../../shared/articles/pipes/sanitaze.pipe';
 import { ArticlesStore } from '../../store/articles.store';
 import { SettingsStore } from '../../store/settings.store';
 import { ReadProgressStore } from '../../store/read-progress.store';
 import { initialNavigationState, NavigationState, NavigationStore } from 'src/store/navigation.store';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-article-render',
@@ -42,8 +41,11 @@ export class ArticleRenderComponent {
   readonly settingsStore = inject(SettingsStore);
   readonly readProgressStore = inject(ReadProgressStore);
   readonly navigationStore = inject(NavigationStore);
+  readonly router = inject(Router);
 
   constructor() {
+    const fragment = toSignal(this.router.routerState.root.fragment);
+
     effect(() => {
       const navigationState = {
         isProgress: this.navigationStore.isProgress(),
@@ -51,39 +53,32 @@ export class ArticleRenderComponent {
         isSearch: this.navigationStore.isSearch(),
       };
 
+      console.log(navigationState);
+      console.log(fragment());
+
       this.scrollToSearchedText(this.articlesStore.searchText(), navigationState);
-      this.scrollToFragment(this.articlesStore.currentFragment(), navigationState);
+      this.scrollToFragment(fragment(), navigationState);
       this.scrollToReadProgress();
     });
   }
 
   saveReadProgress({ offsetHeight, scrollTop, scrollHeight }): void {
     const articleProgress = ((scrollTop / (scrollHeight - offsetHeight)) * 100).toFixed(4);
-    console.log(articleProgress);
     this.readProgressStore.updateReadProgress({ [this.html.key]: +articleProgress });
   }
 
   scrollToReadProgress(): void {
-    combineLatest([this.content.getScrollElement()])
+    from(this.content.getScrollElement())
       .pipe(
-        first(),
-        filter(([_]) => this.settingsStore.restoreArticleProgress() && this.navigationStore.isProgress()),
+        filter(() => this.settingsStore.restoreArticleProgress() && this.navigationStore.isProgress()),
+        switchMap(({ scrollHeight, offsetHeight }) => {
+          const readArticleProgress = this.readProgressStore.readProgressState()[this.html.key] ?? 0;
+          return this.content.scrollToPoint(0, ((scrollHeight - offsetHeight) * readArticleProgress) / 100, 0);
+        }),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(([{ scrollHeight, offsetHeight }]) => {
-        const readArticleProgress = this.readProgressStore[this.html.key] as Signal<number>;
-
-        if (!readArticleProgress) {
-          return;
-        }
-
-        console.log('readArticleProgress', readArticleProgress());
-
-        void this.content
-          .scrollToPoint(0, ((scrollHeight - offsetHeight) * readArticleProgress()) / 100, 0)
-          .then(() => {
-            this.navigationStore.updateNavigationState(initialNavigationState);
-          });
+      .subscribe(() => {
+        this.navigationStore.updateNavigationState(initialNavigationState);
       });
   }
 

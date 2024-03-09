@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy } from '@angular/core';
 import {
   IonAccordion,
   IonAccordionGroup,
@@ -32,6 +32,7 @@ import { ArticlesStore } from '../../store/articles.store';
 import { SettingsStore } from '../../store/settings.store';
 import { ReadProgressStore } from '../../store/read-progress.store';
 import { NavigationStore } from '../../store/navigation.store';
+import { ArticlesService } from '../../features/services/articles.service';
 
 @Component({
   selector: 'app-articles',
@@ -85,8 +86,15 @@ export class ArticlesComponent implements OnDestroy {
     private toastController: ToastController,
     private platform: Platform,
     private translate: TranslateService,
+    private articlesService: ArticlesService,
   ) {
     addIcons({ search, languageOutline });
+
+    effect(() => {
+      const language = this.settingsStore.language();
+      this.articlesService.loadArticlesFile(language);
+      this.translate.use(language);
+    });
   }
 
   ionViewWillEnter(): void {

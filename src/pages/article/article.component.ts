@@ -23,7 +23,6 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { ArticleNavigationToolbarComponent } from '../../widgets/navigation-toolbar/article-navigation-toolbar.component';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ArticlesStore } from '../../store/articles.store';
 import { SettingsStore } from '../../store/settings.store';
 import { ReadProgressStore } from '../../store/read-progress.store';
@@ -70,10 +69,7 @@ export class ArticleComponent {
   readonly readProgressStore = inject(ReadProgressStore);
   readonly navigationStore = inject(NavigationStore);
 
-  constructor(
-    private router: Router,
-    private domSanitazer: DomSanitizer,
-  ) {
+  constructor(private router: Router) {
     addIcons({ removeOutline, addOutline, arrowBackCircleOutline, arrowForwardCircleOutline });
   }
 
