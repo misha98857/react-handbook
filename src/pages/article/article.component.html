@@ -12,24 +12,24 @@
       </ion-button>
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>{{ (article$ | async).key }}</ion-title>
+    <ion-title>{{ currentArticle().key }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
   <app-article-render
-    *ngIf="(article$ | async).key"
+    *ngIf="currentArticle().key"
     (click)='getRoute($event)'
-    [html]='article$ | async'
-    [ngStyle]="{'font-size': (fontSize | async).toString() + 'rem'}"
+    [html]='currentArticle()'
+    [ngStyle]="{'font-size': settingsStore.fontSize().toString() + 'rem'}"
   >
   </app-article-render>
 </ion-content>
 <ion-footer>
-  <ion-toolbar *ngIf='navButtonsState | async'>
+  <ion-toolbar *ngIf='settingsStore.showNavigationButtons()'>
     <app-article-navigation-toolbar
-      [article]="article$ | async"
-      [readProgress]="progress | async"
-      [showProgress]="showProgress | async">
+      [article]="currentArticle()"
+      [readProgress]="readProgressStore.readProgressState()"
+      [showProgress]="settingsStore.showArticleProgress()">
     </app-article-navigation-toolbar>
   </ion-toolbar>
 </ion-footer>

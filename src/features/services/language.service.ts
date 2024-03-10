@@ -1,15 +1,26 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { ArticleGroup } from '../../entities/articles/models/articles';
+import { Device } from '@capacitor/device';
+import { allowedLanguages, langMap } from '../../shared/translate/const/const';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LanguageService {
-  constructor(private http: HttpClient) {}
+  async getLanguage(language: string): Promise<string> {
+    if (language) {
+      return language;
+    }
 
-  loadArticlesFile(language: string): Observable<ArticleGroup[]> {
-    return this.http.get<ArticleGroup[]>(`shared/assets/articles/react/${language}.articles.json`);
+    let deviceLanguage = (await Device.getLanguageCode()).value;
+
+    if (!allowedLanguages.includes(deviceLanguage)) {
+      return 'en';
+    }
+
+    if (Object.keys(langMap).includes(deviceLanguage)) {
+      deviceLanguage = langMap[deviceLanguage];
+    }
+
+    return deviceLanguage;
   }
 }

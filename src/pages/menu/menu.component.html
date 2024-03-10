@@ -11,40 +11,40 @@
       <ion-item>
         <ion-label>{{ 'navigation-buttons' | translate }}</ion-label>
         <ion-toggle
-          (ionChange)='changeNavigationButtonState($event.detail.checked)'
-          [checked]='navButtonState | async'
+          (ionChange)='changeSettings({showNavigationButtons: $event.detail.checked})'
+          [checked]='settingsStore.showNavigationButtons()'
           color='primary'>
         </ion-toggle>
       </ion-item>
       <ion-item>
         <ion-label>{{ 'dark-theme-button' | translate }}</ion-label>
         <ion-toggle
-          (ionChange)='toggleTheme($event.detail.checked)'
-          [checked]='darkMode | async'
+          (ionChange)='changeSettings({darkTheme: $event.detail.checked})'
+          [checked]='settingsStore.darkTheme()'
           color='primary'>
         </ion-toggle>
       </ion-item>
       <ion-item>
         <ion-label>{{ 'visible-progress' | translate }}</ion-label>
         <ion-toggle
-          (ionChange)='toggleShowProgress($event.detail.checked)'
-          [checked]='showProgress | async'
+          (ionChange)='changeSettings({showArticleProgress: $event.detail.checked})'
+          [checked]='settingsStore.showArticleProgress()'
           color='primary'>
         </ion-toggle>
       </ion-item>
       <ion-item>
         <ion-label>{{ 'restore-progress' | translate }}</ion-label>
         <ion-toggle
-          (ionChange)='toggleRestoreProgress($event.detail.checked)'
-          [checked]='restoreProgress | async'
+          (ionChange)='changeSettings({restoreArticleProgress: $event.detail.checked})'
+          [checked]='settingsStore.restoreArticleProgress()'
           color='primary'>
         </ion-toggle>
       </ion-item>
       <ion-item>
         <ion-label>{{ 'restore-state' | translate }}</ion-label>
         <ion-toggle
-          (ionChange)='toggleRestoreState($event.detail.checked)'
-          [checked]='restoreState | async'
+          (ionChange)='changeSettings({restoreAppState: $event.detail.checked})'
+          [checked]='settingsStore.restoreAppState()'
           color='primary'>
         </ion-toggle>
       </ion-item>

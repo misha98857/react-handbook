@@ -11,7 +11,7 @@
 </ion-header>
 <ion-content [fullscreen]="true" id='main'>
   <ion-accordion-group>
-    @for (articleGroup of articleGroups$ | async; track articleGroup.key) {
+    @for (articleGroup of articlesStore.searchedArticles(); track articleGroup.key) {
       <ion-accordion>
         <ion-item slot='header'>
           <ion-label> {{ articleGroup.key }}</ion-label>
@@ -20,8 +20,8 @@
           <app-article-list-item
             (openArticle)="openArticleWithSearch()"
             [articles]="articleGroup.values"
-            [readProgress]="progress | async"
-            [showProgress]="showProgress | async"
+            [readProgress]="readProgressStore.readProgressState()"
+            [showProgress]="settingsStore.showArticleProgress()"
           >
           </app-article-list-item>
         </ion-list>

@@ -1,30 +1,25 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  effect,
   ElementRef,
   inject,
   Input,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { combineLatest, filter, Observable } from 'rxjs';
+import { filter, from, switchMap } from 'rxjs';
 import { Article } from '../../entities/articles/models/articles';
-import { Store } from '@ngrx/store';
 import { IonContent } from '@ionic/angular/standalone';
 import * as Mark from 'mark.js';
-import { first } from 'rxjs/operators';
-import { selectFragment, selectSearchText } from '../../store/selectors/articles.selectors';
-import { selectRestoreProgress } from '../../store/selectors/settings.selectors';
-import { NavigationState } from '../../store/state/navigation.state';
-import { selectNavigationState } from '../../store/selectors/navigation.selectors';
-import { saveArticlesProgressStateAction, setArticleProgressStateAction } from '../../store/actions/progress.actions';
-import { returnDefaultNavigationStateAction } from '../../store/actions/navigation.actions';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { selectReadProgressState } from '../../store/selectors/progress.selectors';
-import { ReadProgressState } from '../../store/state/read-progress.state';
 import { SanitizeHtmlPipe } from '../../shared/articles/pipes/sanitaze.pipe';
+import { ArticlesStore } from '../../store/articles.store';
+import { SettingsStore } from '../../store/settings.store';
+import { ReadProgressStore } from '../../store/read-progress.store';
+import { initialNavigationState, NavigationState, NavigationStore } from 'src/store/navigation.store';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-article-render',
@@ -35,60 +30,54 @@ import { SanitizeHtmlPipe } from '../../shared/articles/pipes/sanitaze.pipe';
   standalone: true,
   imports: [IonContent, SanitizeHtmlPipe],
 })
-export class ArticleRenderComponent implements AfterViewInit {
+export class ArticleRenderComponent {
   @ViewChild(IonContent) content: IonContent;
   @ViewChild('renderElement') renderElement: ElementRef<HTMLDivElement>;
 
   @Input() html: Article;
 
-  destroyRef = inject(DestroyRef);
+  readonly destroyRef = inject(DestroyRef);
+  readonly articlesStore = inject(ArticlesStore);
+  readonly settingsStore = inject(SettingsStore);
+  readonly readProgressStore = inject(ReadProgressStore);
+  readonly navigationStore = inject(NavigationStore);
+  readonly router = inject(Router);
 
-  private searchText$: Observable<string> = this.store.select(selectSearchText);
-  private fragment$: Observable<string> = this.store.select(selectFragment);
-  private restoreProgress$: Observable<boolean> = this.store.select(selectRestoreProgress);
-  private navigationState$: Observable<NavigationState> = this.store.select(selectNavigationState);
-  private readProgressState$: Observable<ReadProgressState> = this.store.select(selectReadProgressState);
+  constructor() {
+    effect(
+      () => {
+        const navigationState = {
+          isProgress: this.navigationStore.isProgress(),
+          isInternalLink: this.navigationStore.isInternalLink(),
+          isSearch: this.navigationStore.isSearch(),
+        };
 
-  constructor(private store: Store) {}
+        this.scrollToSearchedText(this.articlesStore.searchText(), navigationState);
+        this.scrollToFragment(this.articlesStore.fragment(), navigationState);
+        this.scrollToReadProgress();
+      },
+      { allowSignalWrites: true },
+    );
+  }
 
   saveReadProgress({ offsetHeight, scrollTop, scrollHeight }): void {
     const articleProgress = ((scrollTop / (scrollHeight - offsetHeight)) * 100).toFixed(4);
-    this.store.dispatch(setArticleProgressStateAction({ key: this.html.key, value: articleProgress }));
+    this.readProgressStore.updateReadProgress({ [this.html.key]: +articleProgress });
   }
 
   scrollToReadProgress(): void {
-    combineLatest([
-      this.restoreProgress$,
-      this.content.getScrollElement(),
-      this.navigationState$,
-      this.readProgressState$,
-    ])
+    from(this.content.getScrollElement())
       .pipe(
-        first(),
-        filter(([restoreProgress, _, navigationState]) => restoreProgress && navigationState.isProgress),
+        filter(() => this.settingsStore.restoreArticleProgress() && this.navigationStore.isProgress()),
+        switchMap(({ scrollHeight, offsetHeight }) => {
+          const readArticleProgress = this.readProgressStore.readProgressState()[this.html.key] ?? 0;
+          return this.content.scrollToPoint(0, ((scrollHeight - offsetHeight) * readArticleProgress) / 100, 0);
+        }),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(([_, { scrollHeight, offsetHeight }, __, progressState]) => {
-        this.content
-          .scrollToPoint(0, ((scrollHeight - offsetHeight) * progressState[this.html.key]) / 100, 0)
-          .then(() => {
-            this.store.dispatch(returnDefaultNavigationStateAction());
-          });
+      .subscribe(() => {
+        this.navigationStore.updateNavigationState(initialNavigationState);
       });
-  }
-
-  ngAfterViewInit(): void {
-    combineLatest([this.navigationState$, this.searchText$, this.fragment$])
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(([navigationState, searchText, fragment]) => {
-        this.scrollToSearchedText(searchText, navigationState);
-        this.scrollToFragment(fragment, navigationState);
-        this.scrollToReadProgress();
-      });
-
-    this.readProgressState$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(progressState => {
-      this.store.dispatch(saveArticlesProgressStateAction({ progressState }));
-    });
   }
 
   private scrollToSearchedText(text: string, { isSearch }: NavigationState): void {
@@ -102,7 +91,7 @@ export class ArticleRenderComponent implements AfterViewInit {
 
     if (markedElements.length) {
       setTimeout(() => markedElements?.[0].scrollIntoView());
-      this.store.dispatch(returnDefaultNavigationStateAction());
+      this.navigationStore.updateNavigationState(initialNavigationState);
     }
   }
 
@@ -112,10 +101,10 @@ export class ArticleRenderComponent implements AfterViewInit {
     }
 
     const element: HTMLElement = this.renderElement.nativeElement.querySelector(`#${fragment}`);
+
     if (element) {
-      this.content.scrollToPoint(0, element.offsetTop, 300).then(() => {
-        this.store.dispatch(returnDefaultNavigationStateAction());
-      });
+      setTimeout(() => void this.content.scrollToPoint(0, element.offsetTop, 300));
+      this.navigationStore.updateNavigationState(initialNavigationState);
     }
   }
 }

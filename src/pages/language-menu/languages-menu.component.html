@@ -3,7 +3,7 @@
     <ion-buttons slot='start'>
       <ion-back-button [defaultHref]='"/react"'></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ 'app-language' | translate }} ({{ currentLang | async }})</ion-title>
+    <ion-title>{{ 'app-language' | translate }} ({{ settingsStore.language() }})</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]='true'>
@@ -15,7 +15,7 @@
           [imagePath]="'shared/assets/flags/' + lang.abbr + '.svg'"
           [language]='lang.abbr'
           [message]='lang.englishName'
-          [selected]='(currentLang | async) === lang.abbr'
+          [selected]='settingsStore.language() === lang.abbr'
         ></app-card>
       </ion-col>
     </ion-row>

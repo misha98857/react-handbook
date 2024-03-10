@@ -1,25 +1,17 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, effect, EnvironmentInjector, inject, OnInit, runInInjectionContext } from '@angular/core';
 import { IonApp, IonContent, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
-import { Store } from '@ngrx/store';
-import { forkJoin, from, Observable, of, switchMap, tap } from 'rxjs';
+import { from } from 'rxjs';
 import { PushNotifications } from '@capacitor/push-notifications';
-import { Device } from '@capacitor/device';
-import { openWithProgressAction } from '../../store/actions/navigation.actions';
-import { loadLatestPageAction, saveLatestPageAction } from '../../store/actions/history.actions';
-import { selectRouterState } from '../../store/selectors/articles.selectors';
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { selectAppTheme } from '../../store/selectors/settings.selectors';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, Location } from '@angular/common';
 import { MenuComponent } from '../menu/menu.component';
-import { allowedLanguages, langMap } from '../../shared/translate/const/const';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs/operators';
-import { SettingsService } from '../../features/services/settings.service';
-import { SettingsState } from '../../store/state/settings.state';
-import { changeAppLanguageAction, initApplicationDataAction } from '../../store/actions/settings.actions';
-import { loadProgressStateAction } from '../../store/actions/progress.actions';
-import { Preferences } from '@capacitor/preferences';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { SettingsStore } from '../../store/settings.store';
+import { HistoryStore } from '../../store/history.store';
+import { ArticlesService } from '../../features/services/articles.service';
+import { TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
+import { NavigationStore } from '../../store/navigation.store';
 
 @Component({
   selector: 'app-root',
@@ -29,97 +21,74 @@ import { SplashScreen } from '@capacitor/splash-screen';
   imports: [IonApp, IonContent, IonRouterOutlet, AsyncPipe, MenuComponent],
 })
 export class AppComponent implements OnInit {
-  darkMode: Observable<boolean> = this.store.select(selectAppTheme);
-
-  destroyRef = inject(DestroyRef);
+  readonly settingsStore = inject(SettingsStore);
+  readonly navigationStore = inject(NavigationStore);
+  readonly historyStore = inject(HistoryStore);
+  private readonly environmentInjector = inject(EnvironmentInjector);
 
   constructor(
     private platform: Platform,
-    private store: Store,
-    private settingsService: SettingsService,
-  ) {}
+    private location: Location,
+    private articlesService: ArticlesService,
+    private translate: TranslateService,
+    private router: Router,
+  ) {
+    effect(
+      () => {
+        const language = this.settingsStore.language();
+        if (language) {
+          this.setLanguage(language);
+          this.restoreAppState();
+        }
+      },
+      { allowSignalWrites: true },
+    );
+  }
 
   ngOnInit(): void {
     this.initializeApp();
   }
 
   initializeApp(): void {
-    from(this.platform.ready())
-      .pipe(
-        switchMap(() => this.settingsService.initSettings$()),
-        switchMap(settings => this.initApplicationData(settings)),
-        tap(() => {
-          this.initRouterWatcher();
-          this.darkThemeHandler();
-        }),
-        switchMap(() => PushNotifications.register()),
-      )
-      .subscribe();
-  }
-
-  private getLanguage(language: string | null): Observable<string> {
-    if (language) {
-      return of(language);
-    }
-
-    const deviceLanguage$ = from(Device.getLanguageCode());
-
-    return deviceLanguage$.pipe(
-      map(({ value: deviceLanguage }) => {
-        if (!allowedLanguages.includes(deviceLanguage)) {
-          return 'en';
-        }
-
-        if (Object.keys(langMap).includes(deviceLanguage)) {
-          deviceLanguage = langMap[deviceLanguage];
-        }
-
-        return deviceLanguage;
-      }),
-    );
-  }
-
-  private darkThemeHandler() {
-    this.darkMode.subscribe(darkMode => {
-      void StatusBar.setStyle({ style: darkMode ? Style.Dark : Style.Light });
-      void StatusBar.setBackgroundColor({ color: darkMode ? '#000000' : '#ffffff' });
+    from(this.platform.ready()).subscribe(() => {
+      this.initUrlChangeWatcher();
+      this.darkThemeChangeEffect();
+      void PushNotifications.register();
+      void SplashScreen.hide();
     });
   }
 
-  private initApplicationData(settings: SettingsState) {
-    const language$ = this.getLanguage(settings['language']);
-
-    return forkJoin([language$, Preferences.get({ key: 'progress' }), Preferences.get({ key: 'latestPage' })]).pipe(
-      switchMap(([language, progress, latestPage]) => {
-        this.store.dispatch(initApplicationDataAction({ settings: { ...settings, language } }));
-        this.store.dispatch(changeAppLanguageAction({ language }));
-        this.store.dispatch(
-          loadProgressStateAction({ progressState: JSON.parse(progress.value) as Record<string, number> }),
-        );
-        this.restoreLatestPage(settings['restoreState'], latestPage.value);
-        return SplashScreen.hide();
-      }),
-    );
-  }
-
-  private initRouterWatcher() {
-    this.store
-      .select(selectRouterState)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(routerState => {
-        this.store.dispatch(saveLatestPageAction({ url: routerState.url }));
+  private darkThemeChangeEffect() {
+    runInInjectionContext(this.environmentInjector, () => {
+      effect(() => {
+        void StatusBar.setStyle({ style: this.settingsStore.darkTheme() ? Style.Dark : Style.Light });
+        void StatusBar.setBackgroundColor({ color: this.settingsStore.darkTheme() ? '#000000' : '#ffffff' });
       });
+    });
   }
 
-  private restoreLatestPage(restoreState: boolean, latestPage: string) {
-    if (restoreState && latestPage) {
-      this.store.dispatch(openWithProgressAction());
-      this.store.dispatch(loadLatestPageAction({ url: latestPage.replace(/"/g, '') }));
+  private initUrlChangeWatcher() {
+    this.location.onUrlChange((url: string) => {
+      this.historyStore.updateLatestPage(url);
+    });
+  }
+
+  private setLanguage(language: string): void {
+    this.articlesService.loadArticlesFile(language);
+    this.translate.use(language);
+  }
+
+  private restoreAppState(): void {
+    const latestPage = this.historyStore.latestPage();
+    const shouldRestoreAppState = this.settingsStore.restoreAppState();
+    const appStateAlreadyRestored = this.historyStore.appStateRestored();
+
+    if (appStateAlreadyRestored || !shouldRestoreAppState || !latestPage) {
       return;
     }
 
-    if (location.pathname !== '/react') {
-      location.assign('/react');
-    }
+    this.historyStore.updateAppStateRestored(true);
+    this.navigationStore.updateNavigationState({ isProgress: true });
+    void this.router.navigateByUrl(latestPage.replace(/"/g, ''));
   }
 }

@@ -1,6 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AsyncPipe } from '@angular/common';
 import {
@@ -14,20 +12,7 @@ import {
   IonToggle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import {
-  selectAppTheme,
-  selectNavButtons,
-  selectRestoreProgress,
-  selectRestoreState,
-  selectShowProgress,
-} from '../../store/selectors/settings.selectors';
-import {
-  toggleNavigationButtonAction,
-  toggleRestoreProgressAction,
-  toggleRestoreStateAction,
-  toggleShowProgressAction,
-  toggleThemeAction,
-} from '../../store/actions/settings.actions';
+import { SettingsState, SettingsStore } from '../../store/settings.store';
 
 @Component({
   selector: 'app-menu',
@@ -50,32 +35,9 @@ import {
   ],
 })
 export class MenuComponent {
-  navButtonState: Observable<boolean> = this.store.select(selectNavButtons);
-  darkMode: Observable<boolean> = this.store.select(selectAppTheme);
-  showProgress: Observable<boolean> = this.store.select(selectShowProgress);
-  restoreProgress: Observable<boolean> = this.store.select(selectRestoreProgress);
-  restoreState: Observable<boolean> = this.store.select(selectRestoreState);
+  readonly settingsStore = inject(SettingsStore);
 
-  constructor(private store: Store) {}
-
-  changeNavigationButtonState(checked: boolean): void {
-    // TODO: should use method from service in features
-    this.store.dispatch(toggleNavigationButtonAction({ navButton: checked }));
-  }
-
-  toggleTheme(checked: boolean): void {
-    this.store.dispatch(toggleThemeAction({ darkTheme: checked }));
-  }
-
-  toggleShowProgress(checked: boolean): void {
-    this.store.dispatch(toggleShowProgressAction({ showProgress: checked }));
-  }
-
-  toggleRestoreProgress(checked: boolean): void {
-    this.store.dispatch(toggleRestoreProgressAction({ restoreProgress: checked }));
-  }
-
-  toggleRestoreState(checked: boolean): void {
-    this.store.dispatch(toggleRestoreStateAction({ restoreState: checked }));
+  changeSettings(settings: Partial<SettingsState>): void {
+    this.settingsStore.updateSettings(settings);
   }
 }

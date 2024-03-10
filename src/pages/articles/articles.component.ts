@@ -1,6 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { ArticleGroup } from '../../entities/articles/models/articles';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import {
   IonAccordion,
   IonAccordionGroup,
@@ -21,19 +19,19 @@ import {
   Platform,
   ToastController,
 } from '@ionic/angular/standalone';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { App } from '@capacitor/app';
-import { selectArticleGroups } from '../../store/selectors/articles.selectors';
-import { selectReadProgressState } from '../../store/selectors/progress.selectors';
-import { selectLanguage, selectShowProgress } from '../../store/selectors/settings.selectors';
-import { openWithProgressAction } from '../../store/actions/navigation.actions';
 import { addIcons } from 'ionicons';
 import { languageOutline, search } from 'ionicons/icons';
 import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 import { GithubStarComponent } from '../../widgets/github-star/github-star.component';
+import { ArticlesStore } from '../../store/articles.store';
+import { SettingsStore } from '../../store/settings.store';
+import { ReadProgressStore } from '../../store/read-progress.store';
+import { NavigationStore } from '../../store/navigation.store';
 
 @Component({
   selector: 'app-articles',
@@ -72,10 +70,10 @@ import { GithubStarComponent } from '../../widgets/github-star/github-star.compo
   ],
 })
 export class ArticlesComponent implements OnDestroy {
-  articleGroups$: Observable<ArticleGroup[]> = this.store.select(selectArticleGroups);
-  progress$: Observable<Record<string, number>> = this.store.select(selectReadProgressState);
-  showProgress$: Observable<boolean> = this.store.select(selectShowProgress);
-  language: Observable<string> = this.store.select(selectLanguage);
+  readonly articlesStore = inject(ArticlesStore);
+  readonly settingsStore = inject(SettingsStore);
+  readonly readProgressStore = inject(ReadProgressStore);
+  readonly navigationStore = inject(NavigationStore);
 
   skeletonLoadingItems = [...Array(8).keys()];
 
@@ -84,7 +82,6 @@ export class ArticlesComponent implements OnDestroy {
   private changeLanguageSubscription: Subscription;
 
   constructor(
-    private store: Store,
     private toastController: ToastController,
     private platform: Platform,
     private translate: TranslateService,
@@ -100,7 +97,7 @@ export class ArticlesComponent implements OnDestroy {
         setTimeout(() => (this.backCounter = 0), 2000);
       }
       if (this.backCounter === 2) {
-        App.exitApp();
+        void App.exitApp();
       }
     });
   }
@@ -114,7 +111,7 @@ export class ArticlesComponent implements OnDestroy {
   }
 
   openArticle(): void {
-    this.store.dispatch(openWithProgressAction());
+    this.navigationStore.updateNavigationState({ isProgress: true });
   }
 
   private async onBackButtonPress(): Promise<void> {
