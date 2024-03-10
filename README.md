@@ -56,12 +56,6 @@ npm run sync
 npm run android
 ```
 
-## TODO
-
-1. Migrate to [SignalStore](https://ngrx.io/guide/signals/signal-store)
-2. Move article title to the article body
-3. Add a "Return to Home" button in the header
-
 ## License
 
 This product is licensed under
