@@ -10,7 +10,7 @@ COPY . ./
 
 RUN npm run build
 
-FROM nginx:latest as prod
+FROM nginx:1.25.4-alpine as prod
 
 WORKDIR /app
 
