@@ -26,8 +26,6 @@ export class AppComponent implements OnInit {
   readonly historyStore = inject(HistoryStore);
   private readonly environmentInjector = inject(EnvironmentInjector);
 
-  private isAppStateRestored = false;
-
   constructor(
     private platform: Platform,
     private location: Location,
@@ -40,7 +38,7 @@ export class AppComponent implements OnInit {
         const language = this.settingsStore.language();
         if (language) {
           this.setLanguage(language);
-          this.restoreAppState(this.settingsStore.restoreAppState(), this.historyStore.latestPage());
+          this.restoreAppState();
         }
       },
       { allowSignalWrites: true },
@@ -80,13 +78,17 @@ export class AppComponent implements OnInit {
     this.translate.use(language);
   }
 
-  private restoreAppState(restoreAppState: boolean, latestPage: string): void {
-    if (this.isAppStateRestored || !restoreAppState || !latestPage) {
+  private restoreAppState(): void {
+    const latestPage = this.historyStore.latestPage();
+    const shouldRestoreAppState = this.settingsStore.restoreAppState();
+    const appStateAlreadyRestored = this.historyStore.appStateRestored();
+
+    if (appStateAlreadyRestored || !shouldRestoreAppState || !latestPage) {
       return;
     }
 
+    this.historyStore.updateAppStateRestored(true);
     this.navigationStore.updateNavigationState({ isProgress: true });
     void this.router.navigateByUrl(latestPage.replace(/"/g, ''));
-    this.isAppStateRestored = true;
   }
 }

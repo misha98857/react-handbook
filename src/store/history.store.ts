@@ -3,6 +3,7 @@ import { Preferences } from '@capacitor/preferences';
 
 const initialHistoryState = {
   latestPage: '',
+  appStateRestored: false,
 };
 
 export const HistoryStore = signalStore(
@@ -12,6 +13,9 @@ export const HistoryStore = signalStore(
     updateLatestPage: (page: string) => {
       patchState(store, { latestPage: page });
       void Preferences.set({ key: 'latestPage', value: JSON.stringify(page) });
+    },
+    updateAppStateRestored: (restored: boolean) => {
+      patchState(store, { appStateRestored: restored });
     },
   })),
   withHooks(store => ({
