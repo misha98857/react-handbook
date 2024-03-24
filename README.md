@@ -56,6 +56,27 @@ npm run sync
 npm run android
 ```
 
+## Content structure
+
+```json5
+[
+  {
+    "key": "Installation", // Topic title
+    "values": [
+      {
+        "key": "Getting Started", // Subtopic title
+        "value": "<div>html content</div>", // Subtopic content
+        "path": "/react/getting-started", // Path to subtitle
+        "nav": [
+          "/react", // Path to pervious page
+          "/react/add-react-to-a-website" // Path to next page
+        ]
+      }
+    ]
+  }
+]
+```
+
 ## License
 
 This product is licensed under
