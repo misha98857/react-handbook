@@ -68,7 +68,7 @@ npm run android
         "value": "<div>html content</div>", // Subtopic content
         "path": "/react/getting-started", // Path to subtitle
         "nav": [
-          "/react", // Path to pervious page
+          "/react", // Path to previous page
           "/react/add-react-to-a-website" // Path to next page
         ]
       }
