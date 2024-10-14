@@ -42,6 +42,12 @@ npm install
 npm start
 ```
 
+3. Also you can launch live server and open app on android emulator or real device
+
+```bash
+npm run android:liveserver
+```
+
 ## Build android app
 
 1. Build application and sync with android folder
@@ -53,8 +59,10 @@ npm run sync
 2. Open android studio by command
 
 ```bash
-npm run android
+npm run android-studio
 ```
+
+3. Build release application apk or aab by Android Studio
 
 ## Content structure
 
