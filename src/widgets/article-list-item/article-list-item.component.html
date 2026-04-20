@@ -1,6 +1,6 @@
 @for (article of articles(); track article.key) {
   <ion-item [routerLink]="[article.path]" (click)="onOpenArticle()">
-    <ion-label>{{ article.key }}</ion-label>
+    <ion-label>{{ article.title || article.key }}</ion-label>
     @if (showProgress()) {
       @switch ((readProgress()?.[article.key] ?? 0).toFixed(0)) {
         @case ('100') {
