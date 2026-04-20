@@ -12,7 +12,7 @@
       </ion-button>
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>{{ currentArticle().key }}</ion-title>
+    <ion-title>{{ currentArticle().title || currentArticle().key }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
