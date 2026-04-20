@@ -36,14 +36,41 @@ describe('ArticlesService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(articles);
 
+    const examplesReq = httpMock.expectOne('shared/assets/articles/react/ru.examples.json');
+    examplesReq.flush({});
+
     expect(store.articleGroups()).toEqual(articles);
     httpMock.verify();
   });
 
   it('использует переданный язык в URL', () => {
     service.loadArticlesFile('en');
-    const req = httpMock.expectOne('shared/assets/articles/react/en.articles.json');
-    req.flush([]);
+    const articlesReq = httpMock.expectOne('shared/assets/articles/react/en.articles.json');
+    articlesReq.flush([]);
+    const examplesReq = httpMock.expectOne('shared/assets/articles/react/en.examples.json');
+    examplesReq.flush({});
+    httpMock.verify();
+  });
+
+  it('загружает examples json рядом с articles', () => {
+    service.loadArticlesFile('ja');
+    httpMock.expectOne('shared/assets/articles/react/ja.articles.json').flush([]);
+    const examplesReq = httpMock.expectOne('shared/assets/articles/react/ja.examples.json');
+    expect(examplesReq.request.method).toBe('GET');
+    examplesReq.flush({ 'learn-001': { files: {}, entry: '/App.js', dependencies: {}, environment: 'react' } });
+
+    expect(store.getExample('learn-001')).toBeDefined();
+    httpMock.verify();
+  });
+
+  it('игнорирует отсутствие examples json (graceful 404)', () => {
+    service.loadArticlesFile('uk');
+    httpMock.expectOne('shared/assets/articles/react/uk.articles.json').flush([]);
+    const examplesReq = httpMock.expectOne('shared/assets/articles/react/uk.examples.json');
+    examplesReq.flush('not found', { status: 404, statusText: 'Not Found' });
+
+    // Не падает и сохраняет пустую карту examples
+    expect(store.getExample('nonexistent')).toBeUndefined();
     httpMock.verify();
   });
 });
