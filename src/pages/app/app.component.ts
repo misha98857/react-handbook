@@ -40,8 +40,15 @@ export class AppComponent implements OnInit {
     });
 
     effect(() => {
-      void StatusBar.setStyle({ style: this.settingsStore.darkTheme() ? Style.Dark : Style.Light });
-      void StatusBar.setBackgroundColor({ color: this.settingsStore.darkTheme() ? '#000000' : '#ffffff' });
+      const isDark = this.settingsStore.darkTheme();
+      void StatusBar.setStyle({ style: isDark ? Style.Dark : Style.Light });
+      void StatusBar.setBackgroundColor({ color: isDark ? '#000000' : '#ffffff' });
+      // Toggle the Ionic dark palette class on <ion-app> so CSS variables
+      // defined under `ion-app.dark` take effect in browser too (native
+      // StatusBar alone doesn't restyle the DOM).
+      const ionApp = document.querySelector('ion-app');
+      ionApp?.classList.toggle('dark', isDark);
+      document.documentElement.classList.toggle('dark', isDark);
     });
   }
 
