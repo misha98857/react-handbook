@@ -1,0 +1,45 @@
+name: ci
+
+on:
+  push:
+    branches: [master, main, project-upgrade]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  lint-unit:
+    name: lint + unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test:run
+      - run: npx ng build --configuration=development
+
+  e2e:
+    name: playwright e2e
+    runs-on: ubuntu-latest
+    needs: lint-unit
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run e2e
+        run: npm run e2e
+      - name: Upload report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
