@@ -1,5 +1,11 @@
 {
   "title": "React El Kitab\u0131",
+  "playground-title": "Etkile\u015fimli \u00f6rnek",
+  "playground-reload": "Yeniden \u00e7al\u0131\u015ft\u0131r",
+  "playground-copy": "Kodu kopyala",
+  "playground-open-external": "CodeSandbox'ta a\u00e7",
+  "playground-console": "Konsol",
+  "playground-external-deps": "Bu \u00f6rnek ek paketler gerektiriyor. \u00c7evrimi\u00e7i denemek i\u00e7in CodeSandbox'ta a\u00e7\u0131n.",
   "exit": "\u00c7\u0131kmak i\u00e7in tekrar t\u0131klay\u0131n",
   "alert-header": "Uygulamay\u0131 seviyor musunuz?",
   "alert-message": "Uygulamadan ho\u015flan\u0131yorsan\u0131z.Bunu derecelendirmek i\u00e7in biraz zaman ay\u0131r\u0131r m\u0131s\u0131n?",

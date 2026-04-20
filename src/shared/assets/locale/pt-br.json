@@ -1,5 +1,11 @@
 {
   "title": "Manual do React",
+  "playground-title": "Exemplo interativo",
+  "playground-reload": "Executar novamente",
+  "playground-copy": "Copiar c\u00f3digo",
+  "playground-open-external": "Abrir no CodeSandbox",
+  "playground-console": "Console",
+  "playground-external-deps": "Este exemplo requer pacotes adicionais. Abra-o no CodeSandbox para test\u00e1-lo online.",
   "exit": "Clique novamente para sair",
   "alert-header": "Voc\u00ea gosta de aplicativo?",
   "alert-message": "Se voc\u00ea gosta de aplicativo.Voc\u00ea se importaria de levar um momento para classific\u00e1 -lo?",

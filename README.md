@@ -80,26 +80,63 @@ Configuration lives in `vitest.config.ts`; the test bootstrap is `src/test-setup
 npm run lint              # ESLint 9 flat config (eslint.config.js)
 ```
 
-## Content structure
+## Content
+
+Article content is generated from the official React documentation sources
+(`reactjs/react.dev` and its localized forks) by the pipeline under
+`scripts/content/`. Supported locales: **en, ru, es, fr, ja, ko, tr, pt-br,
+uk, zh-hans**.
+
+Structure of the generated JSON:
 
 ```json5
 [
   {
-    key: 'Installation', // Topic title
+    key: 'Learn React', // Topic title
     values: [
       {
-        key: 'Getting Started', // Subtopic title
-        value: '<div>html content</div>', // Subtopic content
-        path: '/react/getting-started', // Page path
+        key: 'learn', // Stable slug (used as URL id)
+        title: 'Quick Start', // Subtopic title
+        value: '<article>...</article>', // Subtopic HTML
+        path: '/react/learn', // Page path
         nav: [
           '/react', // Previous page
-          '/react/add-react-to-a-website', // Next page
+          '/react/learn-thinking-in-react', // Next page
         ],
+        examples: ['learn-001', 'learn-002'], // Sandpack example ids (optional)
       },
     ],
   },
 ]
 ```
+
+### Content pipeline
+
+```bash
+npm run content:install                   # one-time: install scripts/content/ deps
+npm run content:fetch                     # shallow-clone all supported locales
+npm run content:fetch -- --lang en        # or a subset
+npm run content:build -- --lang en        # render MDX -> articles.json + examples.json
+npm run content:build -- --lang en --section learn --max 10
+npm run content:validate                  # cross-check every locale
+```
+
+Generated artefacts live under `src/shared/assets/articles/react/` (one
+`<lang>.articles.json` and `<lang>.examples.json` per locale) and
+`src/shared/assets/images/react/` (referenced assets).
+
+### Interactive code playground
+
+`<Sandpack>` examples from react.dev are rendered as inline placeholders. Tapping
+one opens a lazy-loaded modal that executes the snippet inside a sandboxed
+`<iframe>` using bundled React UMD + `@babel/standalone`. Examples that require
+extra npm packages fall back to an "Open in CodeSandbox" link.
+
+```bash
+npm run playground:vendors                # one-time: download React + Babel UMD
+```
+
+Assets land in `src/shared/assets/playground/vendor/`.
 
 ## Project layout
 

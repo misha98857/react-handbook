@@ -1,5 +1,11 @@
 {
   "title": "Manuel de r\u00e9action",
+  "playground-title": "Exemple interactif",
+  "playground-reload": "R\u00e9-ex\u00e9cuter",
+  "playground-copy": "Copier le code",
+  "playground-open-external": "Ouvrir dans CodeSandbox",
+  "playground-console": "Console",
+  "playground-external-deps": "Cet exemple n\u00e9cessite des paquets suppl\u00e9mentaires. Ouvrez-le dans CodeSandbox pour l'essayer en ligne.",
   "exit": "Cliquez \u00e0 nouveau pour quitter",
   "alert-header": "Aimez-vous l'application?",
   "alert-message": "Si vous aimez l'application.Pourriez-vous prendre un moment pour l'\u00e9valuer?",

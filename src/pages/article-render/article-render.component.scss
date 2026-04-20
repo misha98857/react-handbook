@@ -99,3 +99,149 @@ article {
     border: none;
   }
 }
+
+/* react.dev semantic blocks (produced by the MDX pipeline) */
+
+.intro {
+  font-size: 1.05em;
+  color: var(--ion-color-medium-shade, #666);
+  margin-bottom: 20px;
+}
+
+.you-will-learn,
+.learn-more,
+.recap {
+  background-color: rgba(88, 175, 223, 0.12);
+  border-left: 4px solid rgba(88, 175, 223, 0.8);
+  padding: 16px 20px;
+  margin: 18px 0;
+  border-radius: 4px;
+}
+
+.deep-dive {
+  border: 1px dashed rgba(88, 175, 223, 0.6);
+  padding: 14px 18px;
+  margin: 18px 0;
+  border-radius: 6px;
+
+  > summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: rgba(88, 175, 223, 1);
+  }
+}
+
+.console-block {
+  background: #0d1117;
+  color: #e6edf3;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.92em;
+  margin: 14px 0;
+  white-space: pre-wrap;
+
+  &[data-level='warning'] {
+    border-left: 4px solid #d4a72c;
+  }
+  &[data-level='error'] {
+    border-left: 4px solid #ed3315;
+    color: #ffb4b4;
+  }
+}
+
+.terminal-block {
+  background: #0d1117;
+  color: #58a6ff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.92em;
+  margin: 14px 0;
+
+  &::before {
+    content: '$ ';
+    color: #8b949e;
+  }
+}
+
+.challenge,
+.challenges,
+.solution,
+.hint {
+  border-left: 4px solid #6f42c1;
+  background: rgba(111, 66, 193, 0.08);
+  padding: 12px 18px;
+  margin: 16px 0;
+  border-radius: 4px;
+}
+
+.solution {
+  border-left-color: #28a745;
+  background: rgba(40, 167, 69, 0.08);
+}
+
+.hint {
+  border-left-color: #d4a72c;
+  background: rgba(212, 167, 44, 0.08);
+}
+
+/* Sandpack placeholder — the interactive button rendered before the runtime modal opens */
+.sandpack-placeholder {
+  display: block;
+  margin: 16px 0;
+  border: 1px solid rgba(88, 175, 223, 0.5);
+  border-radius: 8px;
+  background: rgba(88, 175, 223, 0.08);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover,
+  &:active {
+    background: rgba(88, 175, 223, 0.18);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__label {
+    font-weight: 600;
+    color: rgba(88, 175, 223, 1);
+  }
+
+  &__label::before {
+    content: '▶ ';
+  }
+
+  &__files {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.8em;
+    color: var(--ion-color-medium-shade, #666);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 60%;
+  }
+}
+
+ion-app.dark {
+  .intro {
+    color: #a0a0a0;
+  }
+  .console-block {
+    background: #000;
+  }
+  .sandpack-placeholder {
+    background: rgba(88, 175, 223, 0.12);
+
+    &:hover,
+    &:active {
+      background: rgba(88, 175, 223, 0.22);
+    }
+  }
+}

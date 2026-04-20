@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sandpack Runner</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+      #root {
+        padding: 8px;
+      }
+      #error {
+        display: none;
+        white-space: pre-wrap;
+        color: #b00020;
+        background: #fff0f0;
+        padding: 10px 12px;
+        font-family: 'SFMono-Regular', Consolas, monospace;
+        font-size: 12px;
+        border-left: 4px solid #b00020;
+        margin: 0;
+      }
+      @media (prefers-color-scheme: dark) {
+        html,
+        body {
+          background: #1a1a1a;
+          color: #e4e4e4;
+        }
+        #error {
+          background: #2a1515;
+          color: #ff8a8a;
+        }
+      }
+    </style>
+    <script src="./vendor/react.development.js"></script>
+    <script src="./vendor/react-dom.development.js"></script>
+    <script src="./vendor/babel.min.js"></script>
+  </head>
+  <body>
+    <pre id="error"></pre>
+    <div id="root"></div>
+    <script>
+      (function () {
+        'use strict';
+
+        var parentOrigin = '*'; // restricted by sandbox; host validates source
+        var currentFiles = {};
+        var currentEntry = '/App.js';
+
+        function send(type, payload) {
+          parent.postMessage(Object.assign({ type: 'sandpack:' + type }, payload || {}), parentOrigin);
+        }
+
+        function showError(e) {
+          var pre = document.getElementById('error');
+          pre.textContent = (e && (e.stack || e.message)) || String(e);
+          pre.style.display = 'block';
+          send('error', { message: String((e && e.message) || e), stack: e && e.stack });
+        }
+
+        function clearError() {
+          var pre = document.getElementById('error');
+          pre.style.display = 'none';
+          pre.textContent = '';
+        }
+
+        // --- console capture -------------------------------------------------
+        ['log', 'info', 'warn', 'error', 'debug'].forEach(function (level) {
+          var original = console[level].bind(console);
+          console[level] = function () {
+            var args = Array.prototype.slice.call(arguments);
+            try {
+              send('console', {
+                level: level,
+                args: args.map(safeStringify)
+              });
+            } catch (_) {
+              /* ignore */
+            }
+            original.apply(console, args);
+          };
+        });
+
+        window.addEventListener('error', function (ev) {
+          showError(ev.error || ev.message);
+        });
+        window.addEventListener('unhandledrejection', function (ev) {
+          showError(ev.reason);
+        });
+
+        function safeStringify(v) {
+          if (v === null) return 'null';
+          if (v === undefined) return 'undefined';
+          var t = typeof v;
+          if (t === 'string') return v;
+          if (t === 'number' || t === 'boolean' || t === 'bigint') return String(v);
+          if (t === 'function') return '[Function ' + (v.name || 'anonymous') + ']';
+          try {
+            return JSON.stringify(v);
+          } catch (_) {
+            return Object.prototype.toString.call(v);
+          }
+        }
+
+        // --- module resolution ----------------------------------------------
+        function normalize(fromPath, spec) {
+          if (spec[0] !== '.' && spec[0] !== '/') return spec; // bare package
+          var base = spec[0] === '/' ? '' : fromPath.split('/').slice(0, -1).join('/');
+          var parts = (base + '/' + spec).split('/');
+          var stack = [];
+          for (var i = 0; i < parts.length; i++) {
+            var p = parts[i];
+            if (!p || p === '.') continue;
+            if (p === '..') stack.pop();
+            else stack.push(p);
+          }
+          var resolved = '/' + stack.join('/');
+          // try exact, then with .js / .jsx / .ts / .tsx / /index.js
+          var candidates = [resolved];
+          if (!/\.[a-z]+$/i.test(resolved)) {
+            candidates.push(
+              resolved + '.js',
+              resolved + '.jsx',
+              resolved + '.ts',
+              resolved + '.tsx',
+              resolved + '/index.js',
+              resolved + '/index.jsx'
+            );
+          }
+          for (var j = 0; j < candidates.length; j++) {
+            if (currentFiles[candidates[j]] != null) return candidates[j];
+          }
+          return resolved;
+        }
+
+        // Provide a stub for bare-specifier dependencies that we cannot resolve.
+        var externals = {
+          react: window.React,
+          'react-dom': window.ReactDOM,
+          'react-dom/client': window.ReactDOM
+        };
+
+        function requireBare(name) {
+          if (Object.prototype.hasOwnProperty.call(externals, name)) return externals[name];
+          throw new Error(
+            'Cannot resolve external module "' +
+              name +
+              '". Open this example in CodeSandbox to run with its full dependencies.'
+          );
+        }
+
+        function compile(filename, source) {
+          var presets = ['react'];
+          if (/\.tsx?$/i.test(filename)) presets.push('typescript');
+          var opts = {
+            filename: filename,
+            presets: presets,
+            plugins: [Babel.availablePlugins['transform-modules-commonjs']],
+            sourceType: 'module'
+          };
+          return Babel.transform(source, opts).code;
+        }
+
+        var moduleCache;
+
+        function requireModule(path, fromPath) {
+          var resolved = normalize(fromPath || '/', path);
+          if (Object.prototype.hasOwnProperty.call(externals, path)) return requireBare(path);
+          if (currentFiles[resolved] == null) return requireBare(path);
+          if (moduleCache[resolved]) return moduleCache[resolved].exports;
+
+          var mod = { exports: {} };
+          moduleCache[resolved] = mod;
+
+          var src = currentFiles[resolved];
+          if (/\.css$/i.test(resolved)) {
+            var style = document.createElement('style');
+            style.textContent = src;
+            document.head.appendChild(style);
+            return mod.exports;
+          }
+          if (/\.json$/i.test(resolved)) {
+            try {
+              mod.exports = JSON.parse(src);
+            } catch (e) {
+              throw new Error('Invalid JSON in ' + resolved + ': ' + e.message);
+            }
+            return mod.exports;
+          }
+
+          var code = compile(resolved, src);
+          var localRequire = function (spec) {
+            return requireModule(spec, resolved);
+          };
+          var factory = new Function('require', 'module', 'exports', code + '\n//# sourceURL=' + resolved);
+          try {
+            factory(localRequire, mod, mod.exports);
+          } catch (e) {
+            e.message = '[' + resolved + '] ' + e.message;
+            throw e;
+          }
+          return mod.exports;
+        }
+
+        function mount(files, entry) {
+          clearError();
+          // Reset DOM
+          var root = document.getElementById('root');
+          root.innerHTML = '';
+          currentFiles = files || {};
+          currentEntry = entry || '/App.js';
+          moduleCache = Object.create(null);
+
+          try {
+            var exports = requireModule(currentEntry, '/');
+            var Component = exports && (exports.default || exports);
+            if (typeof Component !== 'function' && typeof Component !== 'object') {
+              send('ready', { rendered: false });
+              return;
+            }
+            // React 18 root API
+            if (ReactDOM.createRoot) {
+              var rootEl = ReactDOM.createRoot(root);
+              rootEl.render(React.createElement(Component));
+            } else {
+              ReactDOM.render(React.createElement(Component), root);
+            }
+            send('ready', { rendered: true });
+          } catch (e) {
+            showError(e);
+          }
+        }
+
+        window.addEventListener('message', function (ev) {
+          var data = ev.data || {};
+          if (!data || typeof data !== 'object') return;
+          if (data.type === 'sandpack:mount') {
+            mount(data.files, data.entry);
+          } else if (data.type === 'sandpack:ping') {
+            send('pong');
+          }
+        });
+
+        send('boot');
+      })();
+    </script>
+  </body>
+</html>

@@ -1,5 +1,11 @@
 {
   "title": "React Handbook",
+  "playground-title": "Interactive example",
+  "playground-reload": "Re-run",
+  "playground-copy": "Copy code",
+  "playground-open-external": "Open in CodeSandbox",
+  "playground-console": "Console",
+  "playground-external-deps": "This example requires extra packages. Open it in CodeSandbox to try it online.",
   "exit": "Click again to exit",
   "alert-header": "Do you enjoy App?",
   "alert-message": "If you enjoy App. Would you mind taking a moment to rate it?",

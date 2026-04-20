@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ 'playground-title' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="reload()" [title]="'playground-reload' | translate">
+        <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="copyCode()" [title]="'playground-copy' | translate">
+        <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="openInCodeSandbox()" [title]="'playground-open-external' | translate">
+        <ion-icon slot="icon-only" name="open-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="playground-layout">
+    <section class="playground-preview">
+      @if (needsExternal()) {
+        <div class="playground-external-hint">
+          <p>{{ 'playground-external-deps' | translate }}</p>
+          <ion-button expand="block" (click)="openInCodeSandbox()">
+            <ion-icon slot="start" name="open-outline"></ion-icon>
+            {{ 'playground-open-external' | translate }}
+          </ion-button>
+        </div>
+      } @else {
+        <iframe
+          #runnerIframe
+          sandbox="allow-scripts"
+          src="shared/assets/playground/runner.html"
+          (load)="onIframeLoad()"
+          title="Sandpack runner"
+        ></iframe>
+      }
+      @if (consoleEntries().length > 0) {
+        <div class="playground-console">
+          <div class="playground-console__label">{{ 'playground-console' | translate }}</div>
+          @for (entry of consoleEntries(); track $index) {
+            <div class="playground-console__entry" [attr.data-level]="entry.level">
+              {{ entry.message }}
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <section class="playground-code">
+      <ion-segment [value]="activeFile()" scrollable="true" (ionChange)="selectFile($any($event).detail.value)">
+        @for (file of fileNames(); track file) {
+          <ion-segment-button [value]="file">
+            <ion-label>{{ file }}</ion-label>
+          </ion-segment-button>
+        }
+      </ion-segment>
+      <pre class="playground-code__source"><code>{{ activeSource() }}</code></pre>
+    </section>
+  </div>
+</ion-content>

@@ -23,6 +23,7 @@ import { SettingsStore } from '../../store/settings.store';
 import { ReadProgressStore } from '../../store/read-progress.store';
 import { NavigationStore } from '../../store/navigation.store';
 import { Article } from '../../entities/articles/models/articles';
+import { PlaygroundService } from '../../features/playground/playground.service';
 
 @Component({
   selector: 'app-react-article',
@@ -53,6 +54,7 @@ export class ArticleComponent {
   readonly readProgressStore = inject(ReadProgressStore);
   readonly navigationStore = inject(NavigationStore);
   readonly router = inject(Router);
+  readonly playground = inject(PlaygroundService);
 
   currentArticle: Signal<Article> = computed(() => {
     const url = this.articlesStore.urlPath();
@@ -81,6 +83,15 @@ export class ArticleComponent {
     const path = e?.composedPath() as HTMLElement[];
 
     for (const node of path) {
+      if (node.classList && node.classList.contains('sandpack-placeholder')) {
+        const exampleId = node.getAttribute('data-example');
+        if (exampleId) {
+          void this.playground.open(exampleId);
+          e.preventDefault();
+          return;
+        }
+      }
+
       if (node.localName === 'img') {
         const src = node.attributes.getNamedItem('src') ?? { value: '' };
         const { value = '' } = src;
