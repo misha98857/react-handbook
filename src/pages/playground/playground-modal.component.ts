@@ -3,7 +3,6 @@ import {
   Component,
   ElementRef,
   inject,
-  input,
   signal,
   viewChild,
   OnDestroy,
@@ -54,8 +53,11 @@ interface ConsoleEntry {
   ],
 })
 export class PlaygroundModalComponent implements AfterViewInit, OnDestroy {
-  readonly exampleId = input<string>('');
-  readonly example = input<SandpackExample>();
+  // Set by Ionic ModalController via componentProps — these are plain
+  // assignments, so they cannot be `input()` signals (Ionic would overwrite
+  // the InputSignal function with a raw value).
+  exampleId = '';
+  example?: SandpackExample;
 
   readonly iframe = viewChild<ElementRef<HTMLIFrameElement>>('runnerIframe');
   readonly activeFile = signal<string>('');
@@ -72,7 +74,7 @@ export class PlaygroundModalComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    const ex = this.example();
+    const ex = this.example;
     if (!ex) return;
 
     this.activeFile.set(ex.entry);
@@ -95,12 +97,12 @@ export class PlaygroundModalComponent implements AfterViewInit, OnDestroy {
   }
 
   fileNames(): string[] {
-    const ex = this.example();
+    const ex = this.example;
     return ex ? Object.keys(ex.files) : [];
   }
 
   activeSource(): string {
-    const ex = this.example();
+    const ex = this.example;
     const f = this.activeFile();
     return ex && f ? (ex.files[f] ?? '') : '';
   }
@@ -122,9 +124,9 @@ export class PlaygroundModalComponent implements AfterViewInit, OnDestroy {
   }
 
   openInCodeSandbox(): void {
-    const ex = this.example();
+    const ex = this.example;
     if (!ex) return;
-    const url = codeSandboxUrl(ex, this.exampleId());
+    const url = codeSandboxUrl(ex, this.exampleId);
     InAppBrowser.create(url, '_system');
   }
 
@@ -141,7 +143,7 @@ export class PlaygroundModalComponent implements AfterViewInit, OnDestroy {
     switch (data.type) {
       case 'sandpack:boot': {
         this.runtimeReady.set(true);
-        const ex = this.example();
+        const ex = this.example;
         if (ex) frame.contentWindow?.postMessage({ type: 'sandpack:mount', files: ex.files, entry: ex.entry }, '*');
         break;
       }
