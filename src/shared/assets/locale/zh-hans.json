@@ -83,5 +83,9 @@
   "group-directives": "指令",
   "group-lints": "Lint",
   "group-overview": "概述",
-  "group-legacy-react-apis": "旧版 React API"
+  "group-legacy-react-apis": "旧版 React API",
+  "future-handler-title": "错误",
+  "future-handler-body": "您好。非常感谢您测试这款应用程序。<br />目前处于测试阶段，可能存在大量错误和未实现的功能，但我正在努力把它做好。<br /><br />如果您愿意提供帮助，可以告诉我您是如何以及从哪里来到这个页面的。",
+  "future-handler-contact-label": "联系我：",
+  "future-handler-mail-label": "邮箱"
 }

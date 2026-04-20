@@ -83,5 +83,9 @@
   "group-directives": "Direktifler",
   "group-lints": "Lintler",
   "group-overview": "Genel bakış",
-  "group-legacy-react-apis": "Eski React APIleri"
+  "group-legacy-react-apis": "Eski React APIleri",
+  "future-handler-title": "Hata",
+  "future-handler-body": "Merhaba. Uygulamayı test ettiğiniz için çok teşekkür ederim. <br />Şu anda beta aşamasında olduğu için çok sayıda hata ve uygulanmamış özellik olabilir, ancak iyi yapmaya çalışıyorum.<br /><br />Yardım etmek isterseniz, bu sayfaya nasıl ve nereden geldiğinizi yazabilirsiniz.",
+  "future-handler-contact-label": "Bana ulaşın:",
+  "future-handler-mail-label": "E-posta"
 }

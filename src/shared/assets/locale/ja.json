@@ -83,5 +83,9 @@
   "group-directives": "ディレクティブ",
   "group-lints": "Lint",
   "group-overview": "概要",
-  "group-legacy-react-apis": "レガシー React API"
+  "group-legacy-react-apis": "レガシー React API",
+  "future-handler-title": "エラー",
+  "future-handler-body": "こんにちは。アプリをテストしていただき、誠にありがとうございます。<br />現在ベータテスト中のため、多くのエラーや未実装の機能がある可能性がありますが、きちんと仕上げるよう努めています。<br /><br />もしご協力いただけるなら、どうやってこのページに来たのかを教えてください。",
+  "future-handler-contact-label": "お問い合わせ:",
+  "future-handler-mail-label": "メール"
 }

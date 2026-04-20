@@ -83,5 +83,9 @@
   "group-directives": "Directives",
   "group-lints": "Lints",
   "group-overview": "Vue d'ensemble",
-  "group-legacy-react-apis": "APIs React historiques"
+  "group-legacy-react-apis": "APIs React historiques",
+  "future-handler-title": "Erreur",
+  "future-handler-body": "Salut. Merci beaucoup de tester l'application. <br />Actuellement, pendant la bêta, il peut y avoir de nombreuses erreurs et des fonctionnalités non implémentées, mais j'essaie de bien faire.<br /><br />Si tu veux aider, écris comment tu es arrivé sur cette page et d'où.",
+  "future-handler-contact-label": "Contacte-moi :",
+  "future-handler-mail-label": "E-mail"
 }

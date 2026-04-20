@@ -83,5 +83,9 @@
   "group-directives": "Директиви",
   "group-lints": "Лінти",
   "group-overview": "Огляд",
-  "group-legacy-react-apis": "Застарілі React API"
+  "group-legacy-react-apis": "Застарілі React API",
+  "future-handler-title": "Помилка",
+  "future-handler-body": "Привіт. Дуже дякую, що тестуєш додаток. <br />Зараз, під час бета-тесту, можлива велика кількість помилок та нереалізованого функціоналу, але я намагаюся зробити добре.<br /><br />Якщо хочеш допомогти, напиши, як ти потрапив на цю сторінку і звідки.",
+  "future-handler-contact-label": "Зв'язатися зі мною:",
+  "future-handler-mail-label": "Пошта"
 }

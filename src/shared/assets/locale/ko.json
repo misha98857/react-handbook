@@ -83,5 +83,9 @@
   "group-directives": "지시어",
   "group-lints": "Lints",
   "group-overview": "개요",
-  "group-legacy-react-apis": "레거시 React API"
+  "group-legacy-react-apis": "레거시 React API",
+  "future-handler-title": "오류",
+  "future-handler-body": "안녕하세요. 애플리케이션을 테스트해 주셔서 대단히 감사합니다. <br />현재 베타 테스트 중이기 때문에 많은 오류와 아직 구현되지 않은 기능이 있을 수 있지만, 잘 만들기 위해 노력하고 있습니다.<br /><br />도움을 주고 싶으시다면, 어떻게 이 페이지에 오셨는지 알려주세요.",
+  "future-handler-contact-label": "연락처:",
+  "future-handler-mail-label": "메일"
 }

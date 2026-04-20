@@ -83,5 +83,9 @@
   "group-directives": "Directives",
   "group-lints": "Lints",
   "group-overview": "Overview",
-  "group-legacy-react-apis": "Legacy React APIs"
+  "group-legacy-react-apis": "Legacy React APIs",
+  "future-handler-title": "Error",
+  "future-handler-body": "Hey. Thank you very much for testing the application. <br />Now, during the beta test, there may be a large number of errors and not implemented functionality, but I am trying to do so, to do well.<br /><br />If you want to help, you can write how you got to this page and from where.",
+  "future-handler-contact-label": "Contact me:",
+  "future-handler-mail-label": "Mail"
 }
