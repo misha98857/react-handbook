@@ -19,7 +19,10 @@
     "content:fetch": "npm --prefix scripts/content run fetch --",
     "content:build": "npm --prefix scripts/content run build --",
     "content:validate": "npm --prefix scripts/content run validate --",
-    "playground:vendors": "node scripts/playground/download-vendors.mjs"
+    "playground:vendors": "node scripts/playground/download-vendors.mjs",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:headed": "playwright test --headed"
   },
   "private": true,
   "dependencies": {
@@ -74,6 +77,7 @@
     "@angular/language-service": "21.2.9",
     "@babel/compat-data": "^7.29.0",
     "@eslint/js": "^9.39.4",
+    "@playwright/test": "^1.59.1",
     "@types/node": "^25.6.0",
     "@typescript-eslint/eslint-plugin": "^8.58.2",
     "@typescript-eslint/parser": "^8.58.2",

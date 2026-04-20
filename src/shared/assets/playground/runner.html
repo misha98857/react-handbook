@@ -10,10 +10,70 @@
         margin: 0;
         padding: 0;
         background: #fff;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: #23272f;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
       }
       #root {
-        padding: 8px;
+        padding: 12px 16px;
+      }
+      #root h1,
+      #root h2,
+      #root h3 {
+        margin: 0.4em 0 0.3em;
+        line-height: 1.25;
+      }
+      #root h1 {
+        font-size: 1.6rem;
+      }
+      #root h2 {
+        font-size: 1.3rem;
+      }
+      #root h3 {
+        font-size: 1.1rem;
+      }
+      #root p {
+        margin: 0.4em 0;
+      }
+      #root button {
+        font: inherit;
+        padding: 4px 12px;
+        border: 1px solid #cbd0d8;
+        border-radius: 6px;
+        background: #f6f7f9;
+        cursor: pointer;
+      }
+      #root button:hover {
+        background: #ececf0;
+      }
+      #root button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      #root input,
+      #root select,
+      #root textarea {
+        font: inherit;
+        padding: 4px 8px;
+        border: 1px solid #cbd0d8;
+        border-radius: 6px;
+        background: #fff;
+      }
+      #root ul,
+      #root ol {
+        padding-left: 1.4em;
+        margin: 0.4em 0;
+      }
+      #root label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      #root hr {
+        border: 0;
+        border-top: 1px solid #e4e7eb;
+        margin: 12px 0;
       }
       #error {
         display: none;
@@ -29,8 +89,26 @@
       @media (prefers-color-scheme: dark) {
         html,
         body {
-          background: #1a1a1a;
-          color: #e4e4e4;
+          background: #1a1d23;
+          color: #e6e6e6;
+        }
+        #root button {
+          background: #262a33;
+          border-color: #3a3f4a;
+          color: inherit;
+        }
+        #root button:hover {
+          background: #2f333d;
+        }
+        #root input,
+        #root select,
+        #root textarea {
+          background: #23272f;
+          border-color: #3a3f4a;
+          color: inherit;
+        }
+        #root hr {
+          border-top-color: #30353f;
         }
         #error {
           background: #2a1515;
@@ -180,9 +258,7 @@
 
           var src = currentFiles[resolved];
           if (/\.css$/i.test(resolved)) {
-            var style = document.createElement('style');
-            style.textContent = src;
-            document.head.appendChild(style);
+            // CSS files are pre-injected in mount(); treat import as a no-op.
             return mod.exports;
           }
           if (/\.json$/i.test(resolved)) {
@@ -213,9 +289,24 @@
           // Reset DOM
           var root = document.getElementById('root');
           root.innerHTML = '';
+          // Purge previously injected example stylesheets so switching files
+          // doesn't leak rules across runs.
+          var prev = document.head.querySelectorAll('style[data-sandpack-css]');
+          for (var i = 0; i < prev.length; i++) prev[i].parentNode.removeChild(prev[i]);
+
           currentFiles = files || {};
           currentEntry = entry || '/App.js';
           moduleCache = Object.create(null);
+
+          // Auto-inject every .css file bundled with the example, regardless
+          // of whether App.js imports it — matches Sandpack's default loader.
+          Object.keys(currentFiles).forEach(function (name) {
+            if (!/\.css$/i.test(name)) return;
+            var style = document.createElement('style');
+            style.setAttribute('data-sandpack-css', name);
+            style.textContent = currentFiles[name];
+            document.head.appendChild(style);
+          });
 
           try {
             var exports = requireModule(currentEntry, '/');

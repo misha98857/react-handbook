@@ -42,3 +42,8 @@ npm-debug.log*
 # playground vendor bundles (downloaded via scripts/playground/download-vendors.mjs)
 /src/shared/assets/playground/vendor
 
+# playwright
+/playwright-report
+/test-results
+/playwright/.cache
+
