@@ -1,12 +1,12 @@
-import { enableProdMode, importProvidersFrom } from '@angular/core';
+import { enableProdMode, provideZoneChangeDetection } from '@angular/core';
 import { environment } from './environments/environment';
 import '@capacitor/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { AppComponent } from '../pages/app/app.component';
-import { HttpClient, provideHttpClient, withFetch } from '@angular/common/http';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { createTranslateLoader } from '../shared/translate/utils/create-translate-loader';
+import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import {
   PreloadAllModules,
   provideRouter,
@@ -21,17 +21,15 @@ if (environment.production) {
 }
 bootstrapApplication(AppComponent, {
   providers: [
+    provideZoneChangeDetection(),
     provideIonicAngular(),
-    importProvidersFrom(
-      TranslateModule.forRoot({
-        defaultLanguage: 'en',
-        loader: {
-          provide: TranslateLoader,
-          useFactory: createTranslateLoader,
-          deps: [HttpClient],
-        },
+    provideTranslateService({
+      defaultLanguage: 'en',
+      loader: provideTranslateHttpLoader({
+        prefix: './shared/assets/locale/',
+        suffix: '.json',
       }),
-    ),
+    }),
     provideHttpClient(withFetch()),
     provideRouter(
       routes,

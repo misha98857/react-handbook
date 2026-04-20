@@ -12,11 +12,10 @@ import {
 } from '@ionic/angular/standalone';
 
 @Component({
-  selector: 'app-future-handler',
-  templateUrl: './future-handler.component.html',
-  styleUrls: ['./future-handler.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonGrid, IonList, IonItem],
+    selector: 'app-future-handler',
+    templateUrl: './future-handler.component.html',
+    styleUrls: ['./future-handler.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonGrid, IonList, IonItem]
 })
 export class FutureHandlerComponent {}

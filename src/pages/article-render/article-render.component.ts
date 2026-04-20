@@ -22,13 +22,12 @@ import { initialNavigationState, NavigationState, NavigationStore } from 'src/st
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-article-render',
-  templateUrl: './article-render.component.html',
-  styleUrls: ['./article-render.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [IonContent, SanitizeHtmlPipe],
+    selector: 'app-article-render',
+    templateUrl: './article-render.component.html',
+    styleUrls: ['./article-render.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IonContent, SanitizeHtmlPipe]
 })
 export class ArticleRenderComponent {
   @ViewChild(IonContent) content: IonContent;

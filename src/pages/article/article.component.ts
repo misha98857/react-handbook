@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
 import { addIcons } from 'ionicons';
 import { addOutline, arrowBackCircleOutline, arrowForwardCircleOutline, removeOutline } from 'ionicons/icons';
-import { AsyncPipe, NgIf, NgStyle, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import { AsyncPipe, NgStyle } from '@angular/common';
 import { ArticleRenderComponent } from '../article-render/article-render.component';
 import {
   IonBackButton,
@@ -34,7 +34,6 @@ import { Article } from '../../entities/articles/models/articles';
   templateUrl: './article.component.html',
   styleUrls: ['./article.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     IonHeader,
     IonToolbar,
@@ -48,15 +47,11 @@ import { Article } from '../../entities/articles/models/articles';
     ArticleRenderComponent,
     NgStyle,
     IonFooter,
-    NgIf,
     IonTabs,
     IonTabBar,
     IonTabButton,
     RouterLink,
-    NgSwitch,
-    NgSwitchCase,
     IonBadge,
-    NgSwitchDefault,
     IonLabel,
     AsyncPipe,
     ArticleNavigationToolbarComponent,

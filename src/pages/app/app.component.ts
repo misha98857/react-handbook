@@ -14,11 +14,10 @@ import { Router } from '@angular/router';
 import { NavigationStore } from '../../store/navigation.store';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss'],
-  standalone: true,
-  imports: [IonApp, IonContent, IonRouterOutlet, AsyncPipe, MenuComponent],
+    selector: 'app-root',
+    templateUrl: 'app.component.html',
+    styleUrls: ['app.component.scss'],
+    imports: [IonApp, IonContent, IonRouterOutlet, AsyncPipe, MenuComponent]
 })
 export class AppComponent implements OnInit {
   readonly settingsStore = inject(SettingsStore);

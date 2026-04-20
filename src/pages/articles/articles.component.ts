@@ -24,7 +24,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { App } from '@capacitor/app';
 import { addIcons } from 'ionicons';
 import { languageOutline, search } from 'ionicons/icons';
-import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 import { GithubStarComponent } from '../../widgets/github-star/github-star.component';
@@ -38,7 +38,6 @@ import { NavigationStore } from '../../store/navigation.store';
   templateUrl: './articles.component.html',
   styleUrls: ['./articles.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     IonHeader,
     IonToolbar,
@@ -51,16 +50,11 @@ import { NavigationStore } from '../../store/navigation.store';
     IonTitle,
     IonContent,
     IonAccordionGroup,
-    NgFor,
     IonAccordion,
     IonItem,
     IonLabel,
     IonList,
-    NgIf,
-    NgSwitch,
-    NgSwitchCase,
     IonBadge,
-    NgSwitchDefault,
     AsyncPipe,
     TranslateModule,
     ArticleListItemComponent,

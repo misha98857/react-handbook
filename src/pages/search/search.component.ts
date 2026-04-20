@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
-import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   IonAccordion,
   IonAccordionGroup,
@@ -29,7 +29,6 @@ import { NavigationStore } from '../../store/navigation.store';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     IonHeader,
     IonToolbar,
@@ -39,17 +38,12 @@ import { NavigationStore } from '../../store/navigation.store';
     IonSearchbar,
     IonContent,
     IonAccordionGroup,
-    NgFor,
     IonAccordion,
     IonItem,
     IonLabel,
     IonList,
     RouterLink,
-    NgIf,
-    NgSwitch,
-    NgSwitchCase,
     IonBadge,
-    NgSwitchDefault,
     AsyncPipe,
     TranslateModule,
     ArticleListItemComponent,

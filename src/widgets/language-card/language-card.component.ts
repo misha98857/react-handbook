@@ -3,12 +3,11 @@ import { IonCard, IonCardContent, IonCardTitle } from '@ionic/angular/standalone
 import { NgOptimizedImage } from '@angular/common';
 
 @Component({
-  selector: 'app-card',
-  templateUrl: './language-card.component.html',
-  styleUrls: ['./language-card.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [IonCard, IonCardContent, IonCardTitle, NgOptimizedImage],
+    selector: 'app-card',
+    templateUrl: './language-card.component.html',
+    styleUrls: ['./language-card.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IonCard, IonCardContent, IonCardTitle, NgOptimizedImage]
 })
 export class LanguageCardComponent {
   @Input() message: string;
