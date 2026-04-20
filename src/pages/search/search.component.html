@@ -1,29 +1,28 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot='start'>
-      <ion-back-button [defaultHref]='"/react"'></ion-back-button>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/react'"></ion-back-button>
     </ion-buttons>
-    <ion-buttons slot='primary'>
+    <ion-buttons slot="primary">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-searchbar (ionInput)='searchText($event)' [placeholder]="'search' | translate"></ion-searchbar>
+    <ion-searchbar (ionInput)="searchText($event)" [placeholder]="'search' | translate"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
-<ion-content [fullscreen]="true" id='main'>
+<ion-content [fullscreen]="true" id="main">
   <ion-accordion-group>
     @for (articleGroup of articlesStore.searchedArticles(); track articleGroup.key) {
       <ion-accordion>
-        <ion-item slot='header'>
-          <ion-label> {{ articleGroup.key }}</ion-label>
+        <ion-item slot="header">
+          <ion-label>{{ 'group-' + articleGroup.key | translate }}</ion-label>
         </ion-item>
-        <ion-list slot='content'>
+        <ion-list slot="content">
           <app-article-list-item
             (openArticle)="openArticleWithSearch()"
             [articles]="articleGroup.values"
             [readProgress]="readProgressStore.readProgressState()"
             [showProgress]="settingsStore.showArticleProgress()"
-          >
-          </app-article-list-item>
+          ></app-article-list-item>
         </ion-list>
       </ion-accordion>
     }

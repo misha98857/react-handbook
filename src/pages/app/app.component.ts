@@ -1,9 +1,9 @@
-import { Component, effect, EnvironmentInjector, inject, OnInit, runInInjectionContext } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { IonApp, IonContent, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
 import { from } from 'rxjs';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { AsyncPipe, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { MenuComponent } from '../menu/menu.component';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { SettingsStore } from '../../store/settings.store';
@@ -17,32 +17,39 @@ import { NavigationStore } from '../../store/navigation.store';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
-  standalone: true,
-  imports: [IonApp, IonContent, IonRouterOutlet, AsyncPipe, MenuComponent],
+  imports: [IonApp, IonContent, IonRouterOutlet, MenuComponent],
 })
 export class AppComponent implements OnInit {
+  private platform = inject(Platform);
+  private location = inject(Location);
+  private articlesService = inject(ArticlesService);
+  private translate = inject(TranslateService);
+  private router = inject(Router);
+
   readonly settingsStore = inject(SettingsStore);
   readonly navigationStore = inject(NavigationStore);
   readonly historyStore = inject(HistoryStore);
-  private readonly environmentInjector = inject(EnvironmentInjector);
 
-  constructor(
-    private platform: Platform,
-    private location: Location,
-    private articlesService: ArticlesService,
-    private translate: TranslateService,
-    private router: Router,
-  ) {
-    effect(
-      () => {
-        const language = this.settingsStore.language();
-        if (language) {
-          this.setLanguage(language);
-          this.restoreAppState();
-        }
-      },
-      { allowSignalWrites: true },
-    );
+  constructor() {
+    effect(() => {
+      const language = this.settingsStore.language();
+      if (language) {
+        this.setLanguage(language);
+        this.restoreAppState();
+      }
+    });
+
+    effect(() => {
+      const isDark = this.settingsStore.darkTheme();
+      void StatusBar.setStyle({ style: isDark ? Style.Dark : Style.Light });
+      void StatusBar.setBackgroundColor({ color: isDark ? '#000000' : '#ffffff' });
+      // Toggle the Ionic dark palette class on <ion-app> so CSS variables
+      // defined under `ion-app.dark` take effect in browser too (native
+      // StatusBar alone doesn't restyle the DOM).
+      const ionApp = document.querySelector('ion-app');
+      ionApp?.classList.toggle('dark', isDark);
+      document.documentElement.classList.toggle('dark', isDark);
+    });
   }
 
   ngOnInit(): void {
@@ -52,18 +59,8 @@ export class AppComponent implements OnInit {
   initializeApp(): void {
     from(this.platform.ready()).subscribe(() => {
       this.initUrlChangeWatcher();
-      this.darkThemeChangeEffect();
       void PushNotifications.register();
       void SplashScreen.hide();
-    });
-  }
-
-  private darkThemeChangeEffect() {
-    runInInjectionContext(this.environmentInjector, () => {
-      effect(() => {
-        void StatusBar.setStyle({ style: this.settingsStore.darkTheme() ? Style.Dark : Style.Light });
-        void StatusBar.setBackgroundColor({ color: this.settingsStore.darkTheme() ? '#000000' : '#ffffff' });
-      });
     });
   }
 

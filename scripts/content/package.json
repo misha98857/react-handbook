@@ -1,0 +1,28 @@
+{
+  "name": "react-handbook-content-pipeline",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Internal build-time pipeline that converts react.dev MDX sources into the *.articles.json bundles consumed by the Angular app.",
+  "scripts": {
+    "fetch": "node fetch-sources.mjs",
+    "build": "node build-articles.mjs",
+    "validate": "node validate.mjs"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "hast-util-to-html": "^9.0.3",
+    "mdast-util-to-hast": "^13.2.0",
+    "react-handbook": "file:../..",
+    "refractor": "^4.8.1",
+    "rehype-raw": "^7.0.0",
+    "rehype-stringify": "^10.0.1",
+    "remark-gfm": "^4.0.0",
+    "remark-mdx": "^3.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.1",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.0.0",
+    "zod": "^3.23.8"
+  }
+}

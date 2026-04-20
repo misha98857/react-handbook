@@ -1,26 +1,19 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot='start'>
-      <ion-back-button [defaultHref]='"/react"'></ion-back-button>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/react'"></ion-back-button>
     </ion-buttons>
-    <ion-title>Error</ion-title>
+    <ion-title>{{ 'future-handler-title' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
   <ion-grid>
-    <p>English</p>
-    <div class='text'>
-      Hey. Thank you very much for testing the application. <br />
-      Now, during the beta test, there may be a large number of errors and not implemented functionality, but I am
-      trying to do so, to do well.
-      <br />
-      <br />
-      If you want to help, you can write how you got to this page and from where. <br />
-      <br />
-      Contact me:
-      <ion-list>
-        <ion-item><a href='mailto:cataha319@gmail.com'>Mail</a></ion-item>
-      </ion-list>
-    </div>
+    <div class="text" [innerHTML]="'future-handler-body' | translate"></div>
+    <p>{{ 'future-handler-contact-label' | translate }}</p>
+    <ion-list>
+      <ion-item>
+        <a href="mailto:cataha319@gmail.com">{{ 'future-handler-mail-label' | translate }}</a>
+      </ion-item>
+    </ion-list>
   </ion-grid>
 </ion-content>

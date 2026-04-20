@@ -1,35 +1,43 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot='start'>
-      <ion-back-button [defaultHref]='"/react"'></ion-back-button>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/react'"></ion-back-button>
     </ion-buttons>
-    <ion-buttons slot='primary'>
-      <ion-button (click)='decreaseFontSize()'>
-        <ion-icon name='remove-outline' slot='icon-only'></ion-icon>
+    <ion-buttons slot="primary">
+      <ion-button (click)="decreaseFontSize()">
+        <ion-icon name="remove-outline" slot="icon-only"></ion-icon>
       </ion-button>
-      <ion-button (click)='increaseFontSize()'>
-        <ion-icon name='add-outline' slot='icon-only'></ion-icon>
+      <ion-button (click)="increaseFontSize()">
+        <ion-icon name="add-outline" slot="icon-only"></ion-icon>
       </ion-button>
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>{{ currentArticle().key }}</ion-title>
+    <ion-title>{{ currentArticle().title || currentArticle().key }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <app-article-render
-    *ngIf="currentArticle().key"
-    (click)='getRoute($event)'
-    [html]='currentArticle()'
-    [ngStyle]="{'font-size': settingsStore.fontSize().toString() + 'rem'}"
-  >
-  </app-article-render>
+  @if (currentArticle().key) {
+    @if (currentArticle().fallback) {
+      <div class="translation-banner" role="note">
+        <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>
+        <span>{{ 'article-not-translated' | translate }}</span>
+      </div>
+    }
+    <app-article-render
+      (click)="getRoute($event)"
+      [html]="currentArticle()"
+      [ngStyle]="{ 'font-size': settingsStore.fontSize().toString() + 'rem' }"
+    ></app-article-render>
+  }
 </ion-content>
 <ion-footer>
-  <ion-toolbar *ngIf='settingsStore.showNavigationButtons()'>
-    <app-article-navigation-toolbar
-      [article]="currentArticle()"
-      [readProgress]="readProgressStore.readProgressState()"
-      [showProgress]="settingsStore.showArticleProgress()">
-    </app-article-navigation-toolbar>
-  </ion-toolbar>
+  @if (settingsStore.showNavigationButtons()) {
+    <ion-toolbar>
+      <app-article-navigation-toolbar
+        [article]="currentArticle()"
+        [readProgress]="readProgressStore.readProgressState()"
+        [showProgress]="settingsStore.showArticleProgress()"
+      ></app-article-navigation-toolbar>
+    </ion-toolbar>
+  }
 </ion-footer>

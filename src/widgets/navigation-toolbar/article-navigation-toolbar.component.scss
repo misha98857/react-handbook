@@ -1,8 +1,25 @@
-.nav-icon {
-  font-size: 2rem;
+// Bottom nav: minimal tab bar, crisp border, restrained icon size.
+
+:host ion-tab-bar {
+  --background: var(--app-surface);
+  --border: 1px solid var(--app-border);
+  height: 56px;
 }
 
-.progress-badge {
-  display: flex;
-  align-items: center;
+:host ion-tab-button {
+  --color: var(--app-text-muted);
+  --color-selected: var(--ion-color-primary);
+  --ripple-color: transparent;
+}
+
+.nav-icon {
+  font-size: 1.6rem;
+}
+
+ion-badge {
+  align-self: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
 }

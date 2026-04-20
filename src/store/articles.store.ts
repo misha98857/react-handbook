@@ -1,5 +1,5 @@
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
-import { ArticleGroup } from '../entities/articles/models/articles';
+import { ArticleGroup, ExamplesMap, SandpackExample } from '../entities/articles/models/articles';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { Location } from '@angular/common';
 
 export interface ArticlesState {
   articleGroups: ArticleGroup[];
+  examples: ExamplesMap;
   searchText: string;
   urlPath: string;
   fragment: string;
@@ -15,6 +16,7 @@ export interface ArticlesState {
 
 export const initialArticlesState: ArticlesState = {
   articleGroups: [],
+  examples: {},
   searchText: '',
   urlPath: '/react',
   fragment: '',
@@ -55,6 +57,14 @@ export const ArticlesStore = signalStore(
         }),
       ),
     ),
+    updateExamples: rxMethod<ExamplesMap>(
+      pipe(
+        map(examples => {
+          patchState(store, state => ({ ...state, examples }));
+        }),
+      ),
+    ),
+    getExample: (id: string): SandpackExample | undefined => store.examples()[id],
     updateSearchText: (searchText: string) => {
       patchState(store, state => ({ ...state, searchText }));
     },

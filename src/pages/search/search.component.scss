@@ -15,3 +15,47 @@ pre {
   overflow-x: scroll;
   white-space: nowrap;
 }
+
+:host ion-header ion-toolbar {
+  --border-width: 0;
+  --background: var(--ion-background-color);
+}
+
+:host ion-searchbar {
+  --background: var(--app-surface-muted);
+  --border-radius: var(--app-radius-sm);
+  --box-shadow: none;
+  padding: 0 var(--app-space-2);
+}
+
+:host ion-content {
+  --background: var(--ion-background-color);
+  --padding-top: var(--app-space-2);
+}
+
+:host ion-accordion-group {
+  display: block;
+  padding: 0 var(--app-space-3);
+}
+
+:host ion-accordion {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  margin-bottom: var(--app-space-3);
+  overflow: hidden;
+}
+
+:host ion-accordion ion-item[slot='header'] {
+  --background: transparent;
+  --border-width: 0;
+  --inner-border-width: 0;
+
+  ion-label {
+    font-weight: 600;
+  }
+}
+
+:host ion-accordion ion-list[slot='content'] {
+  background: var(--app-surface-muted);
+}

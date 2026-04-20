@@ -1,24 +1,26 @@
-import { ChangeDetectionStrategy, Component, computed, inject, Input, Signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal, input } from '@angular/core';
+import { Router } from '@angular/router';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
 import { addIcons } from 'ionicons';
-import { addOutline, arrowBackCircleOutline, arrowForwardCircleOutline, removeOutline } from 'ionicons/icons';
-import { AsyncPipe, NgIf, NgStyle, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import {
+  addOutline,
+  arrowBackCircleOutline,
+  arrowForwardCircleOutline,
+  informationCircleOutline,
+  removeOutline,
+} from 'ionicons/icons';
+import { NgStyle } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { ArticleRenderComponent } from '../article-render/article-render.component';
 import {
   IonBackButton,
-  IonBadge,
   IonButton,
   IonButtons,
   IonContent,
   IonFooter,
   IonHeader,
   IonIcon,
-  IonLabel,
   IonMenuButton,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
@@ -28,13 +30,13 @@ import { SettingsStore } from '../../store/settings.store';
 import { ReadProgressStore } from '../../store/read-progress.store';
 import { NavigationStore } from '../../store/navigation.store';
 import { Article } from '../../entities/articles/models/articles';
+import { PlaygroundService } from '../../features/playground/playground.service';
 
 @Component({
   selector: 'app-react-article',
   templateUrl: './article.component.html',
   styleUrls: ['./article.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     IonHeader,
     IonToolbar,
@@ -48,28 +50,19 @@ import { Article } from '../../entities/articles/models/articles';
     ArticleRenderComponent,
     NgStyle,
     IonFooter,
-    NgIf,
-    IonTabs,
-    IonTabBar,
-    IonTabButton,
-    RouterLink,
-    NgSwitch,
-    NgSwitchCase,
-    IonBadge,
-    NgSwitchDefault,
-    IonLabel,
-    AsyncPipe,
     ArticleNavigationToolbarComponent,
+    TranslateModule,
   ],
 })
 export class ArticleComponent {
-  @Input() articleKey: string;
+  readonly articleKey = input<string>(undefined);
 
   readonly articlesStore = inject(ArticlesStore);
   readonly settingsStore = inject(SettingsStore);
   readonly readProgressStore = inject(ReadProgressStore);
   readonly navigationStore = inject(NavigationStore);
   readonly router = inject(Router);
+  readonly playground = inject(PlaygroundService);
 
   currentArticle: Signal<Article> = computed(() => {
     const url = this.articlesStore.urlPath();
@@ -83,7 +76,13 @@ export class ArticleComponent {
   });
 
   constructor() {
-    addIcons({ removeOutline, addOutline, arrowBackCircleOutline, arrowForwardCircleOutline });
+    addIcons({
+      removeOutline,
+      addOutline,
+      arrowBackCircleOutline,
+      arrowForwardCircleOutline,
+      informationCircleOutline,
+    });
   }
 
   increaseFontSize(): void {
@@ -98,6 +97,15 @@ export class ArticleComponent {
     const path = e?.composedPath() as HTMLElement[];
 
     for (const node of path) {
+      if (node.classList && node.classList.contains('sandpack-placeholder')) {
+        const exampleId = node.getAttribute('data-example');
+        if (exampleId) {
+          void this.playground.open(exampleId);
+          e.preventDefault();
+          return;
+        }
+      }
+
       if (node.localName === 'img') {
         const src = node.attributes.getNamedItem('src') ?? { value: '' };
         const { value = '' } = src;
