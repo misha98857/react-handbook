@@ -27,6 +27,21 @@ test.describe('languages & fallback banner', () => {
     await expect(page.locator('.translation-banner')).toHaveCount(0);
   });
 
+  test('article group titles are translated', async ({ page }) => {
+    await setLanguage(page, 'Russian');
+    await page.goto('/react');
+    await expect(page.locator('ion-accordion ion-label').first()).toContainText('Изучаем React');
+  });
+
+  test('sandpack placeholder label is translated', async ({ page }) => {
+    await setLanguage(page, 'Russian');
+    // Thinking-in-React is translated to ru and contains Sandpack blocks.
+    await page.goto('/react/learn-thinking-in-react');
+    const label = page.locator('.sandpack-placeholder__label').first();
+    await expect(label).toBeVisible();
+    await expect(label).toHaveText('Интерактивный пример');
+  });
+
   test.afterEach(async ({ page }) => {
     // Reset to English so downstream tests don't start in Russian.
     await setLanguage(page, 'English');

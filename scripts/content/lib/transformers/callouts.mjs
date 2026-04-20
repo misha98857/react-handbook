@@ -30,8 +30,9 @@ export function applyCallouts(tree) {
     }
 
     if (node.name === 'DeepDive') {
-      const title = extractFirstHeading(node) || 'Deep dive';
-      wrapAsDetails(node, title, 'deep-dive');
+      const extracted = extractFirstHeading(node);
+      const title = extracted || 'Deep dive';
+      wrapAsDetails(node, title, 'deep-dive', !extracted);
       return;
     }
 
@@ -62,10 +63,11 @@ function wrap(node, tag, attrs) {
   }));
 }
 
-function wrapAsDetails(node, summary, className) {
+function wrapAsDetails(node, summary, className, translatable = false) {
   // Prepend an html node with <summary>…</summary> and wrap everything
   // in a <details> element.
-  const summaryNode = { type: 'html', value: `<summary>${escapeHtml(summary)}</summary>` };
+  const dataAttr = translatable ? ' data-i18n="article-deep-dive"' : '';
+  const summaryNode = { type: 'html', value: `<summary${dataAttr}>${escapeHtml(summary)}</summary>` };
   const children = node.children || [];
   // Drop the first heading — it's already our summary
   const body = children.filter(c => !(c && c.type === 'heading' && c.depth <= 4 && sameText(c, summary)));

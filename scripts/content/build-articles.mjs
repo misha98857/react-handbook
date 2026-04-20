@@ -61,6 +61,20 @@ function splitList(v) {
     .filter(Boolean);
 }
 
+/**
+ * Slugify a human group title into a stable i18n-friendly key.
+ * "Learn React" -> "learn-react", "API Reference" -> "api-reference".
+ * @param {string} s
+ */
+function slugifyGroup(s) {
+  return (
+    String(s)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'general'
+  );
+}
+
 async function readJson(path) {
   return JSON.parse(await readFile(path, 'utf8'));
 }
@@ -203,8 +217,9 @@ async function buildLocale(locale, args) {
         id.startsWith(`${page.contentPath.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-`),
       );
 
-      const group = page.groupTitle || 'General';
-      (groups[group] ||= []).push({
+      const groupTitle = page.groupTitle || 'General';
+      const group = slugifyGroup(groupTitle);
+      (groups[group] ||= { title: groupTitle, values: [] }).values.push({
         key: slug,
         title,
         value: html,
@@ -219,7 +234,7 @@ async function buildLocale(locale, args) {
   }
 
   // Compute prev/next within the full ordered list of emitted pages.
-  const ordered = Object.values(groups).flat();
+  const ordered = Object.values(groups).flatMap(g => g.values);
   for (let i = 0; i < ordered.length; i++) {
     const prev = i > 0 ? ordered[i - 1].path : '/react';
     const next = i < ordered.length - 1 ? ordered[i + 1].path : '/react';
@@ -227,10 +242,10 @@ async function buildLocale(locale, args) {
   }
 
   // Re-shape into ArticleGroup[] keeping insertion order.
-  /** @type {Array<{key:string, values: any[]}>} */
+  /** @type {Array<{key:string, title:string, values: any[]}>} */
   const articleGroups = [];
-  for (const [groupKey, values] of Object.entries(groups)) {
-    articleGroups.push({ key: groupKey, values });
+  for (const [groupKey, { title, values }] of Object.entries(groups)) {
+    articleGroups.push({ key: groupKey, title, values });
   }
 
   const outDir = join(REPO_ROOT, 'src', 'shared', 'assets', 'articles', 'react');

@@ -44,11 +44,13 @@ export function applyMisc(tree) {
 
       case 'LearnMore': {
         const href = getJsxAttr(node, 'path') || getJsxAttr(node, 'href');
-        const label = textOf(node) || 'Learn more';
+        const explicit = textOf(node);
+        const label = explicit || 'Learn more';
+        const span = explicit ? escapeHtml(label) : `<span data-i18n="article-learn-more">${escapeHtml(label)}</span>`;
         if (href) {
-          replaceWithHtml(node, `<p class="learn-more"><a href="${escapeHtml(href)}">${escapeHtml(label)} →</a></p>`);
+          replaceWithHtml(node, `<p class="learn-more"><a href="${escapeHtml(href)}">${span} →</a></p>`);
         } else {
-          replaceWithHtml(node, `<p class="learn-more">${escapeHtml(label)}</p>`);
+          replaceWithHtml(node, `<p class="learn-more">${span}</p>`);
         }
         return;
       }

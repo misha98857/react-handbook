@@ -20,6 +20,7 @@ import { SettingsStore } from '../../store/settings.store';
 import { ReadProgressStore } from '../../store/read-progress.store';
 import { initialNavigationState, NavigationState, NavigationStore } from 'src/store/navigation.store';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-article-render',
@@ -41,6 +42,7 @@ export class ArticleRenderComponent {
   readonly readProgressStore = inject(ReadProgressStore);
   readonly navigationStore = inject(NavigationStore);
   readonly router = inject(Router);
+  readonly translate = inject(TranslateService);
 
   constructor() {
     effect(() => {
@@ -53,6 +55,34 @@ export class ArticleRenderComponent {
       this.scrollToSearchedText(this.articlesStore.searchText(), navigationState);
       this.scrollToFragment(this.articlesStore.fragment(), navigationState);
       this.scrollToReadProgress();
+    });
+
+    // Translate nodes carrying `data-i18n` once the article HTML has been
+    // materialised into the DOM. This covers labels emitted by the content
+    // pipeline (e.g. "Interactive example", "Show solution") that live inside
+    // trusted innerHTML and therefore bypass Angular's binding machinery.
+    effect(() => {
+      const article = this.html();
+      if (!article) return;
+      queueMicrotask(() => this.translateEmbeddedLabels());
+    });
+
+    this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.translateEmbeddedLabels();
+    });
+  }
+
+  private translateEmbeddedLabels(): void {
+    const host = this.renderElement()?.nativeElement;
+    if (!host) return;
+    const nodes = host.querySelectorAll<HTMLElement>('[data-i18n]');
+    nodes.forEach(node => {
+      const key = node.dataset['i18n'];
+      if (!key) return;
+      const value = this.translate.instant(key) as string;
+      if (value && value !== key) {
+        node.textContent = value;
+      }
     });
   }
 

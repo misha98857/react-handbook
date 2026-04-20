@@ -1,5 +1,6 @@
 export interface ArticleGroup {
   key: string;
+  title?: string;
   values: Article[];
 }
 

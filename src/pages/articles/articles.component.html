@@ -20,7 +20,9 @@
     @for (articleGroup of articlesStore.articleGroups(); track articleGroup.key) {
       <ion-accordion>
         <ion-item slot="header">
-          <ion-label>{{ articleGroup.key }}</ion-label>
+          <ion-label>
+            {{ 'group-' + articleGroup.key | translate }}
+          </ion-label>
         </ion-item>
         <ion-list slot="content">
           <app-article-list-item

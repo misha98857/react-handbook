@@ -73,7 +73,7 @@ export function applySandpack(tree, ctx) {
     const html =
       `<div class="sandpack-placeholder" data-example="${id}">` +
       `<div class="sandpack-placeholder__header">` +
-      `<span class="sandpack-placeholder__label">Interactive example</span>` +
+      `<span class="sandpack-placeholder__label" data-i18n="article-sandpack-label">Interactive example</span>` +
       `<span class="sandpack-placeholder__files">${escapeHtml(fileList)}</span>` +
       `</div>` +
       `</div>`;

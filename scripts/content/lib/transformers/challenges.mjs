@@ -32,7 +32,7 @@ export function applyChallenges(tree) {
 
   visit(tree, node => {
     if (!isJsxElement(node, 'Solution')) return;
-    const summary = { type: 'html', value: '<summary>Show solution</summary>' };
+    const summary = { type: 'html', value: '<summary data-i18n="article-show-solution">Show solution</summary>' };
     node.type = 'mdxJsxFlowElement';
     node.name = 'details';
     node.attributes = [{ type: 'mdxJsxAttribute', name: 'class', value: 'solution' }];
@@ -41,7 +41,7 @@ export function applyChallenges(tree) {
 
   visit(tree, node => {
     if (!isJsxElement(node, 'Hint')) return;
-    const summary = { type: 'html', value: '<summary>Hint</summary>' };
+    const summary = { type: 'html', value: '<summary data-i18n="article-hint">Hint</summary>' };
     node.type = 'mdxJsxFlowElement';
     node.name = 'details';
     node.attributes = [{ type: 'mdxJsxAttribute', name: 'class', value: 'hint' }];
