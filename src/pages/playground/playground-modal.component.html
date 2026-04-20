@@ -60,7 +60,9 @@
           </ion-segment-button>
         }
       </ion-segment>
-      <pre class="playground-code__source"><code>{{ activeSource() }}</code></pre>
+      <pre
+        class="playground-code__source language-{{ activeLanguage() }}"
+      ><code [innerHTML]="highlightedSource()" class="language-{{ activeLanguage() }}"></code></pre>
     </section>
   </div>
 </ion-content>

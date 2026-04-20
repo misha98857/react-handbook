@@ -73,4 +73,13 @@ test.describe('playground', () => {
     await page.locator('app-playground-modal ion-button:has(ion-icon[name="close-outline"])').click();
     await expect(page.locator('app-playground-modal')).toHaveCount(0);
   });
+
+  test('source pane applies Prism syntax highlighting', async ({ page }) => {
+    await openPlaygroundFromArticle(page);
+    const source = page.locator('app-playground-modal .playground-code__source code');
+    // Prism emits `<span class="token keyword">` etc. for js/jsx.
+    await expect(source.locator('span.token.keyword').first()).toBeVisible();
+    // Language class reflects file extension (.js → jsx).
+    await expect(source).toHaveClass(/language-jsx/);
+  });
 });

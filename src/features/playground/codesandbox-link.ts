@@ -76,7 +76,8 @@ export function codeSandboxUrl(example: SandpackExample, title = 'React example'
 }
 
 function escapeHtml(s: string): string {
-  return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+  const map: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+  return s.replace(/[&<>"]/g, c => map[c] ?? c);
 }
 
 function slugify(s: string): string {

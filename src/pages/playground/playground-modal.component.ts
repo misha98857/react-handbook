@@ -7,7 +7,9 @@ import {
   viewChild,
   OnDestroy,
   AfterViewInit,
+  computed,
 } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -25,12 +27,56 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { closeOutline, copyOutline, openOutline, refreshOutline } from 'ionicons/icons';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-jsx';
+import 'prismjs/components/prism-typescript';
+import 'prismjs/components/prism-tsx';
 import { SandpackExample } from '../../entities/articles/models/articles';
 import { codeSandboxUrl, requiresExternalSandbox } from '../../features/playground/codesandbox-link';
 
 interface ConsoleEntry {
   level: string;
   message: string;
+}
+
+interface RunnerMessage {
+  type?: string;
+  level?: string;
+  args?: unknown[];
+  stack?: string;
+  message?: string;
+}
+
+function stringifyArg(a: unknown): string {
+  if (a === null) return 'null';
+  if (typeof a === 'string') return a;
+  if (typeof a === 'number' || typeof a === 'boolean' || typeof a === 'undefined') return String(a);
+  try {
+    return JSON.stringify(a);
+  } catch {
+    return '[unserialisable]';
+  }
+}
+
+function languageFor(path: string): string {
+  const ext = path.split('.').pop()?.toLowerCase() ?? '';
+  switch (ext) {
+    case 'jsx':
+    case 'js':
+      return 'jsx';
+    case 'tsx':
+      return 'tsx';
+    case 'ts':
+      return 'typescript';
+    case 'css':
+      return 'css';
+    case 'json':
+      return 'json';
+    case 'html':
+      return 'markup';
+    default:
+      return 'jsx';
+  }
 }
 
 @Component({
@@ -66,6 +112,16 @@ export class PlaygroundModalComponent implements AfterViewInit, OnDestroy {
   readonly needsExternal = signal<boolean>(false);
 
   readonly modalCtrl = inject(ModalController);
+  readonly sanitizer = inject(DomSanitizer);
+
+  readonly activeLanguage = computed(() => languageFor(this.activeFile()));
+  readonly highlightedSource = computed<SafeHtml>(() => {
+    const src = this.activeSource();
+    const lang = this.activeLanguage();
+    const grammar = Prism.languages[lang] ?? Prism.languages.javascript;
+    const html = Prism.highlight(src, grammar, lang);
+    return this.sanitizer.bypassSecurityTrustHtml(html);
+  });
 
   private bootListener?: (ev: MessageEvent) => void;
 
@@ -110,6 +166,7 @@ export class PlaygroundModalComponent implements AfterViewInit, OnDestroy {
   reload(): void {
     this.consoleEntries.set([]);
     const frame = this.iframe()?.nativeElement;
+    // eslint-disable-next-line no-self-assign
     if (frame) frame.src = frame.src;
   }
 
@@ -117,7 +174,7 @@ export class PlaygroundModalComponent implements AfterViewInit, OnDestroy {
     const src = this.activeSource();
     if (!src) return;
     try {
-      navigator.clipboard?.writeText(src);
+      void navigator.clipboard?.writeText(src);
     } catch {
       /* ignore */
     }
@@ -137,7 +194,7 @@ export class PlaygroundModalComponent implements AfterViewInit, OnDestroy {
   private onMessage(ev: MessageEvent): void {
     const frame = this.iframe()?.nativeElement;
     if (!frame || ev.source !== frame.contentWindow) return;
-    const data = ev.data;
+    const data = ev.data as RunnerMessage | null;
     if (!data || typeof data !== 'object') return;
 
     switch (data.type) {
@@ -152,14 +209,14 @@ export class PlaygroundModalComponent implements AfterViewInit, OnDestroy {
       case 'sandpack:console': {
         const entries = this.consoleEntries();
         const next = entries.slice(-49);
-        next.push({ level: data.level, message: (data.args || []).join(' ') });
+        next.push({ level: data.level ?? 'log', message: (data.args ?? []).map(stringifyArg).join(' ') });
         this.consoleEntries.set(next);
         break;
       }
       case 'sandpack:error': {
         const entries = this.consoleEntries();
         const next = entries.slice(-49);
-        next.push({ level: 'error', message: data.stack || data.message || 'Runtime error' });
+        next.push({ level: 'error', message: data.stack ?? data.message ?? 'Runtime error' });
         this.consoleEntries.set(next);
         break;
       }
