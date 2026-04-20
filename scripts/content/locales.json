@@ -1,0 +1,15 @@
+{
+  "pinnedRef": "main",
+  "locales": [
+    { "code": "en", "repo": "https://github.com/reactjs/react.dev.git" },
+    { "code": "ru", "repo": "https://github.com/reactjs/ru.react.dev.git" },
+    { "code": "es", "repo": "https://github.com/reactjs/es.react.dev.git" },
+    { "code": "ja", "repo": "https://github.com/reactjs/ja.react.dev.git" },
+    { "code": "ko", "repo": "https://github.com/reactjs/ko.react.dev.git" },
+    { "code": "zh-hans", "repo": "https://github.com/reactjs/zh-hans.react.dev.git" },
+    { "code": "tr", "repo": "https://github.com/reactjs/tr.react.dev.git" },
+    { "code": "fr", "repo": "https://github.com/reactjs/fr.react.dev.git" },
+    { "code": "pt-br", "repo": "https://github.com/reactjs/pt-br.react.dev.git" },
+    { "code": "uk", "repo": "https://github.com/reactjs/uk.react.dev.git" }
+  ]
+}
