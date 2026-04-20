@@ -32,6 +32,7 @@ import { applyHeadings, preprocessHeadingAnchors } from './transformers/headings
  * @property {string} contentPath
  * @property {import('./examples-store.mjs').ExamplesStore} examples
  * @property {Set<string>} [assetReferences]
+ * @property {Set<string>} [knownSlugs]
  */
 
 /**

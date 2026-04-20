@@ -66,37 +66,74 @@ export function toAppPath(slug) {
  * @returns {string}
  */
 export function rewriteLink(href, currentContentPath) {
-  if (!href) return href;
-  // absolute external
+  const r = resolveLink(href, currentContentPath);
+  if (r.kind === 'internal') return r.appPath + (r.hash ? `#${r.hash}` : '');
+  return r.url;
+}
+
+/**
+ * Like rewriteLink but returns a structured result:
+ *   - kind:'internal' with appPath/hash/originalPath — resolved to /react/:slug
+ *   - kind:'external' with url — passthrough (mailto:, https://..., etc.)
+ *   - kind:'fragment' with hash — pure #fragment
+ *
+ * Callers can inspect originalPath (the react.dev-style path like
+ * "learn/thinking-in-react") to decide whether the internal page is
+ * actually built, and fall back to an absolute react.dev URL if not.
+ *
+ * @param {string} href
+ * @param {string} currentContentPath
+ * @returns {
+ *   { kind:'internal', appPath:string, hash:string, originalPath:string, slug:string } |
+ *   { kind:'external', url:string } |
+ *   { kind:'fragment', url:string, hash:string }
+ * }
+ */
+export function resolveLink(href, currentContentPath) {
+  if (!href) return { kind: 'external', url: href };
+
+  // absolute external (non-react.dev)
   if (/^(https?:)?\/\//i.test(href) && !/^https?:\/\/(?:\w+\.)?react\.dev/i.test(href)) {
-    return href;
+    return { kind: 'external', url: href };
   }
   let work = href.replace(/^https?:\/\/(?:\w+\.)?react\.dev/i, '');
 
-  // pure fragment stays as-is (handled by the in-app scroll logic)
-  if (work.startsWith('#')) return work;
+  // pure fragment
+  if (work.startsWith('#')) return { kind: 'fragment', url: work, hash: work.slice(1) };
 
-  // mailto:, tel:, etc
-  if (/^[a-z]+:/i.test(work)) return work;
+  // mailto:, tel:, ...
+  if (/^[a-z]+:/i.test(work)) return { kind: 'external', url: work };
 
-  // root-relative: "/learn/..." or "/reference/..."
+  // root-relative
   if (work.startsWith('/')) {
     const [pathname, hash = ''] = work.split('#');
     const trimmed = pathname.replace(/^\/+|\/+$/g, '');
-    if (!trimmed) return '/react';
+    if (!trimmed) {
+      return { kind: 'internal', appPath: '/react', hash, originalPath: '', slug: '' };
+    }
     const mapped = toAppSlug(trimmed);
-    return mapped ? toAppPath(mapped.slug) + (hash ? `#${hash}` : '') : work;
+    return {
+      kind: 'internal',
+      appPath: toAppPath(mapped.slug),
+      hash,
+      originalPath: trimmed,
+      slug: mapped.slug,
+    };
   }
 
-  // relative ("./foo", "bar", "../baz") — resolve against current page dir
   const [pathname, hash = ''] = work.split('#');
 
-  // If a "relative" link happens to start with a known section prefix
-  // (authoring shorthand in react.dev MDX), treat it as root-relative.
+  // Section-prefixed "relative" shorthand in react.dev MDX.
   for (const [section] of SECTION_ENTRIES) {
     if (pathname === section || pathname.startsWith(section + '/')) {
       const mapped = toAppSlug(pathname);
-      return mapped ? toAppPath(mapped.slug) + (hash ? `#${hash}` : '') : work;
+      return {
+        kind: 'internal',
+        appPath: toAppPath(mapped.slug),
+        hash,
+        originalPath: pathname,
+        slug: mapped.slug,
+      };
     }
   }
 
@@ -109,5 +146,26 @@ export function rewriteLink(href, currentContentPath) {
   }
   const resolved = baseDir.join('/');
   const mapped = toAppSlug(resolved);
-  return mapped ? toAppPath(mapped.slug) + (hash ? `#${hash}` : '') : work;
+  return {
+    kind: 'internal',
+    appPath: toAppPath(mapped.slug),
+    hash,
+    originalPath: resolved,
+    slug: mapped.slug,
+  };
+}
+
+/**
+ * Build an absolute react.dev URL for a given source path + locale.
+ * Used as a fallback for links that point to pages we don't ship
+ * (blog, community, deprecated APIs, …).
+ *
+ * @param {string} originalPath e.g. "blog/2024-04-25-react-19"
+ * @param {string} hash         fragment without leading '#'
+ * @param {string} locale       e.g. "en", "ru", "zh-hans"
+ */
+export function externalReactDevUrl(originalPath, hash, locale) {
+  const host = locale === 'en' ? 'react.dev' : `${locale}.react.dev`;
+  const pathname = originalPath ? `/${originalPath.replace(/^\/+/, '')}` : '';
+  return `https://${host}${pathname}${hash ? `#${hash}` : ''}`;
 }

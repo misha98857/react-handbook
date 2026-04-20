@@ -136,6 +136,16 @@ async function buildLocale(locale, args) {
   const examples = new ExamplesStore(locale);
   const assetReferences = new Set();
 
+  // Pre-compute the set of slugs that WILL be built this run. Link
+  // transformer uses it to redirect dead internal links to external
+  // react.dev URLs instead of emitting broken /react/:name hrefs.
+  const knownSlugs = new Set();
+  for (const { pages } of sidebars) {
+    for (const page of pages) {
+      knownSlugs.add(toAppSlug(page.contentPath).slug);
+    }
+  }
+
   /** @type {Record<string, {key:string, title:string, value:string, path:string, nav:[string,string], examples:string[], fallback?:boolean}[]>} */
   const groups = {};
   /** @type {string[]} */
@@ -174,6 +184,7 @@ async function buildLocale(locale, args) {
         contentPath: page.contentPath,
         examples,
         assetReferences,
+        knownSlugs,
       };
 
       let html;
