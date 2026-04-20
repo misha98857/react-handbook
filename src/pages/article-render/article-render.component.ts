@@ -5,14 +5,14 @@ import {
   effect,
   ElementRef,
   inject,
-  Input,
-  ViewChild,
   ViewEncapsulation,
+  input,
+  viewChild,
 } from '@angular/core';
 import { filter, from, switchMap } from 'rxjs';
 import { Article } from '../../entities/articles/models/articles';
 import { IonContent } from '@ionic/angular/standalone';
-import * as Mark from 'mark.js';
+import Mark from 'mark.js';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SanitizeHtmlPipe } from '../../shared/articles/pipes/sanitaze.pipe';
 import { ArticlesStore } from '../../store/articles.store';
@@ -22,18 +22,18 @@ import { initialNavigationState, NavigationState, NavigationStore } from 'src/st
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-article-render',
-    templateUrl: './article-render.component.html',
-    styleUrls: ['./article-render.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [IonContent, SanitizeHtmlPipe]
+  selector: 'app-article-render',
+  templateUrl: './article-render.component.html',
+  styleUrls: ['./article-render.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [IonContent, SanitizeHtmlPipe],
 })
 export class ArticleRenderComponent {
-  @ViewChild(IonContent) content: IonContent;
-  @ViewChild('renderElement') renderElement: ElementRef<HTMLDivElement>;
+  readonly content = viewChild(IonContent);
+  readonly renderElement = viewChild<ElementRef<HTMLDivElement>>('renderElement');
 
-  @Input() html: Article;
+  readonly html = input<Article>(undefined);
 
   readonly destroyRef = inject(DestroyRef);
   readonly articlesStore = inject(ArticlesStore);
@@ -43,34 +43,31 @@ export class ArticleRenderComponent {
   readonly router = inject(Router);
 
   constructor() {
-    effect(
-      () => {
-        const navigationState = {
-          isProgress: this.navigationStore.isProgress(),
-          isInternalLink: this.navigationStore.isInternalLink(),
-          isSearch: this.navigationStore.isSearch(),
-        };
+    effect(() => {
+      const navigationState = {
+        isProgress: this.navigationStore.isProgress(),
+        isInternalLink: this.navigationStore.isInternalLink(),
+        isSearch: this.navigationStore.isSearch(),
+      };
 
-        this.scrollToSearchedText(this.articlesStore.searchText(), navigationState);
-        this.scrollToFragment(this.articlesStore.fragment(), navigationState);
-        this.scrollToReadProgress();
-      },
-      { allowSignalWrites: true },
-    );
+      this.scrollToSearchedText(this.articlesStore.searchText(), navigationState);
+      this.scrollToFragment(this.articlesStore.fragment(), navigationState);
+      this.scrollToReadProgress();
+    });
   }
 
   saveReadProgress({ offsetHeight, scrollTop, scrollHeight }): void {
     const articleProgress = ((scrollTop / (scrollHeight - offsetHeight)) * 100).toFixed(4);
-    this.readProgressStore.updateReadProgress({ [this.html.key]: +articleProgress });
+    this.readProgressStore.updateReadProgress({ [this.html().key]: +articleProgress });
   }
 
   scrollToReadProgress(): void {
-    from(this.content.getScrollElement())
+    from(this.content().getScrollElement())
       .pipe(
         filter(() => this.settingsStore.restoreArticleProgress() && this.navigationStore.isProgress()),
         switchMap(({ scrollHeight, offsetHeight }) => {
-          const readArticleProgress = this.readProgressStore.readProgressState()[this.html.key] ?? 0;
-          return this.content.scrollToPoint(0, ((scrollHeight - offsetHeight) * readArticleProgress) / 100, 0);
+          const readArticleProgress = this.readProgressStore.readProgressState()[this.html().key] ?? 0;
+          return this.content().scrollToPoint(0, ((scrollHeight - offsetHeight) * readArticleProgress) / 100, 0);
         }),
         takeUntilDestroyed(this.destroyRef),
       )
@@ -84,7 +81,7 @@ export class ArticleRenderComponent {
       return;
     }
 
-    const instance: Mark = new Mark(this.renderElement.nativeElement);
+    const instance: Mark = new Mark(this.renderElement().nativeElement);
     instance.mark(text, { accuracy: 'complementary' });
     const markedElements = document.getElementsByTagName('mark');
 
@@ -99,10 +96,10 @@ export class ArticleRenderComponent {
       return;
     }
 
-    const element: HTMLElement = this.renderElement.nativeElement.querySelector(`#${fragment}`);
+    const element: HTMLElement = this.renderElement().nativeElement.querySelector(`#${fragment}`);
 
     if (element) {
-      setTimeout(() => void this.content.scrollToPoint(0, element.offsetTop, 300));
+      setTimeout(() => void this.content().scrollToPoint(0, element.offsetTop, 300));
       this.navigationStore.updateNavigationState(initialNavigationState);
     }
   }

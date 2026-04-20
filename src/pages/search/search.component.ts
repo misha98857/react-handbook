@@ -1,12 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { RouterLink } from '@angular/router';
-import { AsyncPipe } from '@angular/common';
 import {
   IonAccordion,
   IonAccordionGroup,
   IonBackButton,
-  IonBadge,
   IonButtons,
   IonContent,
   IonHeader,
@@ -42,9 +39,6 @@ import { NavigationStore } from '../../store/navigation.store';
     IonItem,
     IonLabel,
     IonList,
-    RouterLink,
-    IonBadge,
-    AsyncPipe,
     TranslateModule,
     ArticleListItemComponent,
     GithubStarComponent,

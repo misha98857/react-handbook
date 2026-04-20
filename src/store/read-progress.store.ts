@@ -27,9 +27,10 @@ export const ReadProgressStore = signalStore(
   })),
   withHooks({
     onInit: store => {
-      Preferences.get({ key: 'progress' }).then(({ value }) => {
+      void Preferences.get({ key: 'progress' }).then(({ value }) => {
         if (value) {
-          patchState(store, state => ({ ...state, readProgressState: JSON.parse(value) }));
+          const parsed = JSON.parse(value) as Record<string, number>;
+          patchState(store, state => ({ ...state, readProgressState: parsed }));
         }
       });
 

@@ -1,4 +1,5 @@
-@import "../../../node_modules/prismjs/themes/prism";
+@use 'sass:meta';
+@use 'prismjs/themes/prism';
 
 .gatsby-highlight-code-line {
   display: block;
@@ -30,14 +31,14 @@ article {
   margin-top: 15px;
 }
 
-div[class*="gatsby-"] {
+div[class*='gatsby-'] {
   background: #f5f2f0;
 }
 
 ion-app.dark {
-  @import "../../../node_modules/prismjs/themes/prism-okaidia";
+  @include meta.load-css('prismjs/themes/prism-okaidia');
 
-  div[class*="gatsby-"] {
+  div[class*='gatsby-'] {
     background: #121212;
   }
 
@@ -62,9 +63,7 @@ ion-app.dark {
   .highlight {
     border: yellow 1px solid;
   }
-
 }
-
 
 .token.operator {
   background: none;
@@ -86,7 +85,7 @@ ion-app.dark {
 
 article {
   h2:before {
-    content: " ";
+    content: ' ';
     display: block;
     border-bottom: 1px solid #ececec;
     margin-bottom: 30px;
@@ -94,7 +93,7 @@ article {
   }
 
   h2:first-child::before {
-    content: " ";
+    content: ' ';
     margin: 0;
     padding: 0;
     border: none;

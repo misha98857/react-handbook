@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { AsyncPipe } from '@angular/common';
 import {
   IonContent,
   IonHeader,
@@ -15,23 +14,22 @@ import {
 import { SettingsState, SettingsStore } from '../../store/settings.store';
 
 @Component({
-    selector: 'app-menu',
-    templateUrl: './menu.component.html',
-    styleUrls: ['./menu.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        IonMenu,
-        IonHeader,
-        IonToolbar,
-        IonTitle,
-        IonContent,
-        IonList,
-        IonItem,
-        IonLabel,
-        IonToggle,
-        AsyncPipe,
-        TranslateModule,
-    ]
+  selector: 'app-menu',
+  templateUrl: './menu.component.html',
+  styleUrls: ['./menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    IonMenu,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonToggle,
+    TranslateModule,
+  ],
 })
 export class MenuComponent {
   readonly settingsStore = inject(SettingsStore);

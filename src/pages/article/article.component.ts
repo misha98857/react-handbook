@@ -1,24 +1,19 @@
-import { ChangeDetectionStrategy, Component, computed, inject, Input, Signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal, input } from '@angular/core';
+import { Router } from '@angular/router';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
 import { addIcons } from 'ionicons';
 import { addOutline, arrowBackCircleOutline, arrowForwardCircleOutline, removeOutline } from 'ionicons/icons';
-import { AsyncPipe, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { ArticleRenderComponent } from '../article-render/article-render.component';
 import {
   IonBackButton,
-  IonBadge,
   IonButton,
   IonButtons,
   IonContent,
   IonFooter,
   IonHeader,
   IonIcon,
-  IonLabel,
   IonMenuButton,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
@@ -47,18 +42,11 @@ import { Article } from '../../entities/articles/models/articles';
     ArticleRenderComponent,
     NgStyle,
     IonFooter,
-    IonTabs,
-    IonTabBar,
-    IonTabButton,
-    RouterLink,
-    IonBadge,
-    IonLabel,
-    AsyncPipe,
     ArticleNavigationToolbarComponent,
   ],
 })
 export class ArticleComponent {
-  @Input() articleKey: string;
+  readonly articleKey = input<string>(undefined);
 
   readonly articlesStore = inject(ArticlesStore);
   readonly settingsStore = inject(SettingsStore);

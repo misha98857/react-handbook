@@ -33,10 +33,13 @@ export const SettingsStore = signalStore(
     },
   })),
   withHooks({
-    onInit: async (store, languageService = inject(LanguageService)) => {
-      const settings = JSON.parse((await Preferences.get({ key: 'settings' })).value);
-      const language = await languageService.getLanguage(settings?.language);
-      patchState(store, state => ({ ...state, ...settings, language }));
+    onInit(store, languageService = inject(LanguageService)) {
+      void (async () => {
+        const { value } = await Preferences.get({ key: 'settings' });
+        const settings = value ? (JSON.parse(value) as Partial<SettingsState>) : null;
+        const language = await languageService.getLanguage(settings?.language);
+        patchState(store, state => ({ ...state, ...settings, language }));
+      })();
     },
   }),
 );
