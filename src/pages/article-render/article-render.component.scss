@@ -1,144 +1,240 @@
 @use 'sass:meta';
 @use 'prismjs/themes/prism';
 
-.gatsby-highlight-code-line {
-  display: block;
-}
+// ---------------------------------------------------------------------------
+// Article reader — modern minimal typography.
+// Comfortable reading width, softer callouts, calmer dark palette.
+// ---------------------------------------------------------------------------
 
 article {
-  margin: 0 10px;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--app-space-4, 1rem) var(--app-space-4, 1rem) var(--app-space-6, 2rem);
+  color: var(--app-text, #1f2937);
+  font-family: var(--ion-font-family);
+  line-height: 1.65;
+  font-size: 1rem;
+  letter-spacing: -0.003em;
+
+  p {
+    margin: 0 0 1rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--app-text, #1f2937);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-top: 0;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--app-border, #e4e7eb);
+  }
+
+  h2:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--app-text-muted, #6b7280);
+  }
+
+  a {
+    color: var(--app-link, #087ea4);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+  }
+
+  a:hover,
+  a:active {
+    border-bottom-color: currentColor;
+  }
+
+  ul,
+  ol {
+    padding-left: 1.25rem;
+    margin: 0 0 1rem;
+  }
+
+  li + li {
+    margin-top: 0.25rem;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--app-radius, 0.625rem);
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--app-border, #e4e7eb);
+    margin: 2rem 0;
+  }
+
+  :not(pre) > code {
+    font-family: var(--app-font-mono);
+    font-size: 0.9em;
+    padding: 0.15em 0.4em;
+    border-radius: 0.25em;
+    background: var(--app-surface-muted, #f6f7f9);
+    color: var(--app-text, #1f2937);
+    border: 1px solid var(--app-border, #e4e7eb);
+  }
 }
 
-.external-link:link:after {
-  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
-  margin-left: 2px;
-}
-
-.external-link:link {
-  color: red;
-}
+// External links: subtle arrow glyph, tint not fire-red.
 
 .external-link {
-  color: red;
+  color: var(--app-link, #087ea4);
+
+  &:link::after {
+    content: ' ↗';
+    display: inline-block;
+    margin-left: 0.15em;
+    font-size: 0.85em;
+    opacity: 0.75;
+  }
 }
 
-.highlight {
-  border: red 1px solid;
-}
+// ---------------------------------------------------------------------------
+// Code blocks (Prism) — softer borders, larger radius.
+// ---------------------------------------------------------------------------
 
 .gatsby-highlight {
-  border: 1px solid rgba(236, 236, 236, 1);
-  margin-top: 15px;
+  margin: 1rem 0;
+  border: 1px solid var(--app-border, #e4e7eb);
+  border-radius: var(--app-radius, 0.625rem);
+  overflow: hidden;
 }
 
-div[class*='gatsby-'] {
-  background: #f5f2f0;
+div[class*='gatsby-'],
+.gatsby-highlight pre[class*='language-'] {
+  background: var(--app-surface-muted, #f6f7f9);
+  margin: 0;
+  padding: 0.9rem 1rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.88em;
+  line-height: 1.55;
+  overflow-x: auto;
 }
 
-ion-app.dark {
-  @include meta.load-css('prismjs/themes/prism-okaidia');
-
-  div[class*='gatsby-'] {
-    background: #121212;
-  }
-
-  .gatsby-highlight {
-    border: 1px solid rgb(84, 84, 84);
-  }
-
-  .external-link:link:after {
-    content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
-    margin-left: 2px;
-    filter: invert(1);
-  }
-
-  .external-link:link {
-    color: #5ad75f;
-  }
-
-  .external-link {
-    color: #5ad75f;
-  }
-
-  .highlight {
-    border: yellow 1px solid;
-  }
+.gatsby-highlight-code-line {
+  display: block;
 }
 
 .token.operator {
   background: none;
 }
 
+// ---------------------------------------------------------------------------
+// Blockquotes / legacy note markers.
+// ---------------------------------------------------------------------------
+
 .blockquote {
-  background-color: rgba(255, 229, 100, 0.3);
-  border-left-color: #ffe564;
-  border-left-width: 9px;
-  border-left-style: solid;
-  padding: 20px 45px 20px 26px;
-  margin-top: 15px;
+  background-color: var(--app-callout-note-bg);
+  border-left: 4px solid var(--app-callout-note-border);
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  border-radius: var(--app-radius, 0.625rem);
+
+  > p:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .scary > .blockquote {
-  background-color: rgba(237, 51, 21, 0.2);
-  border-left-color: #ed3315;
+  background-color: var(--app-callout-pitfall-bg);
+  border-left-color: var(--app-callout-pitfall-border);
 }
 
-article {
-  h2:before {
-    content: ' ';
-    display: block;
-    border-bottom: 1px solid #ececec;
-    margin-bottom: 30px;
-    padding-top: 15px;
-  }
-
-  h2:first-child::before {
-    content: ' ';
-    margin: 0;
-    padding: 0;
-    border: none;
-  }
-}
-
-/* react.dev semantic blocks (produced by the MDX pipeline) */
+// ---------------------------------------------------------------------------
+// react.dev semantic blocks (produced by the MDX pipeline).
+// ---------------------------------------------------------------------------
 
 .intro {
-  font-size: 1.05em;
-  color: var(--ion-color-medium-shade, #666);
-  margin-bottom: 20px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--app-text-muted, #6b7280);
+  margin-bottom: 1.25rem;
 }
 
 .you-will-learn,
 .learn-more,
 .recap {
-  background-color: rgba(88, 175, 223, 0.12);
-  border-left: 4px solid rgba(88, 175, 223, 0.8);
-  padding: 16px 20px;
-  margin: 18px 0;
-  border-radius: 4px;
+  background-color: var(--app-callout-note-bg);
+  border-left: 4px solid var(--app-callout-note-border);
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  border-radius: var(--app-radius, 0.625rem);
+
+  > :first-child {
+    margin-top: 0;
+  }
+  > :last-child {
+    margin-bottom: 0;
+  }
 }
 
 .deep-dive {
-  border: 1px dashed rgba(88, 175, 223, 0.6);
-  padding: 14px 18px;
-  margin: 18px 0;
-  border-radius: 6px;
+  border: 1px solid var(--app-callout-deep-border);
+  background: var(--app-callout-deep-bg);
+  padding: 0.85rem 1.25rem;
+  margin: 1.25rem 0;
+  border-radius: var(--app-radius, 0.625rem);
 
   > summary {
     cursor: pointer;
     font-weight: 600;
-    color: rgba(88, 175, 223, 1);
+    color: var(--app-callout-deep-border);
+    list-style: none;
+  }
+
+  > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  > summary::before {
+    content: '▸ ';
+    display: inline-block;
+    transition: transform 0.15s ease;
+  }
+
+  &[open] > summary::before {
+    content: '▾ ';
   }
 }
 
 .console-block {
   background: #0d1117;
   color: #e6edf3;
-  padding: 12px 16px;
-  border-radius: 6px;
-  font-family: 'SFMono-Regular', Consolas, monospace;
-  font-size: 0.92em;
-  margin: 14px 0;
+  padding: 0.85rem 1rem;
+  border-radius: var(--app-radius, 0.625rem);
+  font-family: var(--app-font-mono);
+  font-size: 0.88em;
+  line-height: 1.55;
+  margin: 1rem 0;
   white-space: pre-wrap;
 
   &[data-level='warning'] {
@@ -152,12 +248,13 @@ article {
 
 .terminal-block {
   background: #0d1117;
-  color: #58a6ff;
-  padding: 12px 16px;
-  border-radius: 6px;
-  font-family: 'SFMono-Regular', Consolas, monospace;
-  font-size: 0.92em;
-  margin: 14px 0;
+  color: #7ee787;
+  padding: 0.85rem 1rem;
+  border-radius: var(--app-radius, 0.625rem);
+  font-family: var(--app-font-mono);
+  font-size: 0.88em;
+  line-height: 1.55;
+  margin: 1rem 0;
 
   &::before {
     content: '$ ';
@@ -169,79 +266,141 @@ article {
 .challenges,
 .solution,
 .hint {
-  border-left: 4px solid #6f42c1;
-  background: rgba(111, 66, 193, 0.08);
-  padding: 12px 18px;
-  margin: 16px 0;
-  border-radius: 4px;
+  border-left: 4px solid var(--app-callout-deep-border);
+  background: var(--app-callout-deep-bg);
+  padding: 0.85rem 1.25rem;
+  margin: 1rem 0;
+  border-radius: var(--app-radius, 0.625rem);
 }
 
 .solution {
-  border-left-color: #28a745;
-  background: rgba(40, 167, 69, 0.08);
+  border-left-color: #2dd36f;
+  background: rgba(45, 211, 111, 0.1);
 }
 
 .hint {
-  border-left-color: #d4a72c;
-  background: rgba(212, 167, 44, 0.08);
+  border-left-color: var(--ion-color-warning);
+  background: rgba(255, 196, 9, 0.1);
 }
 
-/* Sandpack placeholder — the interactive button rendered before the runtime modal opens */
+// ---------------------------------------------------------------------------
+// Sandpack placeholder — modern card with clear "run" affordance.
+// ---------------------------------------------------------------------------
+
 .sandpack-placeholder {
   display: block;
-  margin: 16px 0;
-  border: 1px solid rgba(88, 175, 223, 0.5);
-  border-radius: 8px;
-  background: rgba(88, 175, 223, 0.08);
-  padding: 14px 16px;
+  margin: 1rem 0;
+  border: 1px solid var(--ion-color-primary);
+  border-radius: var(--app-radius, 0.625rem);
+  background: var(--app-callout-note-bg);
+  padding: 0.85rem 1rem;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 
-  &:hover,
+  &:hover {
+    background: rgba(20, 158, 202, 0.14);
+    box-shadow: 0 2px 12px rgba(20, 158, 202, 0.18);
+    transform: translateY(-1px);
+  }
+
   &:active {
-    background: rgba(88, 175, 223, 0.18);
+    transform: translateY(0);
   }
 
   &__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    gap: 0.75rem;
   }
 
   &__label {
     font-weight: 600;
-    color: rgba(88, 175, 223, 1);
+    color: var(--ion-color-primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
   }
 
   &__label::before {
-    content: '▶ ';
+    content: '▶';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.4em;
+    height: 1.4em;
+    border-radius: 999px;
+    background: var(--ion-color-primary);
+    color: #fff;
+    font-size: 0.6em;
+    padding-left: 0.15em;
   }
 
   &__files {
-    font-family: 'SFMono-Regular', Consolas, monospace;
-    font-size: 0.8em;
-    color: var(--ion-color-medium-shade, #666);
+    font-family: var(--app-font-mono);
+    font-size: 0.78em;
+    color: var(--app-text-muted, #6b7280);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 60%;
+    max-width: 55%;
   }
 }
 
+// ---------------------------------------------------------------------------
+// Dark-mode overrides for Prism theme and subtle surfaces.
+// ---------------------------------------------------------------------------
+
 ion-app.dark {
-  .intro {
-    color: #a0a0a0;
+  @include meta.load-css('prismjs/themes/prism-okaidia');
+
+  article {
+    color: var(--app-text);
+
+    :not(pre) > code {
+      background: #23272f;
+      border-color: #30353f;
+      color: #f4f5f8;
+    }
+
+    h2 {
+      border-top-color: var(--app-border);
+    }
+
+    h4 {
+      color: var(--app-text-muted);
+    }
+
+    hr {
+      border-top-color: var(--app-border);
+    }
   }
+
+  .gatsby-highlight {
+    border-color: #30353f;
+  }
+
+  div[class*='gatsby-'],
+  .gatsby-highlight pre[class*='language-'] {
+    background: #0f1115;
+  }
+
+  .intro {
+    color: var(--app-text-muted);
+  }
+
   .console-block {
     background: #000;
   }
-  .sandpack-placeholder {
-    background: rgba(88, 175, 223, 0.12);
 
-    &:hover,
-    &:active {
-      background: rgba(88, 175, 223, 0.22);
+  .sandpack-placeholder {
+    background: rgba(20, 158, 202, 0.1);
+
+    &:hover {
+      background: rgba(20, 158, 202, 0.22);
     }
   }
 }
