@@ -2,8 +2,15 @@ import { ChangeDetectionStrategy, Component, computed, inject, Signal, input } f
 import { Router } from '@angular/router';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
 import { addIcons } from 'ionicons';
-import { addOutline, arrowBackCircleOutline, arrowForwardCircleOutline, removeOutline } from 'ionicons/icons';
+import {
+  addOutline,
+  arrowBackCircleOutline,
+  arrowForwardCircleOutline,
+  informationCircleOutline,
+  removeOutline,
+} from 'ionicons/icons';
 import { NgStyle } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { ArticleRenderComponent } from '../article-render/article-render.component';
 import {
   IonBackButton,
@@ -44,6 +51,7 @@ import { PlaygroundService } from '../../features/playground/playground.service'
     NgStyle,
     IonFooter,
     ArticleNavigationToolbarComponent,
+    TranslateModule,
   ],
 })
 export class ArticleComponent {
@@ -68,7 +76,13 @@ export class ArticleComponent {
   });
 
   constructor() {
-    addIcons({ removeOutline, addOutline, arrowBackCircleOutline, arrowForwardCircleOutline });
+    addIcons({
+      removeOutline,
+      addOutline,
+      arrowBackCircleOutline,
+      arrowForwardCircleOutline,
+      informationCircleOutline,
+    });
   }
 
   increaseFontSize(): void {

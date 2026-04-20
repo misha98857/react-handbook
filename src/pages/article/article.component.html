@@ -17,6 +17,12 @@
 </ion-header>
 <ion-content>
   @if (currentArticle().key) {
+    @if (currentArticle().fallback) {
+      <div class="translation-banner" role="note">
+        <ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>
+        <span>{{ 'article-not-translated' | translate }}</span>
+      </div>
+    }
     <app-article-render
       (click)="getRoute($event)"
       [html]="currentArticle()"
