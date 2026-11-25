@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { AsyncPipe } from '@angular/common';
 import {
   IonContent,
   IonHeader,
@@ -19,7 +18,6 @@ import { SettingsState, SettingsStore } from '../../store/settings.store';
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     IonMenu,
     IonHeader,
@@ -30,7 +28,6 @@ import { SettingsState, SettingsStore } from '../../store/settings.store';
     IonItem,
     IonLabel,
     IonToggle,
-    AsyncPipe,
     TranslateModule,
   ],
 })

@@ -6,7 +6,7 @@ import { allowedLanguages, langMap } from '../../shared/translate/const/const';
   providedIn: 'root',
 })
 export class LanguageService {
-  async getLanguage(language: string): Promise<string> {
+  async getLanguage(language?: string): Promise<string> {
     if (language) {
       return language;
     }

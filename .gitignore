@@ -34,3 +34,16 @@ npm-debug.log*
 /.nx
 
 **/google-services.json
+
+# content pipeline
+/scripts/content/sources
+/scripts/content/node_modules
+
+# playground vendor bundles (downloaded via scripts/playground/download-vendors.mjs)
+/src/shared/assets/playground/vendor
+
+# playwright
+/playwright-report
+/test-results
+/playwright/.cache
+

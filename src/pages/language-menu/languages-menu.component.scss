@@ -1,0 +1,18 @@
+// Language grid: airy spacing + flat toolbar.
+
+:host ion-header ion-toolbar {
+  --border-width: 0;
+  --background: var(--ion-background-color);
+}
+
+:host ion-content {
+  --background: var(--ion-background-color);
+}
+
+:host ion-grid {
+  padding: var(--app-space-3);
+}
+
+:host ion-col {
+  padding: var(--app-space-2);
+}

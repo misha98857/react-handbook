@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   IonAccordion,
   IonAccordionGroup,
   IonBackButton,
-  IonBadge,
   IonButton,
   IonButtons,
   IonContent,
@@ -24,7 +23,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { App } from '@capacitor/app';
 import { addIcons } from 'ionicons';
 import { languageOutline, search } from 'ionicons/icons';
-import { AsyncPipe, NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ArticleListItemComponent } from '../../widgets/article-list-item/article-list-item.component';
 import { GithubStarComponent } from '../../widgets/github-star/github-star.component';
@@ -38,7 +37,6 @@ import { NavigationStore } from '../../store/navigation.store';
   templateUrl: './articles.component.html',
   styleUrls: ['./articles.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     IonHeader,
     IonToolbar,
@@ -51,17 +49,10 @@ import { NavigationStore } from '../../store/navigation.store';
     IonTitle,
     IonContent,
     IonAccordionGroup,
-    NgFor,
     IonAccordion,
     IonItem,
     IonLabel,
     IonList,
-    NgIf,
-    NgSwitch,
-    NgSwitchCase,
-    IonBadge,
-    NgSwitchDefault,
-    AsyncPipe,
     TranslateModule,
     ArticleListItemComponent,
     GithubStarComponent,
@@ -69,7 +60,11 @@ import { NavigationStore } from '../../store/navigation.store';
     NgTemplateOutlet,
   ],
 })
-export class ArticlesComponent implements OnDestroy {
+export class ArticlesComponent {
+  private toastController = inject(ToastController);
+  private platform = inject(Platform);
+  private translate = inject(TranslateService);
+
   readonly articlesStore = inject(ArticlesStore);
   readonly settingsStore = inject(SettingsStore);
   readonly readProgressStore = inject(ReadProgressStore);
@@ -79,13 +74,8 @@ export class ArticlesComponent implements OnDestroy {
 
   private backButtonSubscribe: Subscription;
   private backCounter = 0;
-  private changeLanguageSubscription: Subscription;
 
-  constructor(
-    private toastController: ToastController,
-    private platform: Platform,
-    private translate: TranslateService,
-  ) {
+  constructor() {
     addIcons({ search, languageOutline });
   }
 
@@ -104,10 +94,6 @@ export class ArticlesComponent implements OnDestroy {
 
   ionViewDidLeave(): void {
     this.backButtonSubscribe.unsubscribe();
-  }
-
-  ngOnDestroy(): void {
-    this.changeLanguageSubscription.unsubscribe();
   }
 
   openArticle(): void {

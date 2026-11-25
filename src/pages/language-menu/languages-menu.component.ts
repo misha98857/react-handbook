@@ -13,7 +13,7 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { LanguageCardComponent } from '../../widgets/language-card/language-card.component';
-import { AsyncPipe, NgFor } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Language } from '../../entities/languages/models/languages';
 import { SettingsStore } from '../../store/settings.store';
 
@@ -21,7 +21,6 @@ import { SettingsStore } from '../../store/settings.store';
   selector: 'app-languages-menu',
   templateUrl: './languages-menu.component.html',
   styleUrls: ['./languages-menu.component.scss'],
-  standalone: true,
   imports: [
     IonHeader,
     IonToolbar,
@@ -31,7 +30,6 @@ import { SettingsStore } from '../../store/settings.store';
     IonContent,
     IonGrid,
     IonRow,
-    NgFor,
     IonCol,
     LanguageCardComponent,
     AsyncPipe,

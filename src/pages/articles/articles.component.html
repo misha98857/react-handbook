@@ -1,14 +1,14 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot='start'>
+    <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-buttons slot='primary'>
-      <ion-button routerLink='/search'>
-        <ion-icon name='search' slot='icon-only'></ion-icon>
+    <ion-buttons slot="primary">
+      <ion-button routerLink="/search">
+        <ion-icon name="search" slot="icon-only"></ion-icon>
       </ion-button>
-      <ion-button routerLink='/languages'>
-        <ion-icon name='language-outline' slot='icon-only'></ion-icon>
+      <ion-button routerLink="/languages">
+        <ion-icon name="language-outline" slot="icon-only"></ion-icon>
       </ion-button>
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -19,20 +19,22 @@
   <ion-accordion-group>
     @for (articleGroup of articlesStore.articleGroups(); track articleGroup.key) {
       <ion-accordion>
-        <ion-item slot='header'>
-          <ion-label> {{ articleGroup.key }}</ion-label>
+        <ion-item slot="header">
+          <ion-label>
+            {{ 'group-' + articleGroup.key | translate }}
+          </ion-label>
         </ion-item>
-        <ion-list slot='content'>
+        <ion-list slot="content">
           <app-article-list-item
             (openArticle)="openArticle()"
             [articles]="articleGroup.values"
             [readProgress]="readProgressStore.readProgressState()"
-            [showProgress]="settingsStore.showArticleProgress()">
-          </app-article-list-item>
+            [showProgress]="settingsStore.showArticleProgress()"
+          ></app-article-list-item>
         </ion-list>
       </ion-accordion>
     } @empty {
-      <ng-container *ngTemplateOutlet="skeleton"></ng-container>
+      <ng-container [ngTemplateOutlet]="skeleton"></ng-container>
     }
   </ion-accordion-group>
   <app-github-star></app-github-star>
@@ -41,7 +43,7 @@
 <ng-template #skeleton>
   @for (loadingItem of skeletonLoadingItems; track $index) {
     <ion-accordion [readonly]="true">
-      <ion-item slot='header'>
+      <ion-item slot="header">
         <ion-label>
           <ion-skeleton-text [animated]="true"></ion-skeleton-text>
         </ion-label>

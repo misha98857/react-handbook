@@ -1,9 +1,30 @@
+// Language card: lighter surface, subtle selected ring.
+
+:host ion-card {
+  margin: 0;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: none;
+  background: var(--app-surface);
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    border-color: var(--app-border-strong);
+  }
+}
+
 .language-card-image {
   position: relative;
-  height: 90px;
+  height: 80px;
   width: auto;
+  margin-bottom: var(--app-space-2);
 }
 
 .language-card-title {
   text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0;
 }

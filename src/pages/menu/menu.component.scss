@@ -1,0 +1,43 @@
+// Side menu: grouped sections with labels, cleaner toggles.
+
+:host ion-menu::part(container) {
+  border-left: 1px solid var(--app-border);
+}
+
+ion-header ion-toolbar {
+  --border-width: 0;
+  --background: var(--ion-background-color);
+}
+
+ion-content {
+  --background: var(--ion-background-color);
+  --padding-top: var(--app-space-3);
+}
+
+ion-list {
+  background: transparent;
+  padding: 0 var(--app-space-3);
+}
+
+ion-item {
+  --background: var(--app-surface);
+  --border-color: var(--app-border);
+  --inner-border-width: 0;
+  --border-radius: var(--app-radius-sm);
+  --padding-start: var(--app-space-4);
+  --padding-end: var(--app-space-3);
+  --min-height: 52px;
+  margin-bottom: var(--app-space-2);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  font-size: 0.92rem;
+
+  ion-label {
+    color: var(--app-text);
+    font-weight: 500;
+  }
+}
+
+ion-toggle {
+  padding-inline-start: 0;
+}
